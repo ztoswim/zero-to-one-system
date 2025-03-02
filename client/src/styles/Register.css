@@ -1,0 +1,108 @@
+/* 背景模糊 + 居中 */
+.register-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+
+/* 弹窗样式 */
+.register-box {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* 右上角 X 关闭按钮 */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* 标题 */
+.register-box h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+/* 输入框 */
+.register-box input,
+.register-box select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* 按钮样式 */
+.register-box button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;  /* ✅ 让按钮大小随内容变化 */
+  min-width: 80px; /* ✅ 避免按钮太小 */
+  text-align: center;
+}
+
+/* 按钮布局 - 左右排列 */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  gap: 10px; /* ✅ 按钮之间留出间距 */
+}
+
+/* 保存按钮（左侧） */
+.save-btn {
+  background: #007bff;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #0056b3;
+}
+
+/* 删除按钮（右侧） */
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #a71d2a;
+}
+
+/* 注册按钮 */
+.register-box .register-btn {
+  width: 100%;
+  background: #007bff;
+  color: white;
+}
+
+/* 错误信息提示 */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
