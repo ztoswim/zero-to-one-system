@@ -1,4 +1,4 @@
-import jwtDecode from "jwtDecode";
+import { jwtDecode } from "jwt-decode"; // ✅ 使用命名导入
 
 export const setToken = (token) => {
   localStorage.setItem("token", token);
