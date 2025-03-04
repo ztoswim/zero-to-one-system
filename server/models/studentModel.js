@@ -12,6 +12,6 @@ const studentSchema = new mongoose.Schema({
   email: { type: String, unique: true, sparse: true }, // 邮箱，可为空，若填写则唯一
 }, { timestamps: true }); // 添加时间戳，自动记录创建和更新时间
 
-const Student = mongoose.model("student_info", studentSchema);
+const Student = mongoose.model("Student", studentSchema);
 
 module.exports = Student;
