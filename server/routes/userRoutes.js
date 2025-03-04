@@ -84,11 +84,11 @@ router.post("/register-student", async (req, res) => {
 /** 📌 5️⃣ 注册 - 方式 2（Boss 创建账号，可选角色） */
 router.post("/register-admin", async (req, res) => {
   try {
-    const { bossUsername, email, username, password, role } = req.body;
+    const { email, username, password, role } = req.body;
 
-    // 检查操作者是否是 Boss
-    const bossUser = await User.findOne({ username: bossUsername });
-    if (!bossUser || bossUser.role !== "boss") {
+    // 检查操作者是否是 Boss（从当前登录的用户中获取）
+    const currentUser = req.user;  // 假设 req.user 包含当前登录用户的信息
+    if (!currentUser || currentUser.role !== "boss") {
       return res.status(403).json({ message: "无权限，只有 Boss 可以创建用户" });
     }
 
