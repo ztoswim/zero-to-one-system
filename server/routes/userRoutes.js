@@ -1,7 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken"); // 引入 jwt
 const User = require("../models/userModel");
 const Student = require("../models/studentModel");
+const authenticateUser = require("../middlewares/auth");  // 引入身份验证中间件
 
 const router = express.Router();
 
@@ -37,7 +39,10 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "密码错误" });
 
-    res.json({ message: "登录成功", user: { username: user.username, role: user.role } });
+    // 生成 JWT token
+    const token = jwt.sign({ username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ message: "登录成功", token });
   } catch (err) {
     res.status(500).json({ message: "登录失败", error: err.message });
   }
@@ -82,7 +87,7 @@ router.post("/register-student", async (req, res) => {
 });
 
 /** 📌 5️⃣ 注册 - 方式 2（Boss 创建账号，可选角色） */
-router.post("/register-admin", async (req, res) => {
+router.post("/register-admin", authenticateUser, async (req, res) => {
   try {
     const { email, username, password, role } = req.body;
 
@@ -120,7 +125,7 @@ router.post("/register-admin", async (req, res) => {
 });
 
 /** 📌 6️⃣ 更新用户信息 */
-router.put("/:username", async (req, res) => {
+router.put("/:username", authenticateUser, async (req, res) => {
   try {
     const { password, ...updateData } = req.body;
 
@@ -144,7 +149,7 @@ router.put("/:username", async (req, res) => {
 });
 
 /** 📌 7️⃣ 删除用户（禁止删除 Boss） */
-router.delete("/:username", async (req, res) => {
+router.delete("/:username", authenticateUser, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
 

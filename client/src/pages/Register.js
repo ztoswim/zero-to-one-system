@@ -26,14 +26,16 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
 
   if (!isOpen) return null;
 
+  const token = localStorage.getItem('token');  // 获取 token
+
   const handleRegister = async () => {
     setMessage("");
     try {
       const payload = { email, username, password, confirmPassword };
 
       const data = isLoginRegister
-        ? await registerStudent(payload) // 🔹 学生注册
-        : await registerAdmin({ ...payload, role, creatorRole: localStorage.getItem("role") }); // 🔹 Boss 创建
+        ? await registerStudent(payload, token) // 🔹 学生注册
+        : await registerAdmin({ ...payload, role, creatorRole: localStorage.getItem("role") }, token); // 🔹 Boss 创建
 
       setMessage(data.message);
       setTimeout(() => onClose(), 2000);
@@ -52,7 +54,7 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
         password,
         role,
         editorRole: localStorage.getItem("role"),
-      });
+      }, token); // 传递 token
 
       setMessage("用户信息已更新");
       setTimeout(() => onClose(), 2000);
@@ -65,7 +67,7 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
     if (!selectedUser?.username) return;
 
     try {
-      await deleteUser(selectedUser.username);
+      await deleteUser(selectedUser.username, token); // 传递 token
       setMessage("用户已删除");
       setTimeout(() => onClose(), 2000);
     } catch (error) {
