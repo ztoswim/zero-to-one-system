@@ -1,5 +1,12 @@
+import React from "react";
+import Layout from "../components/Layout";
+
 const AdminDashboard = () => {
-    return <h2>Admin 管理页面</h2>;
-  };
-  export default AdminDashboard;
-  
+  return (
+    <Layout>
+      <h1>Admin Dashboard</h1>
+    </Layout>
+  );
+};
+
+export default AdminDashboard;

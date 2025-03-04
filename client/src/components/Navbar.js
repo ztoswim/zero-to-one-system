@@ -1,56 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaBars } from "react-icons/fa";
-import "../styles/Navbar.css";
+import React from "react";
+import { logout } from "../auth";
 
-const Navbar = ({ user, onLogout, isSidebarOpen, setIsSidebarOpen }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  console.log("🔹 Navbar 接收到的 user:", user);
-
-  // 监听点击事件，点击 Navbar 以外的区域自动关闭用户菜单
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!menuRef.current?.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMenuOpen]);
-
+const Navbar = () => {
   return (
-    <nav className={`navbar ${isSidebarOpen ? "shift-right" : ""}`}>
-      {/* 左侧：菜单按钮 + LOGO + 标题 */}
-      <div className="navbar-left">
-      <button className={`menu-button ${isSidebarOpen ? "hidden" : ""}`} onClick={() => setIsSidebarOpen(true)}
->       <FaBars />
-      </button>
-        <div className="navbar-logo">
-          <img src="/Logo.png" alt="Logo" className="logo-img" />
-          <span className="navbar-title">ZERO TO ONE ACADEMY</span>
-        </div>
-      </div>
-
-      {/* 右侧：用户名 + 下拉菜单 */}
-      <div className="navbar-user">
-        <button onClick={() => setIsMenuOpen((prev) => !prev)}>
-          {user?.username || "未登录"}
-        </button>
-        {isMenuOpen && (
-          <div className="user-menu" ref={menuRef}>
-            <button onClick={onLogout} className="logout">登出</button>
-          </div>
-        )}
-      </div>
+    <nav style={styles.navbar}>
+      <h1>管理系统</h1>
+      <button onClick={logout} style={styles.logoutButton}>退出</button>
     </nav>
   );
+};
+
+const styles = {
+  navbar: {
+    height: "60px",
+    backgroundColor: "#333",
+    color: "white",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0 20px",
+  },
+  logoutButton: {
+    backgroundColor: "#ff4d4d",
+    color: "white",
+    border: "none",
+    padding: "8px 16px",
+    cursor: "pointer",
+    borderRadius: "5px",
+  },
 };
 
 export default Navbar;

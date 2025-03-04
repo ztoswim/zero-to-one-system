@@ -1,5 +1,12 @@
+import React from "react";
+import Layout from "../components/Layout";
+
 const CustomerDashboard = () => {
-    return <h2>Customer 个人中心</h2>;
-  };
-  export default CustomerDashboard;
-  
+  return (
+    <Layout>
+      <h1>Customer Dashboard</h1>
+    </Layout>
+  );
+};
+
+export default CustomerDashboard;

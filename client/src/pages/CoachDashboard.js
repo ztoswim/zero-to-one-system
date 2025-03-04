@@ -1,6 +1,12 @@
-const CoachDashboard = () => {
-    return <h2>Coach 管理页面</h2>;
-  };
-  export default CoachDashboard;
+import React from "react";
+import Layout from "../components/Layout";
 
-  
+const CoachDashboard = () => {
+  return (
+    <Layout>
+      <h1>Coach Dashboard</h1>
+    </Layout>
+  );
+};
+
+export default CoachDashboard;
