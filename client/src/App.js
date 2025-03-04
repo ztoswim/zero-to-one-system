@@ -18,16 +18,13 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 用来确定是否已登录
 
   useEffect(() => {
-    // 检查 token 是否存在
     const token = localStorage.getItem("token");
-    
     if (!token) {
-      setIsLoading(false); // 没有 token，停止加载，跳转到登录页面
-      navigate("/"); // 跳转到登录页面
+      setIsLoading(false);
+      navigate("/"); // 没有 token，跳转到登录页
       return;
     }
 
-    // 如果有 token，尝试获取用户信息
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -38,16 +35,14 @@ function App() {
   }, [navigate]);
 
   useEffect(() => {
-    // 如果用户未登录且不在登录页，跳转到登录页面
     if (!isLoading && !isLoggedIn && location.pathname !== "/") {
-      navigate("/");
+      navigate("/"); // 未登录且不在登录页，跳转到登录页面
     }
   }, [isLoading, isLoggedIn, location.pathname, navigate]);
 
-  // 根据用户角色跳转到相应的 Dashboard
   useEffect(() => {
     if (user?.role) {
-      navigateToDashboard(user.role);
+      navigateToDashboard(user.role); // 跳转到相应的 Dashboard
     }
   }, [user]);
 
@@ -65,11 +60,10 @@ function App() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
-    setIsLoggedIn(false); // 设置为未登录状态
+    setIsLoggedIn(false); // 设置为未登录
     navigate("/");
   };
 
-  // 只要是加载中状态，不渲染其他内容
   if (isLoading) {
     return <div>加载中...</div>;
   }
