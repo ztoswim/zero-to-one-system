@@ -28,28 +28,33 @@ const Login = ({ setUser }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true); // ✅ 开始加载
+    setLoading(true); // 开始加载
   
     try {
       const data = await loginUser({ username, password });
   
-      if (data?.user && data?.token) {  // ✅ 确保 data 中含有 token
-        localStorage.setItem("user", JSON.stringify(data.user)); // ✅ 存储用户信息
-        localStorage.setItem("role", data.user.role); // ✅ 存储角色
-        localStorage.setItem("token", data.token); // ✅ 存储 token
+      if (data?.user) {
+        console.log("登录成功, 用户信息:", data.user);
+        localStorage.setItem("user", JSON.stringify(data.user)); // 存储用户信息
+        localStorage.setItem("role", data.user.role); // 存储角色
+        localStorage.setItem("token", data.token); // 存储 token
+  
         setUser(data.user);
-        navigateToDashboard(data.user.role);
+  
+        // 跳转到相应的 Dashboard 页面
+        if (data.user.role) {
+          navigateToDashboard(data.user.role);
+        } else {
+          setError("未找到角色，请重新登录！");
+        }
       } else {
         setError(data.message || "账号或密码错误，请重新输入！");
       }
     } catch (err) {
       console.error("登录请求错误:", err);
-      setError(
-        err.response?.data?.message ||
-          "服务器繁忙，请稍后再试！"
-      );
+      setError(err.response?.data?.message || "服务器繁忙，请稍后再试！");
     } finally {
-      setLoading(false); // ✅ 结束加载
+      setLoading(false); // 结束加载
     }
   };  
 
