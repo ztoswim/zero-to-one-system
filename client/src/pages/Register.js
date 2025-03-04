@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { registerUser, updateUser, deleteUser } from "../api/userApi"; // ✅ 引入 API
 import "../styles/Register.css";  
 
 const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
@@ -24,22 +24,18 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
     }
   }, [isOpen, selectedUser]);
 
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   const handleRegister = async () => {
-    setMessage(""); 
-    
+    setMessage("");
+
     try {
       const payload = isLoginRegister
         ? { email, username, password, confirmPassword }
         : { email, username, password, role, creatorRole: localStorage.getItem("role") };
-    
-      const url = isLoginRegister
-        ? "http://localhost:3001/api/users/register"
-        : "http://localhost:3001/api/users/create-user";
-    
-      const { data } = await axios.post(url, payload);
-    
+
+      const data = await registerUser(payload); // ✅ 调用 `userApi.js` 的 `registerUser`
+      
       setMessage(data.message);
       setTimeout(() => onClose(), 2000);
     } catch (error) {
@@ -48,7 +44,7 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
   };
 
   const handleSave = async () => {
-    if (!selectedUser?.id) return; 
+    if (!selectedUser?.id) return;
 
     try {
       const payload = {
@@ -59,7 +55,7 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
         editorRole: localStorage.getItem("role"),
       };
 
-      await axios.put(`http://localhost:3001/api/users/update/${selectedUser.id}`, payload);
+      await updateUser(selectedUser.id, payload); // ✅ 调用 `updateUser`
       setMessage("用户信息已更新");
       setTimeout(() => onClose(), 2000);
     } catch (error) {
@@ -71,7 +67,7 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
     if (!selectedUser?.id) return;
 
     try {
-      await axios.delete(`http://localhost:3001/api/users/delete/${selectedUser.id}`);
+      await deleteUser(selectedUser.id); // ✅ 调用 `deleteUser`
       setMessage("用户已删除");
       setTimeout(() => onClose(), 2000);
     } catch (error) {
@@ -82,7 +78,6 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
   return (
     <div className="register-modal">
       <div className="register-box">
-        {/* 右上角 X 关闭按钮 */}
         <button className="close-btn" onClick={onClose}>✖</button>
 
         <h2>{selectedUser ? "编辑用户" : isLoginRegister ? "注册新账号" : "创建新用户"}</h2>
@@ -129,7 +124,6 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
 
         {message && <p className="error-message">{message}</p>}
 
-        {/* **按钮布局：左侧 保存，右侧 删除** */}
         <div className="button-group">
           {selectedUser ? (
             <>

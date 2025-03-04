@@ -1,38 +1,35 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const connectDB = require("./config/db");
 
 const app = express();
 
-// 允许前端访问后端
+// 允许前端访问
 app.use(cors({
-  origin: "https://zero-to-one-system.vercel.app", // 允许你的前端访问
+  origin: "https://zero-to-one-system.vercel.app", // 你的前端地址
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 连接数据库
 connectDB();
 
-// 测试服务器是否运行
+// 测试服务器是否正常运行
 app.get("/", (req, res) => {
-  res.send("Server is running!");
+  res.send("✅ Server is running!");
 });
 
-// 测试数据库是否连接成功
-app.get("/test-db", async (req, res) => {
-  try {
-    const users = await mongoose.connection.db.collection("users").find().toArray();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Database connection error" });
-  }
-});
+// 📌 引入路由
+const userRoutes = require("./routes/userRoutes");
+const studentRoutes = require("./routes/studentRoutes"); // ✅ 添加学生路由
 
-// 服务器端口
+app.use("/api/users", userRoutes);
+app.use("/api/students", studentRoutes); // ✅ 这里添加
+
+// 服务器监听端口
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

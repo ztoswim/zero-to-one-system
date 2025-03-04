@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Register from "./Register"; // 导入注册组件
+import Register from "./Register"; // ✅ 导入注册组件
 import { loginUser } from "../api/userApi"; // ✅ 统一 API 调用
 import "../styles/Login.css";
 
@@ -9,7 +9,7 @@ const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showRegister, setShowRegister] = useState(false); // 控制注册弹窗
+  const [showRegister, setShowRegister] = useState(false); // ✅ 控制注册弹窗
   const [loading, setLoading] = useState(false); // ✅ 增加 loading 状态
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const Login = ({ setUser }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true); // 开始加载
+    setLoading(true); // ✅ 开始加载
 
     try {
       const data = await loginUser({ username, password });
@@ -39,11 +39,14 @@ const Login = ({ setUser }) => {
         setUser(data.user);
         navigateToDashboard(data.user.role);
       } else {
-        setError(data.message || "登录失败，请检查账号或密码！");
+        setError(data.message || "账号或密码错误，请重新输入！");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "服务器错误，请稍后再试！");
       console.error("登录请求错误:", err);
+      setError(
+        err.response?.data?.message ||
+          "服务器繁忙，请稍后再试！"
+      );
     } finally {
       setLoading(false); // ✅ 结束加载
     }
@@ -52,11 +55,14 @@ const Login = ({ setUser }) => {
   return (
     <div className="login-container">
       {/* 注册弹窗 */}
-      <Register isOpen={showRegister} onClose={() => setShowRegister(false)} isLoginRegister={true} />
+      {showRegister && (
+        <Register isOpen={showRegister} onClose={() => setShowRegister(false)} isLoginRegister={true} />
+      )}
 
       <div className="login-box">
         <img src="/Logo.png" alt="LOGO" className="logo-img" />
         {error && <p className="error-message">{error}</p>}
+
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <FaUser className="icon" />
@@ -67,8 +73,10 @@ const Login = ({ setUser }) => {
               onChange={(e) => setUsername(e.target.value)}
               required
               className="input-field"
+              disabled={loading} // ✅ 登录时禁用输入框
             />
           </div>
+
           <div className="input-group">
             <FaLock className="icon" />
             <input
@@ -78,13 +86,18 @@ const Login = ({ setUser }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="input-field"
+              disabled={loading} // ✅ 登录时禁用输入框
             />
           </div>
+
           <button type="submit" className="login-button" disabled={loading}>
             {loading ? "登录中..." : "登录"}
           </button>
         </form>
-        <button className="register-button" onClick={() => setShowRegister(true)}>注册</button> {/* 注册按钮 */}
+
+        <button className="register-button" onClick={() => setShowRegister(true)} disabled={loading}>
+          {loading ? "请稍后..." : "注册"}
+        </button>
       </div>
     </div>
   );

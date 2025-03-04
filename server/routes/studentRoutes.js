@@ -1,90 +1,70 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
+const Student = require("../models/studentModel");
 
 const router = express.Router();
 
-// 📌 1️⃣ 获取所有用户
+/** 📌 1️⃣ 获取所有学生 */
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find({}, "-password"); // 不返回密码
-    res.json(users);
+    const students = await Student.find();
+    res.json(students);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// 📌 2️⃣ 获取单个用户
-router.get("/:username", async (req, res) => {
+/** 📌 2️⃣ 获取单个学生 */
+router.get("/:id", async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username }, "-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+    const student = await Student.findById(req.params.id);
+    if (!student) return res.status(404).json({ message: "Student not found" });
+    res.json(student);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// 📌 3️⃣ 注册新用户
+/** 📌 3️⃣ 创建新学生 */
 router.post("/", async (req, res) => {
-  const { username, password, role, email } = req.body;
+  const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
 
-  // 检查用户是否存在
-  const existingUser = await User.findOne({ username });
-  if (existingUser) return res.status(400).json({ message: "Username already exists" });
-
-  // 加密密码
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = new User({
-    username,
-    password: hashedPassword,
-    role,
-    email: email || null
+  const newStudent = new Student({
+    studentName,
+    gender,
+    birthDate,
+    parentName,
+    parentContact,
+    address,
+    classDuration,
+    classLocation,
+    email
   });
 
   try {
-    const savedUser = await newUser.save();
-    res.status(201).json({ message: "User created successfully", user: savedUser });
+    const savedStudent = await newStudent.save();
+    res.status(201).json({ message: "Student created successfully", student: savedStudent });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// 📌 4️⃣ 登录验证
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  const user = await User.findOne({ username });
-  if (!user) return res.status(404).json({ message: "User not found" });
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
-
-  res.json({ message: "Login successful", user: { username: user.username, role: user.role } });
-});
-
-// 📌 5️⃣ 更新用户信息
-router.put("/:username", async (req, res) => {
+/** 📌 4️⃣ 更新学生信息 */
+router.put("/:id", async (req, res) => {
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.params.username },
-      req.body,
-      { new: true }
-    );
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
-    res.json(updatedUser);
+    const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedStudent) return res.status(404).json({ message: "Student not found" });
+    res.json({ message: "Student updated successfully", student: updatedStudent });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// 📌 6️⃣ 删除用户
-router.delete("/:username", async (req, res) => {
+/** 📌 5️⃣ 删除学生 */
+router.delete("/:id", async (req, res) => {
   try {
-    const deletedUser = await User.findOneAndDelete({ username: req.params.username });
-    if (!deletedUser) return res.status(404).json({ message: "User not found" });
-    res.json({ message: "User deleted successfully" });
+    const deletedStudent = await Student.findByIdAndDelete(req.params.id);
+    if (!deletedStudent) return res.status(404).json({ message: "Student not found" });
+    res.json({ message: "Student deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
