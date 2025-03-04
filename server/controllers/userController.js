@@ -78,6 +78,20 @@ const loginUser = async (req, res) => {
     });
   };
 
+// 获取用户信息
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "用户不存在" });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "服务器错误" });
+  }
+};
+
+
 // 修改密码（顾客）
 const resetPassword = async (req, res) => {
   const { email, username, newPassword, confirmPassword } = req.body;
