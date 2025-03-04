@@ -4,7 +4,7 @@ import { loginUser } from "../api/userApi";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await loginUser({ email, password });
+      const res = await loginUser({ username, password });
       login(res.data.token);
       
       // 根据角色跳转到对应 Dashboard
@@ -31,7 +31,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      <input type="email" placeholder="邮箱" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <input type="username" placeholder="账号" value={username} onChange={(e) => setUsername(e.target.value)} required />
       <input type="password" placeholder="密码" value={password} onChange={(e) => setPassword(e.target.value)} required />
       <button type="submit">登录</button>
     </form>

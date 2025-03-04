@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ 使用命名导入
 
 export const AuthContext = createContext();
 
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      const decoded = jwtDecode(token);
+      const decoded = jwtDecode(token); // ✅ 正确使用
       setUser(decoded);
     }
   }, [token]);
