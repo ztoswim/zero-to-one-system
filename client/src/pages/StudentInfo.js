@@ -21,7 +21,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (student && student._id) {  // 🔹 id 改为 _id
+    if (student && student._id) {
       setFormData({
         studentName: student.studentName || "",
         gender: student.gender || "",
@@ -29,7 +29,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
         parentName: student.parentName || "",
         parentContact: student.parentContact || "",
         address: student.address || "",
-        email: student.email || "",
+        email: student.email || "", // 保留原有邮箱，不强制填写
         classDuration: student.classDuration || "",
         classLocation: student.classLocation || "",
       });
@@ -60,15 +60,17 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
     if (!formData.gender) newErrors.gender = "请选择性别";
     if (!formData.birthDate) newErrors.birthDate = "请选择出生日期";
     if (!formData.parentContact.trim()) newErrors.parentContact = "联系方式不能为空";
+    
+    // 如果是新建，要求邮箱不为空并且格式正确
     if (!formData.email.trim()) {
-      newErrors.email = "邮箱不能为空";
+      if (!student) newErrors.email = "邮箱不能为空";  // 新建时邮箱不能为空
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "请输入有效的邮箱地址";
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
