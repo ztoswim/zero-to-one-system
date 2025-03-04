@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import jwtDecode from "jwtDecode";
 
 export const setToken = (token) => {
   localStorage.setItem("token", token);
