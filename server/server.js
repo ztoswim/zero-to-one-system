@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "zero-to-one-system.vercel.app" }));
 app.use(express.json());
 
 // 连接数据库

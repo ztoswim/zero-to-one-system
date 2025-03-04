@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Register from "./Register"; // 导入注册组件
+import { loginUser } from "../api/userApi"; // ✅ 统一 API 调用
 import "../styles/Login.css";
 
 const Login = ({ setUser }) => {
@@ -9,35 +10,10 @@ const Login = ({ setUser }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showRegister, setShowRegister] = useState(false); // 控制注册弹窗
+  const [loading, setLoading] = useState(false); // ✅ 增加 loading 状态
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-  
-    try {
-      const response = await fetch("http://localhost:3001/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok && data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));  // ✅ 存整个 user 对象
-        localStorage.setItem("role", data.user.role);  // ✅ 确保 role 也存进去
-        setUser(data.user);
-        navigateToDashboard(data.user.role);
-      } else {
-        setError(data.message || "登录失败，请检查账号或密码！");
-      }
-    } catch (err) {
-      setError("服务器错误，请稍后再试！");
-      console.error("登录请求错误:", err);
-    }
-  };  
-
+  // 角色对应的跳转路径
   const navigateToDashboard = (role) => {
     const routes = {
       boss: "/boss-dashboard",
@@ -46,6 +22,31 @@ const Login = ({ setUser }) => {
       customer: "/customer-dashboard",
     };
     navigate(routes[role] || "/");
+  };
+
+  // 处理登录逻辑
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true); // 开始加载
+
+    try {
+      const data = await loginUser({ username, password });
+
+      if (data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.user)); // ✅ 存储用户信息
+        localStorage.setItem("role", data.user.role); // ✅ 存储角色
+        setUser(data.user);
+        navigateToDashboard(data.user.role);
+      } else {
+        setError(data.message || "登录失败，请检查账号或密码！");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "服务器错误，请稍后再试！");
+      console.error("登录请求错误:", err);
+    } finally {
+      setLoading(false); // ✅ 结束加载
+    }
   };
 
   return (
@@ -79,7 +80,9 @@ const Login = ({ setUser }) => {
               className="input-field"
             />
           </div>
-          <button type="submit" className="login-button">登录</button>
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? "登录中..." : "登录"}
+          </button>
         </form>
         <button className="register-button" onClick={() => setShowRegister(true)}>注册</button> {/* 注册按钮 */}
       </div>
