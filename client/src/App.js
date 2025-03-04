@@ -14,34 +14,37 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // 默认是加载中
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 用来确定是否已登录
 
   useEffect(() => {
-    // 从 localStorage 获取 token
+    // 检查 token 是否存在
     const token = localStorage.getItem("token");
     
-    // 如果没有 token，跳转到登录页面
     if (!token) {
-      navigate("/");
+      setIsLoading(false); // 没有 token，停止加载，跳转到登录页面
+      navigate("/"); // 跳转到登录页面
       return;
     }
-    
-    // 如果有 token，获取用户信息
+
+    // 如果有 token，尝试获取用户信息
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      setIsLoggedIn(true); // 设置为已登录
     }
-    setIsLoading(false);
+
+    setIsLoading(false); // 加载完毕
   }, [navigate]);
 
-  // 如果没有用户数据且路径不是登录页面，跳转到登录页面
   useEffect(() => {
-    if (!isLoading && !user && location.pathname !== "/") {
+    // 如果用户未登录且不在登录页，跳转到登录页面
+    if (!isLoading && !isLoggedIn && location.pathname !== "/") {
       navigate("/");
     }
-  }, [isLoading, user, location.pathname, navigate]);
+  }, [isLoading, isLoggedIn, location.pathname, navigate]);
 
-  // 根据用户角色跳转到对应的 Dashboard
+  // 根据用户角色跳转到相应的 Dashboard
   useEffect(() => {
     if (user?.role) {
       navigateToDashboard(user.role);
@@ -62,9 +65,11 @@ function App() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
+    setIsLoggedIn(false); // 设置为未登录状态
     navigate("/");
   };
 
+  // 只要是加载中状态，不渲染其他内容
   if (isLoading) {
     return <div>加载中...</div>;
   }
