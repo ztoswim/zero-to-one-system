@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { registerUser, updateUser, deleteUser } from "../api/userApi"; // ✅ 引入 API
-import "../styles/Register.css";  
+import { registerStudent, registerAdmin, updateUser, deleteUser } from "../api/userApi"; // ✅ 调用 API 方法
+import "../styles/Register.css";
 
 const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("customer");  
+  const [role, setRole] = useState("customer");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -28,34 +28,32 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
 
   const handleRegister = async () => {
     setMessage("");
-
     try {
-      const payload = isLoginRegister
-        ? { email, username, password, confirmPassword }
-        : { email, username, password, role, creatorRole: localStorage.getItem("role") };
+      const payload = { email, username, password, confirmPassword };
 
-      const data = await registerUser(payload); // ✅ 调用 `userApi.js` 的 `registerUser`
-      
+      const data = isLoginRegister
+        ? await registerStudent(payload) // 🔹 学生注册
+        : await registerAdmin({ ...payload, role, creatorRole: localStorage.getItem("role") }); // 🔹 Boss 创建
+
       setMessage(data.message);
       setTimeout(() => onClose(), 2000);
     } catch (error) {
-      setMessage(error.response?.data?.message || "操作失败");
+      setMessage(error.response?.data?.message || "注册失败");
     }
   };
 
   const handleSave = async () => {
-    if (!selectedUser?.id) return;
+    if (!selectedUser?.username) return;
 
     try {
-      const payload = {
+      await updateUser(selectedUser.username, {
         username,
         email,
         password,
         role,
         editorRole: localStorage.getItem("role"),
-      };
+      });
 
-      await updateUser(selectedUser.id, payload); // ✅ 调用 `updateUser`
       setMessage("用户信息已更新");
       setTimeout(() => onClose(), 2000);
     } catch (error) {
@@ -64,10 +62,10 @@ const Register = ({ isOpen, onClose, isLoginRegister, selectedUser }) => {
   };
 
   const handleDelete = async () => {
-    if (!selectedUser?.id) return;
+    if (!selectedUser?.username) return;
 
     try {
-      await deleteUser(selectedUser.id); // ✅ 调用 `deleteUser`
+      await deleteUser(selectedUser.username);
       setMessage("用户已删除");
       setTimeout(() => onClose(), 2000);
     } catch (error) {
