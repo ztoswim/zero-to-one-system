@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // ✅ 使用命名导入
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -9,8 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      const decoded = jwtDecode(token); // ✅ 正确使用
-      setUser(decoded);
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded); // 设置用户信息（包含 role）
+      } catch (error) {
+        console.error("Invalid token", error);
+        logout();
+      }
     }
   }, [token]);
 
