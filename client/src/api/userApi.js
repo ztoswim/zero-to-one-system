@@ -1,5 +1,5 @@
 import axios from "axios";
-import API_URL from "../config"; // ✅ 直接引入 API 配置
+import API_URL from "../config"; // 引入 API 配置
 
 const USER_API = `${API_URL}/api/users`; // 统一 API 地址
 
@@ -93,9 +93,23 @@ export const updateUser = async (username, userData) => {
 export const deleteUser = async (username) => {
   try {
     const response = await apiInstance.delete(`${USER_API}/${username}`);
-    return response.data; // ✅ 确保前端能接收删除成功的信息
+    return response.data;
   } catch (error) {
     console.error("删除用户失败:", error.response?.data || error.message);
     throw error;
   }
 };
+
+// 响应拦截器：处理 Token 过期或无效
+apiInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.error("Token 无效或已过期，请重新登录！");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/"; // 跳转到登录页
+    }
+    return Promise.reject(error);
+  }
+);

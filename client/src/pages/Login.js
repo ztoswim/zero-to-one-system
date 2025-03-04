@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Register from "./Register"; // ✅ 导入注册组件
-import { loginUser } from "../api/userApi"; // ✅ 统一 API 调用
+import Register from "./Register"; // 导入注册组件
+import { loginUser } from "../api/userApi"; // 统一 API 调用
 import "../styles/Login.css";
 
 const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showRegister, setShowRegister] = useState(false); // ✅ 控制注册弹窗
-  const [loading, setLoading] = useState(false); // ✅ 增加 loading 状态
+  const [showRegister, setShowRegister] = useState(false); // 控制注册弹窗
+  const [loading, setLoading] = useState(false); // 登录时的加载状态
   const navigate = useNavigate();
 
   // 角色对应的跳转路径
@@ -29,18 +29,18 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     setError("");
     setLoading(true); // 开始加载
-  
+    
     try {
       const data = await loginUser({ username, password });
-  
+
       if (data?.user) {
         console.log("登录成功, 用户信息:", data.user);
         localStorage.setItem("user", JSON.stringify(data.user)); // 存储用户信息
         localStorage.setItem("role", data.user.role); // 存储角色
         localStorage.setItem("token", data.token); // 存储 token
-  
+
         setUser(data.user);
-  
+
         // 跳转到相应的 Dashboard 页面
         if (data.user.role) {
           navigateToDashboard(data.user.role);
@@ -56,7 +56,7 @@ const Login = ({ setUser }) => {
     } finally {
       setLoading(false); // 结束加载
     }
-  };  
+  };
 
   return (
     <div className="login-container">
@@ -79,7 +79,7 @@ const Login = ({ setUser }) => {
               onChange={(e) => setUsername(e.target.value)}
               required
               className="input-field"
-              disabled={loading} // ✅ 登录时禁用输入框
+              disabled={loading}
             />
           </div>
 
@@ -92,7 +92,7 @@ const Login = ({ setUser }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="input-field"
-              disabled={loading} // ✅ 登录时禁用输入框
+              disabled={loading}
             />
           </div>
 

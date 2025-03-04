@@ -61,6 +61,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
     navigate("/");
   };
@@ -84,16 +85,13 @@ function App() {
       )}
       <div className="content">
         <Routes>
-          <Route
-            path="/"
-            element={<Login setUser={(u) => { setUser(u); localStorage.setItem("user", JSON.stringify(u)); }} />}
-          />
+          <Route path="/" element={<Login setUser={(u) => { setUser(u); localStorage.setItem("user", JSON.stringify(u)); }} />} />
           <Route path="/accountmanage" element={<AccountManage />} />
           <Route path="/boss-dashboard" element={<BossDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/coach-dashboard" element={<CoachDashboard />} />
           <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-          <Route path="/studentlist" element={<StudentList userRole={user?.role} />} />
+          <Route path="/studentlist" element={<StudentList />} />
         </Routes>
       </div>
     </div>
