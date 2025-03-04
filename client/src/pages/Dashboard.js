@@ -7,17 +7,19 @@ import CustomerDashboard from "./CustomerDashboard"; // 客户面板组件
 import BossDashboard from "./BossDashboard"; // Boss 面板组件
 
 const Dashboard = () => {
-  const { user } = useAuth(); // 获取当前用户信息
+  const { isAuthenticated, loading, role } = useAuth();
   const navigate = useNavigate();
 
-  // 如果没有用户信息，跳转到登录页面
-  if (!user) {
-    navigate("/login");
-    return null; // 不渲染其他内容
+  if (loading) {
+    return <div>加载中...</div>;
   }
 
-  // 根据角色渲染不同的 dashboard 内容
-  switch (user.role) {
+  if (!isAuthenticated) {
+    navigate("/login");
+    return null;
+  }
+
+  switch (role) {
     case "admin":
       return <AdminDashboard />;
     case "coach":

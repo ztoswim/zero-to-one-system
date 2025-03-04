@@ -15,20 +15,19 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-  
+
     try {
       const data = await loginUser({ username, password });
-  
+
       if (data?.user) {
         console.log("登录成功, 用户信息:", data.user);
         localStorage.setItem("user", JSON.stringify(data.user)); // 存储用户信息
         localStorage.setItem("token", data.token); // 存储 token
-  
-        setUser(data.user);
+
+        setUser(data.user); // 更新用户信息
         
         // 跳转到用户对应的 dashboard 页面
-        const role = data.user.role;
-        navigate(`/dashboard-${role}`); // 使用用户的 role 来确定跳转的页面
+        navigate(`/dashboard-${data.user.role}`); // 使用用户的 role 来确定跳转的页面
       } else {
         setError(data.message || "账号或密码错误，请重新输入！");
       }
@@ -45,7 +44,7 @@ const Login = ({ setUser }) => {
       <div className="login-box">
         <img src="/Logo.png" alt="LOGO" className="logo-img" />
         {error && <p className="error-message">{error}</p>}
-  
+
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <FaUser className="icon" />
@@ -58,7 +57,7 @@ const Login = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-  
+
           <div className="input-group">
             <FaLock className="icon" />
             <input
@@ -70,7 +69,7 @@ const Login = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-  
+
           <button type="submit" disabled={loading}>
             {loading ? "登录中..." : "登录"}
           </button>

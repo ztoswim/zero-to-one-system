@@ -14,8 +14,8 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // 默认是加载中
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 用来确定是否已登录
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,10 +28,10 @@ function App() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      setIsLoggedIn(true); // 设置为已登录
+      setIsLoggedIn(true);
     }
 
-    setIsLoading(false); // 加载完毕
+    setIsLoading(false);
   }, [navigate]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     if (user?.role) {
-      navigateToDashboard(user.role); // 跳转到相应的 Dashboard
+      navigateToDashboard(user.role);
     }
   }, [user]);
 
@@ -60,7 +60,7 @@ function App() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
-    setIsLoggedIn(false); // 设置为未登录
+    setIsLoggedIn(false);
     navigate("/");
   };
 
