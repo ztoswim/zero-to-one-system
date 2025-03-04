@@ -7,7 +7,11 @@ const connectDB = require("./config/db");
 const app = express();
 
 // 允许前端访问后端
-app.use(cors({ origin: "https://zero-to-one-system.vercel.app" }));
+app.use(cors({
+  origin: "https://zero-to-one-system.vercel.app", // 允许你的前端访问
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
