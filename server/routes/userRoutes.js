@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); // 引入 jwt
 const User = require("../models/userModel");
 const Student = require("../models/studentModel");
-const authenticateUser = require("../middlewares/auth");  // 引入身份验证中间件
+const authMiddleware = require("../middleware/authMiddleware");  // 引入身份验证中间件
 
 const router = express.Router();
 
