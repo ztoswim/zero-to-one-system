@@ -33,7 +33,7 @@ const Navbar = ({ user, onLogout, isSidebarOpen, setIsSidebarOpen }) => {
 >       <FaBars />
       </button>
         <div className="navbar-logo">
-          <img src="/logo.png" alt="Logo" className="logo-img" />
+          <img src="/Logo.png" alt="Logo" className="logo-img" />
           <span className="navbar-title">ZERO TO ONE ACADEMY</span>
         </div>
       </div>

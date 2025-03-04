@@ -84,11 +84,7 @@ router.post("/register-student", async (req, res) => {
 /** 📌 5️⃣ 注册 - 方式 2（Boss 创建账号，可选角色） */
 router.post("/register-admin", async (req, res) => {
   try {
-    const { bossUsername, email, username, password, confirmPassword, role } = req.body;
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "两次输入的密码不一致" });
-    }
+    const { bossUsername, email, username, password, role } = req.body;
 
     // 检查操作者是否是 Boss
     const bossUser = await User.findOne({ username: bossUsername });
