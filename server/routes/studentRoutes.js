@@ -9,6 +9,23 @@ const handleError = (res, error, message = "服务器错误", status = 500) => {
   return res.status(status).json({ message });
 };
 
+/** 📌 校验学生信息 */
+const validateStudentData = (data) => {
+  let errors = {};
+
+  if (!data.studentName || data.studentName.trim() === "") {
+    errors.studentName = "学生姓名不能为空";
+  }
+  if (!data.parentContact || data.parentContact.trim() === "") {
+    errors.parentContact = "家长联系方式不能为空";
+  }
+  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    errors.email = "无效的邮箱地址";
+  }
+
+  return errors;
+};
+
 /** 📌 1️⃣ 获取所有学生 */
 router.get("/", async (req, res) => {
   try {
@@ -33,10 +50,17 @@ router.get("/:id", async (req, res) => {
 /** 📌 3️⃣ 创建新学生 */
 router.post("/", async (req, res) => {
   try {
-    const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
+    let { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
 
-    if (!studentName || !parentContact) {
-      return res.status(400).json({ message: "学生姓名和家长联系方式必填" });
+    // 去除空格，避免意外的输入错误
+    studentName = studentName?.trim();
+    parentContact = parentContact?.trim();
+    email = email?.trim();
+
+    // 统一数据校验
+    const errors = validateStudentData({ studentName, parentContact, email });
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ message: "数据校验失败", errors });
     }
 
     const newStudent = new Student({
@@ -48,7 +72,7 @@ router.post("/", async (req, res) => {
       address,
       classDuration,
       classLocation,
-      email
+      email,
     });
 
     const savedStudent = await newStudent.save();
@@ -61,7 +85,24 @@ router.post("/", async (req, res) => {
 /** 📌 4️⃣ 更新学生信息 */
 router.put("/:id", async (req, res) => {
   try {
-    const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    let { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
+
+    // 去除空格
+    studentName = studentName?.trim();
+    parentContact = parentContact?.trim();
+    email = email?.trim();
+
+    // 校验数据
+    const errors = validateStudentData({ studentName, parentContact, email });
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ message: "数据校验失败", errors });
+    }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      req.params.id,
+      { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedStudent) return res.status(404).json({ message: "未找到该学生" });
 

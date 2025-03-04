@@ -20,8 +20,9 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
 
   const [errors, setErrors] = useState({});
 
+  /** 🔹 填充表单数据 */
   useEffect(() => {
-    if (student && student.id) {
+    if (student && student.id !== undefined) {
       setFormData({
         studentName: student.studentName || "",
         gender: student.gender || "",
@@ -36,6 +37,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
     }
   }, [student]);
 
+  /** 🔹 处理表单输入 */
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
@@ -50,19 +52,26 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
       newValue = value.replace(/\D/g, "");
     }
 
-    setFormData({ ...formData, [name]: newValue });
-    setErrors({ ...errors, [name]: "" });
+    // **仅在值变化时更新**
+    if (formData[name] !== newValue) {
+      setFormData({ ...formData, [name]: newValue });
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
+  /** 🔹 校验表单 */
   const validateForm = () => {
     let newErrors = {};
     if (!formData.studentName.trim()) newErrors.studentName = "学生姓名不能为空";
     if (!formData.gender) newErrors.gender = "请选择性别";
     if (!formData.birthDate) newErrors.birthDate = "请选择出生日期";
     if (!formData.parentContact.trim()) newErrors.parentContact = "联系方式不能为空";
-    if (!formData.email.trim()) {
+    
+    // **优化邮箱校验**
+    const emailLower = formData.email.trim().toLowerCase();
+    if (!emailLower) {
       newErrors.email = "邮箱不能为空";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLower)) {
       newErrors.email = "请输入有效的邮箱地址";
     }
 
@@ -70,6 +79,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  /** 🔹 处理提交 */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -85,10 +95,12 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
       }
       onSave();
     } catch (error) {
-      setErrors({ ...errors, formError: error.message || "提交失败" });
+      // **解析后端返回的错误**
+      setErrors({ ...errors, ...(error.errors || {}), formError: error.message || "提交失败" });
     }
   };
 
+  /** 🔹 处理删除 */
   const handleDelete = async () => {
     if (!student || !window.confirm("确定要删除该学生吗？")) return;
     try {
@@ -122,9 +134,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
               <button
                 key={gender}
                 type="button"
-                className={`gender-btn ${formData.gender === gender ? "selected" : ""} ${
-                  errors.gender ? "input-error" : ""
-                }`}
+                className={`gender-btn ${formData.gender === gender ? "selected" : ""}`}
                 onClick={() => {
                   setFormData({ ...formData, gender });
                   setErrors({ ...errors, gender: "" });
@@ -152,22 +162,6 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
           />
           {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
 
-          <label>家长姓名</label>
-          <input type="text" name="parentName" value={formData.parentName} onChange={handleChange} />
-
-          <label>联系方式</label>
-          <input
-            type="text"
-            name="parentContact"
-            value={formData.parentContact}
-            onChange={handleChange}
-            className={errors.parentContact ? "input-error" : ""}
-          />
-          {errors.parentContact && <span className="error-message">{errors.parentContact}</span>}
-
-          <label>地址</label>
-          <input type="text" name="address" value={formData.address} onChange={handleChange} />
-
           <label>邮箱</label>
           <input
             type="email"
@@ -177,23 +171,6 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
             className={errors.email ? "input-error" : ""}
           />
           {errors.email && <span className="error-message">{errors.email}</span>}
-
-          <label>上课时长</label>
-          <div className="duration-selection">
-            {["30MINS", "40MINS", "50MINS"].map((duration) => (
-              <button
-                key={duration}
-                type="button"
-                className={`duration-btn ${formData.classDuration === duration ? "selected" : ""}`}
-                onClick={() => setFormData({ ...formData, classDuration: duration })}
-              >
-                {duration}
-              </button>
-            ))}
-          </div>
-
-          <label>上课地点</label>
-          <input type="text" name="classLocation" value={formData.classLocation} onChange={handleChange} />
 
           {errors.formError && <p className="error-message">{errors.formError}</p>}
 

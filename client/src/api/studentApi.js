@@ -1,12 +1,16 @@
 import axios from "axios";
-import API_URL from "../config"; // ✅ 确保 API_URL 是正确的
+import API_URL from "../config"; // ✅ 确保 API_URL 正确
 
 const STUDENT_API = `${API_URL}/api/students`;
 
 /** 🔹 统一错误处理函数 */
 const handleApiError = (error, defaultMessage) => {
   console.error(defaultMessage, error.response?.data || error.message);
-  throw error.response?.data || { message: defaultMessage };
+  
+  throw {
+    message: error.response?.data?.message || defaultMessage,
+    errors: error.response?.data?.errors || {}, // ✅ 兼容 { message: "...", errors: {...} }
+  };
 };
 
 // 📌 获取所有学生
@@ -53,7 +57,7 @@ export const updateStudent = async (id, studentData) => {
 export const deleteStudent = async (id) => {
   try {
     const response = await axios.delete(`${STUDENT_API}/${id}`);
-    return response.data; // ✅ 让前端接收成功删除的反馈
+    return response.data; // ✅ 确保前端能接收成功删除的反馈
   } catch (error) {
     handleApiError(error, "删除学生失败");
   }
