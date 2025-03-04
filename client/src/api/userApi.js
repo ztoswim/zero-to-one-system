@@ -3,7 +3,7 @@ import API_URL from "../config"; // ✅ 直接引入 API 配置
 
 const USER_API = `${API_URL}/api/users`; // 统一 API 地址
 
-// 用户登录
+// 🔹 用户登录
 export const loginUser = async (userData) => {
   try {
     const response = await axios.post(`${USER_API}/login`, userData);
@@ -14,18 +14,29 @@ export const loginUser = async (userData) => {
   }
 };
 
-// 用户注册
-export const registerUser = async (userData) => {
+// 🔹 学生注册（仅限 student_info 里存在的邮箱）
+export const registerStudent = async (userData) => {
   try {
-    const response = await axios.post(USER_API, userData); // ✅ 确保和后端路径一致
+    const response = await axios.post(`${USER_API}/register-student`, userData);
     return response.data;
   } catch (error) {
-    console.error("注册失败:", error.response?.data || error.message);
+    console.error("学生注册失败:", error.response?.data || error.message);
     throw error;
   }
 };
 
-// 获取所有用户
+// 🔹 Boss 创建用户
+export const registerAdmin = async (userData) => {
+  try {
+    const response = await axios.post(`${USER_API}/register-admin`, userData);
+    return response.data;
+  } catch (error) {
+    console.error("管理员注册失败:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// 🔹 获取所有用户
 export const getUsers = async () => {
   try {
     const response = await axios.get(USER_API);
@@ -36,10 +47,21 @@ export const getUsers = async () => {
   }
 };
 
-// 编辑用户
-export const updateUser = async (id, userData) => {
+// 🔹 获取单个用户
+export const getUserByUsername = async (username) => {
   try {
-    const response = await axios.put(`${USER_API}/${id}`, userData);
+    const response = await axios.get(`${USER_API}/${username}`);
+    return response.data;
+  } catch (error) {
+    console.error("获取用户失败:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// 🔹 更新用户信息
+export const updateUser = async (username, userData) => {
+  try {
+    const response = await axios.put(`${USER_API}/${username}`, userData);
     return response.data;
   } catch (error) {
     console.error("更新用户失败:", error.response?.data || error.message);
@@ -47,10 +69,10 @@ export const updateUser = async (id, userData) => {
   }
 };
 
-// 删除用户
-export const deleteUser = async (id) => {
+// 🔹 删除用户（Boss 不能删除）
+export const deleteUser = async (username) => {
   try {
-    const response = await axios.delete(`${USER_API}/${id}`);
+    const response = await axios.delete(`${USER_API}/${username}`);
     return response.data; // ✅ 确保前端能接收删除成功的信息
   } catch (error) {
     console.error("删除用户失败:", error.response?.data || error.message);
