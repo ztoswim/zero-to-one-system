@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import "../styles/StudentInfo.css";
+import { addStudent, updateStudent, deleteStudent } from "../api/studentApi";
 
 const StudentInfo = ({ student, onClose, onSave, userRole }) => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
     parentName: "",
     parentContact: "",
     address: "",
-    email: "", // 添加 email
+    email: "",
     classDuration: "",
     classLocation: "",
   });
@@ -21,15 +22,14 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
 
   useEffect(() => {
     if (student && student.id) {
-      const formattedBirthDate = student.birthDate ? new Date(student.birthDate) : null;
       setFormData({
         studentName: student.studentName || "",
         gender: student.gender || "",
-        birthDate: formattedBirthDate,
+        birthDate: student.birthDate ? new Date(student.birthDate) : null,
         parentName: student.parentName || "",
         parentContact: student.parentContact || "",
         address: student.address || "",
-        email: student.email || "", // 加载 email
+        email: student.email || "",
         classDuration: student.classDuration || "",
         classLocation: student.classLocation || "",
       });
@@ -39,20 +39,20 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
-  
-    // 需要自动转换为大写的字段
+
+    // 自动大写
     if (["studentName", "parentName", "address", "classLocation"].includes(name)) {
       newValue = value.toUpperCase();
     }
-  
-    // 只允许联系方式输入数字
+
+    // 只允许输入数字
     if (name === "parentContact") {
-      newValue = value.replace(/\D/g, ""); // 只保留数字
+      newValue = value.replace(/\D/g, "");
     }
-  
+
     setFormData({ ...formData, [name]: newValue });
     setErrors({ ...errors, [name]: "" });
-  };  
+  };
 
   const validateForm = () => {
     let newErrors = {};
@@ -72,59 +72,38 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     const formattedDate = format(new Date(formData.birthDate), "yyyy-MM-dd");
     const studentData = { ...formData, birthDate: formattedDate };
 
     try {
-      const response = student
-        ? await fetch(`http://localhost:3001/api/students/${student.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(studentData),
-          })
-        : await fetch("http://localhost:3001/api/students", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(studentData),
-          });
-
-      if (response.ok) {
-        onSave();
+      if (student) {
+        await updateStudent(student.id, studentData);
       } else {
-        console.error("提交失败");
+        await addStudent(studentData);
       }
+      onSave();
     } catch (error) {
-      console.error("❌ 提交失败:", error.message);
+      setErrors({ ...errors, formError: error.message || "提交失败" });
     }
   };
 
   const handleDelete = async () => {
     if (!student || !window.confirm("确定要删除该学生吗？")) return;
     try {
-      const response = await fetch(`http://localhost:3001/api/students/${student.id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        onSave();
-        onClose();
-      } else {
-        console.error("❌ 删除失败");
-      }
-    } catch (err) {
-      console.error("❌ 删除学生信息失败:", err);
+      await deleteStudent(student.id);
+      onSave();
+      onClose();
+    } catch (error) {
+      setErrors({ ...errors, formError: error.message || "删除失败" });
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-x" onClick={onClose}>
-          ×
-        </button>
+        <button className="close-x" onClick={onClose}>×</button>
         <h2>{student ? "编辑学生信息" : "新建学生"}</h2>
         <form onSubmit={handleSubmit} className="form-container">
           <label>学生姓名</label>
@@ -216,14 +195,12 @@ const StudentInfo = ({ student, onClose, onSave, userRole }) => {
           <label>上课地点</label>
           <input type="text" name="classLocation" value={formData.classLocation} onChange={handleChange} />
 
+          {errors.formError && <p className="error-message">{errors.formError}</p>}
+
           <div className="button-group">
             <button type="submit">{student ? "保存" : "创建"}</button>
-
-            {/* 只有 Boss 角色且在编辑模式下才显示删除按钮 */}
             {student && userRole === "boss" && (
-              <button type="button" className="delete-btn" onClick={handleDelete}>
-                删除
-              </button>
+              <button type="button" className="delete-btn" onClick={handleDelete}>删除</button>
             )}
           </div>
         </form>
