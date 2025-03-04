@@ -29,13 +29,14 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     setError("");
     setLoading(true); // ✅ 开始加载
-
+  
     try {
       const data = await loginUser({ username, password });
-
-      if (data?.user) {
+  
+      if (data?.user && data?.token) {  // ✅ 确保 data 中含有 token
         localStorage.setItem("user", JSON.stringify(data.user)); // ✅ 存储用户信息
         localStorage.setItem("role", data.user.role); // ✅ 存储角色
+        localStorage.setItem("token", data.token); // ✅ 存储 token
         setUser(data.user);
         navigateToDashboard(data.user.role);
       } else {
@@ -50,7 +51,7 @@ const Login = ({ setUser }) => {
     } finally {
       setLoading(false); // ✅ 结束加载
     }
-  };
+  };  
 
   return (
     <div className="login-container">
