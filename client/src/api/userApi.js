@@ -14,3 +14,18 @@ export const getUserInfo = async (token) => {
   });
   return res.data;
 };
+
+export const getUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${API_BASE_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("role", response.data.role);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message || "获取用户信息失败";
+    }
+  };
