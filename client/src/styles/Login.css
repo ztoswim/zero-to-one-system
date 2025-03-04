@@ -10,7 +10,7 @@
 /* 登录框，减少内边距以缩小整体间距 */
 .login-box {
   background: white;
-  padding: 40px;  /* 原来40px，现减小到20px */
+  padding: 20px;  /* 原来40px，现减小到20px */
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -70,7 +70,6 @@
 .register-button:hover {
   background-color: #0039cb;
 }
-
 
 /* 错误消息 */
 .error-message {

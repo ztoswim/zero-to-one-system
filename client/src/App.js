@@ -48,10 +48,10 @@ function App() {
 
   const navigateToDashboard = (role) => {
     const dashboardRoutes = {
-      boss: "/boss-dashboard",
-      admin: "/admin-dashboard",
-      coach: "/coach-dashboard",
-      customer: "/customer-dashboard",
+      boss: "/dashboard-boss",
+      admin: "/dashboard-admin",
+      coach: "/dashboard-coach",
+      customer: "/dashboard-customer",
     };
     navigate(dashboardRoutes[role] || "/");
   };
@@ -74,10 +74,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Login setUser={(u) => { setUser(u); localStorage.setItem("user", JSON.stringify(u)); }} />} />
         <Route path="/accountmanage" element={<AccountManage />} />
-        <Route path="/boss-dashboard" element={<BossDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/coach-dashboard" element={<CoachDashboard />} />
-        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+        <Route path="/dashboard-boss" element={<BossDashboard />} />
+        <Route path="/dashboard-admin" element={<AdminDashboard />} />
+        <Route path="/dashboard-coach" element={<CoachDashboard />} />
+        <Route path="/dashboard-customer" element={<CustomerDashboard />} />
       </Routes>
     </div>
   );
