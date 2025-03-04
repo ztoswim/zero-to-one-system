@@ -18,7 +18,7 @@ export const getUserInfo = async (token) => {
 export const getUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_BASE_URL}/users/profile`, {
+      const response = await axios.get(`${USER_API_URL}/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
