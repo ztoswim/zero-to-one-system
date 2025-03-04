@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Register from "./Register"; 
+import { getUsers } from "../api/userApi"; // ✅ 直接从 API 文件调用
 import "../styles/AccountManage.css";
 
 const AccountManage = () => {
   const [users, setUsers] = useState([]);
-  const [selectedRole, setSelectedRole] = useState("customer"); 
+  const [selectedRole, setSelectedRole] = useState("customer");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); 
   const role = localStorage.getItem("role"); 
 
-  // **封装获取用户列表的函数**
+  // ✅ 统一使用 API 文件的 getUsers()
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3001/api/users");
+      const data = await getUsers();
       setUsers(data);
     } catch (error) {
       console.error("获取用户列表失败", error);
@@ -41,11 +41,10 @@ const AccountManage = () => {
     setIsModalOpen(true);
   };
 
-  // **修改 onClose，让它在关闭时刷新用户列表**
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
-    fetchUsers(); // ✅ 重新获取用户列表
+    fetchUsers(); // ✅ 关闭时刷新用户列表
   };
 
   return (
@@ -103,7 +102,7 @@ const AccountManage = () => {
       {isModalOpen && (
         <Register
           isOpen={isModalOpen}
-          onClose={handleCloseModal} // ✅ 关闭后刷新数据
+          onClose={handleCloseModal}
           selectedUser={selectedUser}
           isEditMode={!!selectedUser}
         />
