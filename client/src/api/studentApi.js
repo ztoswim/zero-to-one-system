@@ -24,9 +24,9 @@ export const getStudents = async () => {
 };
 
 // 📌 获取单个学生
-export const getStudentById = async (id) => {
+export const getStudentById = async (_id) => {  // 🔹 修改 id → _id
   try {
-    const response = await axios.get(`${STUDENT_API}/${id}`);
+    const response = await axios.get(`${STUDENT_API}/${_id}`);  // 🔹 传递 _id
     return response.data;
   } catch (error) {
     handleApiError(error, "获取学生信息失败");
@@ -44,9 +44,9 @@ export const addStudent = async (studentData) => {
 };
 
 // 📌 更新学生信息
-export const updateStudent = async (id, studentData) => {
+export const updateStudent = async (_id, studentData) => {  // 🔹 修改 id → _id
   try {
-    const response = await axios.put(`${STUDENT_API}/${id}`, studentData);
+    const response = await axios.put(`${STUDENT_API}/${_id}`, studentData);  // 🔹 传递 _id
     return response.data;
   } catch (error) {
     handleApiError(error, "更新学生信息失败");
@@ -54,9 +54,9 @@ export const updateStudent = async (id, studentData) => {
 };
 
 // 📌 删除学生
-export const deleteStudent = async (id) => {
+export const deleteStudent = async (_id) => {  // 🔹 修改 id → _id
   try {
-    const response = await axios.delete(`${STUDENT_API}/${id}`);
+    const response = await axios.delete(`${STUDENT_API}/${_id}`);  // 🔹 传递 _id
     return response.data; // ✅ 确保前端能接收成功删除的反馈
   } catch (error) {
     handleApiError(error, "删除学生失败");
