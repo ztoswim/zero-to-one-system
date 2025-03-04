@@ -10,7 +10,7 @@ export const getToken = () => {
 
 export const getUserRole = () => {
   const token = getToken();
-  if (!token) return null;
+  if (!token) return localStorage.getItem("role") || null;
 
   try {
     const decoded = jwtDecode(token);
