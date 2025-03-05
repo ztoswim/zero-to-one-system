@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth } from "../auth";
-import "../styles/Login.css"; // ✅ 引入 CSS
-import logo from "../assets/Logo.png"; // ✅ 引入 Logo
+import logo from "../assets/logo/Logo.png"; // ✅ Logo 位置
+import "../styles/Login.css"; // ✅ 引入样式
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -30,11 +30,22 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <img src={logo} alt="Logo" className="login-logo" />
-        <h2>登录</h2>
-        {error && <p className="login-error">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <input type="text" placeholder="用户名" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          <input type="password" placeholder="密码" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        {error && <p className="error-message">{error}</p>}
+        <form className="login-form" onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="用户名"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="密码"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <button type="submit">登录</button>
         </form>
       </div>

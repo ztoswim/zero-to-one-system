@@ -1,63 +1,99 @@
-/* 背景样式 */
+/* 💡 设置全局样式，确保页面居中 */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background-color: #f4f6f9;
+  padding: 20px; /* ✅ 适配小屏幕 */
 }
 
-/* 登录框 */
+/* 📌 登录框 */
 .login-box {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  width: 320px;
-}
-
-/* Logo */
-.login-logo {
-  width: 100px;
-  margin-bottom: 1rem;
-}
-
-/* 标题 */
-h2 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-/* 输入框 */
-input {
   width: 100%;
-  padding: 10px;
+  max-width: 420px; /* ✅ 控制最大宽度 */
+  padding: 2rem;
+  background: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* 🖼️ Logo 放大 + 自适应 */
+.login-logo {
+  width: 80%; /* ✅ 让 Logo 自适应 */
+  max-width: 280px; /* ✅ 限制最大尺寸 */
+  height: auto;
+  margin-bottom: 15px;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-logo:hover {
+  transform: scale(1.1);
+}
+
+/* 📌 输入框和按钮容器 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🎯 统一输入框样式 */
+.login-box input {
+  width: 100%;
+  max-width: 360px;
+  padding: 14px;
   margin: 8px 0;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 16px;
+  transition: border-color 0.3s;
 }
 
-/* 按钮 */
-button {
+.login-box input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* 🎯 统一按钮样式 */
+.login-box button {
   width: 100%;
-  padding: 10px;
-  background: #667eea;
+  max-width: 360px;
+  padding: 14px;
+  margin-top: 12px;
+  background-color: #007bff;
   color: white;
-  font-size: 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s ease;
 }
 
-button:hover {
-  background: #5563c1;
+.login-box button:hover {
+  background-color: #0056b3;
 }
 
-/* 错误提示 */
-.login-error {
+/* ❌ 错误消息 */
+.error-message {
   color: red;
-  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* 📌 响应式适配 */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 1.5rem; /* ✅ 调整 padding 适配小屏 */
+  }
+
+  .login-logo {
+    max-width: 220px; /* ✅ 适配小屏幕 */
+  }
+
+  .login-box input,
+  .login-box button {
+    max-width: 100%; /* ✅ 让输入框 & 按钮撑满容器 */
+  }
 }
