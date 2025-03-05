@@ -1,4 +1,4 @@
-/* Sidebar 基础样式 */
+/* 侧边栏样式 */
 .sidebar {
     height: 100vh;
     width: 16rem;
@@ -41,16 +41,17 @@
     cursor: pointer;
   }
   
+  /* 鼠标悬浮效果 */
   .sidebar-button:hover {
     background-color: #2d3748;
   }
   
-  /* 侧边栏折叠时，隐藏文字 */
+  /* 折叠时隐藏文字 */
   .sidebar.collapsed .sidebar-label {
     display: none;
   }
   
-  /* 侧边栏折叠时，菜单项居中 */
+  /* 折叠时菜单项居中 */
   .sidebar.collapsed .sidebar-button {
     justify-content: center;
     padding: 0.75rem 0;
@@ -78,6 +79,7 @@
     cursor: pointer;
   }
   
+  /* 退出按钮悬浮效果 */
   .sidebar-logout:hover {
     background-color: #c53030;
   }
@@ -103,8 +105,8 @@
     background-color: #2d3748;
   }
   
-  /* 选中页面高亮 */
-.sidebar-button.active {
+  /* 高亮选中页面 */
+  .sidebar-button.active {
     background-color: #4a5568; /* 高亮背景 */
     color: #fbd38d; /* 文字变色 */
     font-weight: bold;
@@ -113,5 +115,37 @@
   /* 高亮状态下的鼠标悬浮 */
   .sidebar-button.active:hover {
     background-color: #2d3748;
+  }
+  
+  /* 移动端菜单按钮 */
+  .mobile-menu-button {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-menu-button {
+      display: block;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+  
+    .sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      width: 100%;
+      height: 100%;
+      box-shadow: none;
+      background-color: rgba(0, 0, 0, 0.75);
+    }
+  
+    .sidebar-nav {
+      padding-top: 4rem;
+    }
   }
   
