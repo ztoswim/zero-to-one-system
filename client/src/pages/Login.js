@@ -13,19 +13,19 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const { token, role } = await login(username, password);
-      saveUserAuth(token, role);
+  e.preventDefault();
+  try {
+    const { token } = await login(username, password); // 只返回 token
+    saveUserAuth(token); // 只保存 token，无需角色
 
-      console.log("登录成功，角色:", role);
-      setTimeout(() => {
-        navigate(`/${role}`);
-      }, 500);
-    } catch (err) {
-      setError(err.message || "登录失败");
-    }
-  };
+    console.log("登录成功");
+    setTimeout(() => {
+      navigate(/＄{role}); 
+    }, 500);
+  } catch (err) {
+    setError(err.message || "登录失败");
+  }
+};
 
   return (
     <div className="login-container">
