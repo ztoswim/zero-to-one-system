@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
-import { saveUserAuth, logout } from "../auth"; // 合并导入
+import { saveUserAuth, logout, getToken, getUserRole } from "../auth"; // 引入简化后的函数
 import { FaUser, FaLock } from "react-icons/fa"; 
 import logo from "../assets/Logo.png"; 
 import "../styles/Login.css"; 
