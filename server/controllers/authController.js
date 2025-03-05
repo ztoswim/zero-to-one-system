@@ -88,9 +88,20 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// 处理登出
+const logoutUser = (req, res) => {
+  try {
+    // 这里可以选择处理 session 或其他逻辑（如果需要）
+    res.json({ message: "登出成功" });
+  } catch (error) {
+    res.status(500).json({ message: "服务器错误" });
+  }
+};
+
 module.exports = {
   loginUser,
   registerCustomer,
   registerEmployee,
   resetPassword,
+  logoutUser,
 };
