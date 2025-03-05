@@ -1,17 +1,17 @@
 import { jwtDecode } from "jwt-decode";
 
-// 保存 Token & 角色
-export const saveUserAuth = (token, role) => {
-  localStorage.setItem("token", token);
-  localStorage.setItem("role", role);
-};
-
 // 获取 Token
 export const getToken = () => localStorage.getItem("token");
 
 // 获取用户角色
 export const getUserRole = () => {
   return localStorage.getItem("role") || null;
+};
+
+// 保存 Token & 角色
+export const saveUserAuth = (token, role) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
 };
 
 // 检查 Token 是否有效
