@@ -7,7 +7,7 @@ import "../styles/Sidebar.css";
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const role = localStorage.getItem("role");
+  const [role, setRole] = useState(localStorage.getItem("role")); // 使用 state 来管理角色
 
   const [isCollapsed, setIsCollapsed] = useState(
     window.innerWidth <= 768 // 小屏幕默认折叠
@@ -27,6 +27,16 @@ const Sidebar = () => {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 监听 localStorage 变化，动态更新角色
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setRole(localStorage.getItem("role"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleLogout = async () => {
