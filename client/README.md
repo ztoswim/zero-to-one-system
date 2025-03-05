@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+zero-to-one-ststem/
+├── 📂 client/         # 前端代码 (React)
+│   ├── 📂 src/
+│   │   ├── 📂 api/                 # API 请求封装
+│   │   │   ├── apiConfig.js          
+│   │   │   ├── authApi.js          # 登录/注册 API
+│   │   │   ├── userApi.js          # 用户管理 API
+│   │   │   ├── studentApi.js       # 学生管理 API
+│   │   ├── 📂 components/          # 复用组件
+│   │   │   ├── Sidebar.js
+│   │   ├── 📂 layouts/          # 复用组件
+│   │   │   ├── DashboardLayout.js
+│   │   ├── 📂 pages/               # 页面组件
+│   │   │   ├── Login.js
+│   │   │   ├── Dashboard.js
+│   │   │   ├── BossDashboard.js
+│   │   │   ├── AdminDashboard.js
+│   │   │   ├── CoachDashboard.js
+│   │   │   ├── CustomerDashboard.js
+│   │   ├── auth.js             # 处理 token & 角色
+│   │   ├── App.js
+│   │   ├── index.js
+│   ├── package.json
+│   ├── .env                        # 环境变量
+│   ├── .gitignore
+│
+├── 📂 server/         # 后端代码 (Node.js + Express + MongoDB)
+│   ├── 📂 config/
+│   │   ├── db.js                   # MongoDB 连接
+│   ├── 📂 controllers/             # 业务逻辑
+│   │   ├── authController.js      
+│   │   ├── userController.js       # 用户管理
+│   │   ├── studentController.js    # 学生管理
+│   ├── 📂 middleware/              # 中间件
+│   │   ├── authMiddleware.js       # 认证 & 授权
+│   ├── 📂 models/                  # Mongoose 数据模型
+│   │   ├── User.js
+│   │   ├── Student.js
+│   ├── 📂 routes/                  # 路由
+│   │   ├── authRoutes.js           # 认证 (登录、注册、登出)
+│   │   ├── userRoutes.js           # 用户管理
+│   │   ├── studentRoutes.js        # 学生管理
+│   ├── server.js                   # 入口文件
+│   ├── package.json
+│   ├── .env
+│   ├── .gitignore
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🟢 1️⃣ 登录 & 认证
+涉及文件
 
-## Available Scripts
+前端：
 
-In the project directory, you can run:
+auth.js（管理 Token & 角色）
+authApi.js（API 请求）
+Login.js（登录页面）
+Dashboard.js（角色跳转）
+App.js（全局路由）
+后端：
 
-### `npm start`
+authController.js（登录/注册逻辑）
+authRoutes.js（认证路由）
+authMiddleware.js（JWT 验证）
+🟠 2️⃣ 用户管理
+涉及文件
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+前端：
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+userApi.js（API 请求）
+BossDashboard.js（Boss 管理界面）
+AdminDashboard.js（Admin 界面）
+后端：
 
-### `npm test`
+userController.js（用户管理逻辑）
+userRoutes.js（用户管理 API）
+🔵 3️⃣ 学生管理
+涉及文件
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+前端：
 
-### `npm run build`
+studentApi.js（API 请求）
+AdminDashboard.js（管理学生）
+CoachDashboard.js（查看学生）
+后端：
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+studentController.js（学生逻辑）
+studentRoutes.js（学生 API）
+🟣 4️⃣ 角色 & 权限
+涉及文件
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+前端：
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+auth.js（获取角色）
+Dashboard.js（跳转不同角色）
+Sidebar.js（根据角色显示不同菜单）
+后端：
 
-### `npm run eject`
+authMiddleware.js（权限验证）
+🟡 5️⃣ 全局组件 & 布局
+涉及文件
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Sidebar.js（导航）
+DashboardLayout.js（仪表盘布局）
