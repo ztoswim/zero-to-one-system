@@ -1,31 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserRole } from "../auth";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const role = localStorage.getItem("role");
-
-    switch (role) {
-      case "boss":
-        navigate("/boss");
-        break;
-      case "admin":
-        navigate("/admin");
-        break;
-      case "coach":
-        navigate("/coach");
-        break;
-      case "customer":
-        navigate("/customer");
-        break;
-      default:
-        navigate("/login");
-    }
+    const role = getUserRole();
+    if (role === "boss") navigate("/dashboard/boss");
+    else if (role === "admin") navigate("/dashboard/admin");
+    else if (role === "coach") navigate("/dashboard/coach");
+    else navigate("/dashboard/customer");
   }, [navigate]);
 
-  return null;
+  return <p>跳转中...</p>;
 };
 
 export default Dashboard;
