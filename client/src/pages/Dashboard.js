@@ -15,17 +15,19 @@ const Dashboard = () => {
     };
 
     window.addEventListener("storage", checkRole);
-    return () => window.removeEventListener("storage", checkRole);
+
+    return () => {
+      window.removeEventListener("storage", checkRole);
+    };
   }, [role]);
 
   useEffect(() => {
     console.log("当前用户角色:", role); // ✅ 调试
     if (!role) {
       navigate("/login");
-      return;
+    } else {
+      navigate(`/${role}`);
     }
-
-    navigate(`/${role}`);
   }, [role, navigate]);
 
   return <p>跳转中...</p>;
