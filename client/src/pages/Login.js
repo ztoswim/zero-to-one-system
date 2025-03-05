@@ -20,7 +20,7 @@ const Login = () => {
     if (token && role) {
       navigate(`/${role}`); // 已登录则跳转到对应角色的页面
     }
-  }, []); // 依赖空数组，组件加载时检查登录状态
+  }, [navigate]); // 依赖空数组，组件加载时检查登录状态
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -34,10 +34,11 @@ const Login = () => {
       // 保存新的 token 和 role
       saveUserAuth(token, role);
 
-      // 登录成功后，跳转到相应角色的页面
+      // 使用 `navigate` 跳转页面前，确保保存好状态
       setTimeout(() => {
         navigate(`/${role}`);
-      }, 500);
+      }, 200);  // 调整等待时间，确保页面有足够时间渲染
+
     } catch (err) {
       setError(err.message || "登录失败");
     }
