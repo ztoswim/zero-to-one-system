@@ -1,41 +1,40 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import API_BASE_URL from "../api/apiConfig";
-import { getUserRole } from "../auth";
+import { login } from "../api/authApi";
+import { saveUserAuth } from "../auth";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      const res = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
-      const { token } = res.data;
+      const { token, role } = await login(username, password);
+      saveUserAuth(token, role);
 
-      if (token) {
-        localStorage.setItem("token", token); // 存 Token
-        const role = getUserRole(); // 获取角色
-        redirectToDashboard(role); // 跳转到相应 Dashboard
+      // 根据角色跳转到相应 Dashboard
+      switch (role) {
+        case "boss":
+          navigate("/boss");
+          break;
+        case "admin":
+          navigate("/admin");
+          break;
+        case "coach":
+          navigate("/coach");
+          break;
+        case "customer":
+          navigate("/customer");
+          break;
+        default:
+          navigate("/dashboard");
       }
     } catch (err) {
-      setError("登录失败，请检查用户名和密码");
+      setError(err.message || "登录失败");
     }
-  };
-
-  const redirectToDashboard = (role) => {
-    const rolePaths = {
-      boss: "/boss",
-      admin: "/admin",
-      coach: "/coach",
-      customer: "/customer",
-    };
-    navigate(rolePaths[role] || "/login");
   };
 
   return (

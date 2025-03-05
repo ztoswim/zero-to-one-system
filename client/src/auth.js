@@ -8,18 +8,21 @@ export const getToken = () => {
   return localStorage.getItem("token");
 };
 
-// 获取当前用户角色
+// 获取用户角色
 export const getUserRole = () => {
-    const token = localStorage.getItem("token"); // 从 localStorage 读取 Token
-    if (!token) return null;
+    return localStorage.getItem("role") || null;
+  };
   
-    try {
-      const decoded = jwtDecode(token); // 解码 Token
-      return decoded.role || null; // 确保有 role 字段
-    } catch (error) {
-      console.error("Token 解析错误:", error);
-      return null;
-    }
+  // 保存用户 Token & 角色
+  export const saveUserAuth = (token, role) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", role);
+  };
+  
+  // 清除用户信息
+  export const clearUserAuth = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
   };
 
 export const logout = () => {
