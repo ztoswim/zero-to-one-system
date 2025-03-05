@@ -8,21 +8,29 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import { getUserRole } from "./auth";
 
 const App = () => {
-  const [userRole, setUserRole] = useState(getUserRole()); // ✅ 监听角色变化
+  const [userRole, setUserRole] = useState(getUserRole());
 
   useEffect(() => {
-    setUserRole(getUserRole()); // ✅ 登录成功后更新角色
-  }, []);
+    const checkRole = () => {
+      const role = getUserRole();
+      if (role !== userRole) {
+        setUserRole(role);
+      }
+    };
 
-  if (userRole === null) {
-    return <p>加载中...</p>; // ✅ 处理 `userRole` 还未获取的情况
+    window.addEventListener("storage", checkRole); // 监听 localStorage 变化
+    return () => window.removeEventListener("storage", checkRole);
+  }, [userRole]);
+
+  if (!userRole) {
+    return <Navigate to="/login" />;
   }
 
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to={userRole ? `/${userRole}` : "/login"} />} />
+        <Route path="/" element={<Navigate to={`/${userRole}`} />} />
         <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
         <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
         <Route path="/coach" element={userRole === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />
