@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth"; // 引入简化后的 auth.js
-import API_BASE_URL from "../api/apiConfig";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
@@ -35,18 +34,9 @@ const Sidebar = () => {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      logout(); // 调用 logout 函数清理 token 和 role
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+  const handleLogout = () => {
+    logout(); // 清除本地存储的 token 和 role
+    navigate("/login"); // 直接跳转到登录页
   };
 
   const menuItems = [
