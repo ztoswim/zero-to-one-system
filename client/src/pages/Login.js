@@ -12,6 +12,16 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+   // 检查是否已登录，已登录则直接跳转到相应页面
+   useEffect(() => {
+    const token = getToken();
+    const role = getUserRole();
+
+    if (token && role) {
+      navigate(`/${role}`); // 已登录则跳转到对应角色的页面
+    }
+  }, [navigate]); // 依赖空数组，组件加载时检查登录状态
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
