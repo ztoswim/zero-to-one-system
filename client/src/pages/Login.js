@@ -15,7 +15,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/users/login`, { username, password });
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
       const { token } = res.data;
 
       if (token) {
