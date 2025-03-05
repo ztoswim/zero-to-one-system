@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth } from "../auth";
 import { FaUser, FaLock } from "react-icons/fa"; // ✅ 引入图标
-import logo from "../assets/logo/Logo.png"; // ✅ Logo 位置
+import logo from "../assets/Logo.png"; // ✅ Logo 位置
 import "../styles/Login.css"; // ✅ 引入样式
 
 const Login = () => {
