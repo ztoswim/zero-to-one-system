@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth, logout, getToken, getUserRole } from "../auth"; // 引入简化后的函数
-import { FaUser, FaLock } from "react-icons/fa"; 
-import logo from "../assets/Logo.png"; 
-import "../styles/Login.css"; 
+import { FaUser, FaLock } from "react-icons/fa"; // ✅ 引入图标
+import logo from "../assets/Logo.png"; // ✅ Logo 位置
+import "../styles/Login.css"; // ✅ 引入样式
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -12,8 +12,8 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-   // 检查是否已登录，已登录则直接跳转到相应页面
-   useEffect(() => {
+  // 检查是否已登录，已登录则直接跳转到相应页面
+  useEffect(() => {
     const token = getToken();
     const role = getUserRole();
 
@@ -34,7 +34,7 @@ const Login = () => {
       // 保存新的 token 和 role
       saveUserAuth(token, role);
 
-      // 强制刷新状态（通过 useEffect 监听）
+      // 登录成功后，跳转到相应角色的页面
       setTimeout(() => {
         navigate(`/${role}`);
       }, 500);
@@ -42,12 +42,12 @@ const Login = () => {
       setError(err.message || "登录失败");
     }
   };
-  
+
   return (
     <div className="login-container">
       <div className="login-box">
         <img src={logo} alt="Logo" className="login-logo" />
-        {error && <p className="error-message">{error}</p>} {/* 显示错误信息 */}
+        {error && <p className="error-message">{error}</p>}
         <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
             <FaUser className="input-icon" />
