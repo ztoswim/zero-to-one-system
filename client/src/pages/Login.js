@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/authApi";
-import { saveUserAuth } from "../auth";
+import { login } from "../api/authApi"; // 你的 login API 函数
 import { FaUser, FaLock } from "react-icons/fa"; // 引入图标
 import logo from "../assets/Logo.png"; // Logo 位置
 import "../styles/Login.css"; // 引入样式
@@ -15,16 +14,16 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // 假设 login 返回 token 和 role
-      const { token, role } = await login(username, password); 
+      // 假设 login 函数返回的内容包含 role
+      const { role } = await login(username, password); 
       
-      // 保存 token 和 role
-      saveUserAuth(token); 
+      // 保存角色信息
       localStorage.setItem("userRole", role); // 将角色信息存储到 localStorage
 
       console.log("登录成功");
+
+      // 登录后根据角色跳转
       setTimeout(() => {
-        // 登录后根据角色跳转
         navigate(`/${role}`);
       }, 500);
     } catch (err) {
