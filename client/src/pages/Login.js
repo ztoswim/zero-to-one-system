@@ -9,33 +9,15 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
-      const { token, role } = await login(username, password);
-      saveUserAuth(token, role);
-
-      // 根据角色跳转到相应 Dashboard
-      switch (role) {
-        case "boss":
-          navigate("/boss");
-          break;
-        case "admin":
-          navigate("/admin");
-          break;
-        case "coach":
-          navigate("/coach");
-          break;
-        case "customer":
-          navigate("/customer");
-          break;
-        default:
-          navigate("/dashboard");
-      }
-    } catch (err) {
-      setError(err.message || "登录失败");
+      const res = await login(username, password);
+      saveUserAuth(res.token, res.role);
+      navigate(`/${res.role}`); // 登录后跳转到对应 Dashboard
+    } catch (error) {
+      console.error("登录失败", error);
     }
-  };
+  };  
 
   return (
     <div>
