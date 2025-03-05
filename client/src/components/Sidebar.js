@@ -1,24 +1,33 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaBars, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import API_BASE_URL from "../api/apiConfig";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const role = localStorage.getItem("role");
 
-  // 读取 Sidebar 展开/折叠状态
   const [isCollapsed, setIsCollapsed] = useState(
-    localStorage.getItem("sidebarCollapsed") === "true"
+    window.innerWidth <= 768 // 小屏幕默认折叠
   );
 
-  // 切换 Sidebar 展开/折叠
   const toggleSidebar = () => {
-    const newState = !isCollapsed;
-    setIsCollapsed(newState);
-    localStorage.setItem("sidebarCollapsed", newState);
+    setIsCollapsed((prev) => !prev); // 切换侧边栏折叠状态
   };
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsCollapsed(true); // 小屏幕自动折叠
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -32,11 +41,10 @@ const Sidebar = () => {
 
       navigate("/login");
     } catch (error) {
-      console.error("Logout failed", error);
+      console.error("退出登录失败", error);
     }
   };
 
-  // 菜单项
   const menuItems = [
     { role: ["boss", "admin", "coach", "customer"], label: "首页", icon: <FaHome />, path: `/${role}` },
     { role: ["boss", "admin"], label: "用户管理", icon: <FaUsers />, path: "/users" },
@@ -46,29 +54,39 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-      <button className="sidebar-toggle" onClick={toggleSidebar}>
-        <FaBars />
+    <>
+      {/* 小屏幕时的菜单按钮 */}
+      <button className="mobile-menu-button" onClick={toggleSidebar}>
+        {isCollapsed ? <FaBars /> : <FaTimes />}
       </button>
-      <nav className="sidebar-nav">
-        <ul>
-          {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
-            allowedRoles.includes(role) ? (
-              <li key={path}>
-                <button className="sidebar-button" onClick={() => navigate(path)}>
-                  <span className="sidebar-icon">{icon}</span>
-                  {!isCollapsed && <span className="sidebar-label">{label}</span>}
-                </button>
-              </li>
-            ) : null
-          )}
-        </ul>
-      </nav>
-      <button className="sidebar-logout" onClick={handleLogout}>
-        <FaSignOutAlt className="sidebar-icon" />
-        {!isCollapsed && <span className="sidebar-label">退出</span>}
-      </button>
-    </aside>
+
+      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+        <nav className="sidebar-nav">
+          <ul>
+            {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
+              allowedRoles.includes(role) ? (
+                <li key={path}>
+                  <button
+                    className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
+                    onClick={() => {
+                      navigate(path);
+                      if (window.innerWidth <= 768) setIsCollapsed(true); // 点击后自动收起侧边栏
+                    }}
+                  >
+                    <span className="sidebar-icon">{icon}</span>
+                    {!isCollapsed && <span className="sidebar-label">{label}</span>}
+                  </button>
+                </li>
+              ) : null
+            )}
+          </ul>
+        </nav>
+        <button className="sidebar-logout" onClick={handleLogout}>
+          <FaSignOutAlt className="sidebar-icon" />
+          {!isCollapsed && <span className="sidebar-label">退出</span>}
+        </button>
+      </aside>
+    </>
   );
 };
 
