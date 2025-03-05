@@ -1,25 +1,13 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const CustomerDashboard = () => {
   return (
-    <div style={styles.container}>
-      <Sidebar />
-      <div style={styles.content}>
-        <h1>Customer Dashboard</h1>
-      </div>
-    </div>
+    <DashboardLayout role="customer">
+      <h1>Customer Dashboard</h1>
+      <p>欢迎来到 Customer 管理页面！</p>
+    </DashboardLayout>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-  },
-  content: {
-    flexGrow: 1,
-    padding: "20px",
-  },
 };
 
 export default CustomerDashboard;

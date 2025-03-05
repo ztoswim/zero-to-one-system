@@ -1,25 +1,13 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const CoachDashboard = () => {
   return (
-    <div style={styles.container}>
-      <Sidebar />
-      <div style={styles.content}>
-        <h1>Coach Dashboard</h1>
-      </div>
-    </div>
+    <DashboardLayout role="coach">
+      <h1>Coach Dashboard</h1>
+      <p>欢迎来到 Coach 管理页面！</p>
+    </DashboardLayout>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-  },
-  content: {
-    flexGrow: 1,
-    padding: "20px",
-  },
 };
 
 export default CoachDashboard;

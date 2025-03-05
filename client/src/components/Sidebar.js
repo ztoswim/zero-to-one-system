@@ -1,131 +1,66 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { logout, getUserRole } from "../auth";
-import { 
-  FaBars, FaHome, FaUserCog, FaUsers, 
-  FaChalkboardTeacher, FaBook, FaSignOutAlt 
-} from "react-icons/fa";
+import React from "react";
+import { Link } from "react-router-dom";
+import { getUserRole } from "../utils/authUtils";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const role = getUserRole();
-  const [activePath, setActivePath] = useState(location.pathname);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const role = getUserRole(); // 直接解析 Token 获取角色
 
-  const menus = {
+  const menuItems = {
     boss: [
-      { name: "首页", path: "/boss", icon: <FaHome /> },
-      { name: "管理员工", path: "/boss/employees", icon: <FaUserCog /> },
-      { name: "管理学生", path: "/boss/students", icon: <FaUsers /> },
+      { name: "账户管理", path: "/account" },
+      { name: "学生管理", path: "/students" },
+      { name: "员工管理", path: "/employees" },
     ],
     admin: [
-      { name: "首页", path: "/admin", icon: <FaHome /> },
-      { name: "管理学生", path: "/admin/students", icon: <FaUsers /> },
+      { name: "账户管理", path: "/account" },
+      { name: "学生管理", path: "/students" },
     ],
-    coach: [
-      { name: "首页", path: "/coach", icon: <FaHome /> },
-      { name: "课程管理", path: "/coach/classes", icon: <FaChalkboardTeacher /> },
-    ],
-    customer: [
-      { name: "首页", path: "/customer", icon: <FaHome /> },
-      { name: "我的课程", path: "/customer/classes", icon: <FaBook /> },
-    ],
-  };
-
-  const handleNavigate = (path) => {
-    setActivePath(path);
-    navigate(path);
+    coach: [{ name: "学生管理", path: "/students" }],
+    customer: [{ name: "账户管理", path: "/account" }],
   };
 
   return (
-    <div style={{ 
-      ...styles.sidebar, 
-      width: isCollapsed ? "60px" : "250px",
-      boxShadow: isCollapsed ? "2px 0 5px rgba(0,0,0,0.2)" : "4px 0 10px rgba(0,0,0,0.3)"
-    }}>
-      <div style={styles.topSection}>
-        <button onClick={() => setIsCollapsed(!isCollapsed)} style={styles.toggleButton}>
-          <FaBars />
-        </button>
-      </div>
-
-      <ul style={styles.menu}>
-        {menus[role]?.map((item) => (
-          <li
-            key={item.path}
-            style={{
-              ...styles.menuItem,
-              background: activePath === item.path ? "#444" : "transparent",
-              borderRadius: isCollapsed ? "50%" : "8px"
-            }}
-            onClick={() => handleNavigate(item.path)}
-          >
-            <span style={styles.icon}>{item.icon}</span>
-            {!isCollapsed && <span>{item.name}</span>}
+    <div style={styles.sidebar}>
+      <h2>控制面板</h2>
+      <ul>
+        {menuItems[role]?.map((item, index) => (
+          <li key={index}>
+            <Link to={item.path} style={styles.link}>{item.name}</Link>
           </li>
         ))}
       </ul>
-
-      <button onClick={logout} style={styles.logout}>
-        <FaSignOutAlt style={{ marginRight: isCollapsed ? "0px" : "8px" }} />
-        {!isCollapsed && "登出"}
-      </button>
+      <button style={styles.logout} onClick={() => logout()}>登出</button>
     </div>
   );
 };
 
+const logout = () => {
+  localStorage.removeItem("token"); // 清除 Token
+  window.location.href = "/login"; // 跳转到登录页面
+};
+
 const styles = {
   sidebar: {
+    width: "250px",
     height: "100vh",
-    background: "#222",
+    backgroundColor: "#2c3e50",
     color: "#fff",
-    display: "flex",
-    flexDirection: "column",
     padding: "20px",
-    transition: "width 0.3s ease, box-shadow 0.3s ease",
-    borderRadius: "10px 0 0 10px",
   },
-  topSection: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginBottom: "20px",
-  },
-  toggleButton: {
-    background: "none",
-    border: "none",
-    color: "white",
-    fontSize: "20px",
-    cursor: "pointer",
-  },
-  menu: {
-    listStyle: "none",
-    padding: 0,
-    flexGrow: 1,
-  },
-  menuItem: {
-    padding: "12px",
-    cursor: "pointer",
-    marginBottom: "8px",
-    transition: "background 0.3s, border-radius 0.3s",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  icon: {
-    fontSize: "18px",
+  link: {
+    color: "#fff",
+    textDecoration: "none",
+    display: "block",
+    padding: "10px 0",
   },
   logout: {
-    padding: "12px",
-    background: "#e74c3c",
-    border: "none",
-    color: "white",
-    cursor: "pointer",
-    borderRadius: "8px",
     marginTop: "20px",
-    display: "flex",
-    alignItems: "center",
-    transition: "margin-right 0.3s",
+    padding: "10px",
+    width: "100%",
+    backgroundColor: "#e74c3c",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
   },
 };
 
