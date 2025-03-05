@@ -15,19 +15,22 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    logout(); // 清理旧的 Token 和 Role
+    // 清理旧的 token 和 role
+    logout();
 
     try {
       const { token, role } = await login(username, password);
-      saveUserAuth(token, role); // 保存新的 Token 和 Role
-      console.log("登录成功，角色:", role);
 
-      setTimeout(() => navigate(`/${role}`), 500); // 根据角色跳转
+      // 保存新的 token 和 role
+      saveUserAuth(token, role);
+
+      // 刷新页面，确保更新后的值被应用
+      window.location.reload(); // 强制刷新页面，解决数据未即时渲染的问题
     } catch (err) {
-      setError(err.message || "登录失败"); // 显示错误信息
+      setError(err.message || "登录失败");
     }
   };
-
+  
   return (
     <div className="login-container">
       <div className="login-box">
