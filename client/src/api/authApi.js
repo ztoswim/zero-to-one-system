@@ -21,14 +21,3 @@ export const login = async (username, password) => {
     throw new Error(error.response?.data?.message || "登录失败");
   }
 };
-
-export const logout = async () => {
-  try {
-    await axios.post(`${AUTH_API_URL}/logout`);
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("username");
-  } catch (error) {
-    console.error("Logout failed", error);
-  }
-};

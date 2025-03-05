@@ -23,5 +23,7 @@ export const isAuthenticated = () => {
 
 // 退出登录
 export const logout = () => {
-  localStorage.clear();
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
 };
+
