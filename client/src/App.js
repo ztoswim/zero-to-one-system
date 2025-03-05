@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import BossDashboard from "./pages/BossDashboard";
@@ -8,7 +8,15 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import { getUserRole } from "./auth";
 
 const App = () => {
-  const userRole = getUserRole();
+  const [userRole, setUserRole] = useState(getUserRole()); // ✅ 监听角色变化
+
+  useEffect(() => {
+    setUserRole(getUserRole()); // ✅ 登录成功后更新角色
+  }, []);
+
+  if (userRole === null) {
+    return <p>加载中...</p>; // ✅ 处理 `userRole` 还未获取的情况
+  }
 
   return (
     <Router>
