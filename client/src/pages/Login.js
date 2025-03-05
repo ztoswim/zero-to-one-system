@@ -20,7 +20,7 @@ const Login = () => {
 
     console.log("登录成功");
     setTimeout(() => {
-      navigate(/＄{role}); 
+      navigate(`/${role}`); 
     }, 500);
   } catch (err) {
     setError(err.message || "登录失败");
