@@ -1,28 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
+import { getUserRole, logout } from "../auth"; // 引入简化后的 auth.js
 import API_BASE_URL from "../api/apiConfig";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [role, setRole] = useState(localStorage.getItem("role")); // 使用 state 来管理角色
+  const [role, setRole] = useState(getUserRole()); // 使用 getUserRole() 获取角色
 
-  const [isCollapsed, setIsCollapsed] = useState(
-    window.innerWidth <= 768 // 小屏幕默认折叠
-  );
+  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768); // 小屏幕默认折叠
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  // 监听窗口大小变化
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setIsCollapsed(true); // 小屏幕自动折叠
-      }
+      if (window.innerWidth <= 768) setIsCollapsed(true); // 小屏幕自动折叠
     };
 
     window.addEventListener("resize", handleResize);
@@ -32,7 +28,7 @@ const Sidebar = () => {
   // 监听 localStorage 变化，动态更新角色
   useEffect(() => {
     const handleStorageChange = () => {
-      setRole(localStorage.getItem("role"));
+      setRole(getUserRole()); // 动态更新角色
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -46,9 +42,7 @@ const Sidebar = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-
+      logout(); // 调用 logout 函数清理 token 和 role
       navigate("/login");
     } catch (error) {
       console.error("Logout failed", error);
@@ -65,7 +59,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* 小屏幕时的菜单按钮 */}
       <button className="mobile-menu-button" onClick={toggleSidebar}>
         {isCollapsed ? <FaBars /> : <FaTimes />}
       </button>
