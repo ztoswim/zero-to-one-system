@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
-import { saveUserAuth, logout, getToken, getUserRole } from "../auth"; // 引入简化后的函数
-import { FaUser, FaLock } from "react-icons/fa"; // ✅ 引入图标
-import logo from "../assets/Logo.png"; // ✅ Logo 位置
-import "../styles/Login.css"; // ✅ 引入样式
+import { saveUserAuth, logout } from "../auth"; // 合并导入
+import { FaUser, FaLock } from "react-icons/fa"; 
+import logo from "../assets/Logo.png"; 
+import "../styles/Login.css"; 
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -12,35 +12,19 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // 检查是否已登录，已登录则直接跳转到相应页面
-  useEffect(() => {
-    const token = getToken();
-    const role = getUserRole();
-
-    if (token && role) {
-      navigate(`/${role}`); // 已登录则跳转到对应角色的页面
-    }
-  }, [navigate]); // 依赖空数组，组件加载时检查登录状态
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // 清理旧的 token 和 role
-    logout();
+    logout(); // 清理旧的 Token 和 Role
 
     try {
       const { token, role } = await login(username, password);
+      saveUserAuth(token, role); // 保存新的 Token 和 Role
+      console.log("登录成功，角色:", role);
 
-      // 保存新的 token 和 role
-      saveUserAuth(token, role);
-
-      // 使用 `navigate` 跳转页面前，确保保存好状态
-      setTimeout(() => {
-        navigate(`/${role}`);
-      }, 200);  // 调整等待时间，确保页面有足够时间渲染
-
+      setTimeout(() => navigate(`/${role}`), 500); // 根据角色跳转
     } catch (err) {
-      setError(err.message || "登录失败");
+      setError(err.message || "登录失败"); // 显示错误信息
     }
   };
 
@@ -48,7 +32,7 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <img src={logo} alt="Logo" className="login-logo" />
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>} {/* 显示错误信息 */}
         <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
             <FaUser className="input-icon" />
