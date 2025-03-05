@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth } from "../auth";
-import logo from "../assets/Logo.png"; // ✅ Logo 位置
+import { FaUser, FaLock } from "react-icons/fa"; // ✅ 引入图标
+import logo from "../assets/logo/Logo.png"; // ✅ Logo 位置
 import "../styles/Login.css"; // ✅ 引入样式
 
 const Login = () => {
@@ -32,20 +33,26 @@ const Login = () => {
         <img src={logo} alt="Logo" className="login-logo" />
         {error && <p className="error-message">{error}</p>}
         <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="text"
-            placeholder="用户名"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="密码"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-group">
+            <FaUser className="input-icon" />
+            <input
+              type="text"
+              placeholder="用户名"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <FaLock className="input-icon" />
+            <input
+              type="password"
+              placeholder="密码"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
           <button type="submit">登录</button>
         </form>
       </div>

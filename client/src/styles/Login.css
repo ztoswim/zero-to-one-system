@@ -1,17 +1,17 @@
-/* 💡 设置全局样式，确保页面居中 */
+/* 💡 保持页面布局 */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #f4f6f9;
-  padding: 20px; /* ✅ 适配小屏幕 */
+  padding: 20px;
 }
 
 /* 📌 登录框 */
 .login-box {
   width: 100%;
-  max-width: 420px; /* ✅ 控制最大宽度 */
+  max-width: 420px;
   padding: 2rem;
   background: #ffffff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -21,8 +21,8 @@
 
 /* 🖼️ Logo 放大 + 自适应 */
 .login-logo {
-  width: 80%; /* ✅ 让 Logo 自适应 */
-  max-width: 280px; /* ✅ 限制最大尺寸 */
+  width: 80%;
+  max-width: 280px;
   height: auto;
   margin-bottom: 15px;
   object-fit: contain;
@@ -33,28 +33,45 @@
   transform: scale(1.1);
 }
 
-/* 📌 输入框和按钮容器 */
+/* 📌 输入框和按钮 */
 .login-form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* 🎯 统一输入框样式 */
-.login-box input {
+/* 🎯 统一输入框样式（带图标） */
+.input-group {
+  display: flex;
+  align-items: center;
   width: 100%;
   max-width: 360px;
-  padding: 14px;
-  margin: 8px 0;
+  background: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 16px;
+  padding: 10px;
+  margin: 8px 0;
   transition: border-color 0.3s;
 }
 
-.login-box input:focus {
+.input-group:focus-within {
   border-color: #007bff;
+}
+
+/* ✨ 输入框 */
+.input-group input {
+  width: 100%;
+  border: none;
   outline: none;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* ✨ 图标样式 */
+.input-icon {
+  font-size: 18px;
+  color: #555;
+  margin-right: 10px;
 }
 
 /* 🎯 统一按钮样式 */
@@ -85,15 +102,15 @@
 /* 📌 响应式适配 */
 @media (max-width: 480px) {
   .login-box {
-    padding: 1.5rem; /* ✅ 调整 padding 适配小屏 */
+    padding: 1.5rem;
   }
 
   .login-logo {
-    max-width: 220px; /* ✅ 适配小屏幕 */
+    max-width: 220px;
   }
 
   .login-box input,
   .login-box button {
-    max-width: 100%; /* ✅ 让输入框 & 按钮撑满容器 */
+    max-width: 100%;
   }
 }

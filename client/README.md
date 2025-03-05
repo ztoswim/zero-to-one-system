@@ -6,6 +6,8 @@ zero-to-one-ststem/
 │   │   │   ├── authApi.js          # 登录/注册 API
 │   │   │   ├── userApi.js          # 用户管理 API
 │   │   │   ├── studentApi.js       # 学生管理 API
+│   │   ├── 📂 assets/               
+│   │   │   ├── Logo.png      
 │   │   ├── 📂 components/          # 复用组件
 │   │   │   ├── Sidebar.js
 │   │   ├── 📂 layouts/          # 复用组件
@@ -17,6 +19,8 @@ zero-to-one-ststem/
 │   │   │   ├── AdminDashboard.js
 │   │   │   ├── CoachDashboard.js
 │   │   │   ├── CustomerDashboard.js
+│   │   ├── 📂 styles/               # 页面组件
+│   │   │   ├── Login.css
 │   │   ├── auth.js             # 处理 token & 角色
 │   │   ├── App.js
 │   │   ├── index.js
