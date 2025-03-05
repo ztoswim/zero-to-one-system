@@ -5,7 +5,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import logo from "../assets/Logo.png";
 import "../styles/Login.css";
 
-const Login = () => {
+const Login = ({ setUserRole }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -15,9 +15,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const role = await login(username, password);
-      navigate(`/${role}`); // 立即跳转 Dashboard
+
+      setUserRole(role); // **立刻更新 App.js 的 userRole**
+      navigate(`/${role}`);
     } catch (err) {
-      setError(err.response?.data?.message || "登录失败");
+      setError(err.message || "登录失败");
     }
   };
 

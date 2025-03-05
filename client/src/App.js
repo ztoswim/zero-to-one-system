@@ -1,47 +1,34 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "api/authApi";
-import { FaUser, FaLock } from "react-icons/fa";
-import logo from "../assets/Logo.png";
-import "../styles/Login.css";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import BossDashboard from "./pages/BossDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import CoachDashboard from "./pages/CoachDashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
-const Login = ({ setUserRole }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+const App = () => {
+  const [userRole, setUserRole] = useState(localStorage.getItem("role") || null);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const role = await login(username, password);
-
-      setUserRole(role); // **立刻更新 App.js 的 userRole**
-      navigate(`/${role}`);
-    } catch (err) {
-      setError(err.message || "登录失败");
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role) {
+      setUserRole(role); // **确保 useState 更新**
     }
-  };
+  }, []);
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <img src={logo} alt="Logo" className="login-logo" />
-        {error && <p className="error-message">{error}</p>}
-        <form className="login-form" onSubmit={handleLogin}>
-          <div className="input-group">
-            <FaUser className="input-icon" />
-            <input type="text" placeholder="用户名" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          </div>
-          <div className="input-group">
-            <FaLock className="input-icon" />
-            <input type="password" placeholder="密码" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-          <button type="submit">登录</button>
-        </form>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login setUserRole={setUserRole} />} />
+        <Route path="/" element={userRole ? <Navigate to={`/${userRole}`} /> : <Navigate to="/login" />} />
+        <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
+        <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
+        <Route path="/coach" element={userRole === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />
+        <Route path="/customer" element={userRole === "customer" ? <CustomerDashboard /> : <Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 };
 
-export default Login;
+export default App;
