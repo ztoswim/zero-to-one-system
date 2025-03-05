@@ -24,8 +24,10 @@ const Login = () => {
       // 保存新的 token 和 role
       saveUserAuth(token, role);
 
-      // 刷新页面，确保更新后的值被应用
-      window.location.reload(); // 强制刷新页面，解决数据未即时渲染的问题
+      // 强制刷新状态（通过 useEffect 监听）
+      setTimeout(() => {
+        navigate(`/${role}`);
+      }, 500);
     } catch (err) {
       setError(err.message || "登录失败");
     }
