@@ -25,7 +25,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={userRole ? <Navigate to={`/${userRole}`} /> : <Login />}
+        />
         <Route path="/" element={<Navigate to={userRole ? `/${userRole}` : "/login"} />} />
         <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
         <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
