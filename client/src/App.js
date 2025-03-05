@@ -18,19 +18,15 @@ const App = () => {
       }
     };
 
-    window.addEventListener("storage", checkRole); // 监听 localStorage 变化
+    window.addEventListener("storage", checkRole);
     return () => window.removeEventListener("storage", checkRole);
   }, [userRole]);
-
-  if (!userRole) {
-    return <Navigate to="/login" />;
-  }
 
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to={`/${userRole}`} />} />
+        <Route path="/" element={<Navigate to={userRole ? `/${userRole}` : "/login"} />} />
         <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
         <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
         <Route path="/coach" element={userRole === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />

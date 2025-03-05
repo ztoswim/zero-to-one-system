@@ -16,22 +16,9 @@ const Login = () => {
       saveUserAuth(token, role);
 
       console.log("登录成功，角色:", role); // ✅ 调试
-      switch (role) {
-        case "boss":
-          navigate("/dashboard/boss");
-          break;
-        case "admin":
-          navigate("/dashboard/admin");
-          break;
-        case "coach":
-          navigate("/dashboard/coach");
-          break;
-        case "customer":
-          navigate("/dashboard/customer");
-          break;
-        default:
-          navigate("/dashboard");
-      }
+      setTimeout(() => {
+        navigate(`/${role}`);
+      }, 500); // ⚠️ 加个小延迟，确保 localStorage 更新
     } catch (err) {
       setError(err.message || "登录失败");
     }
