@@ -27,8 +27,15 @@ export const isAuthenticated = () => {
   }
 };
 
-// 退出登录（清除 Token 和 角色）
+// auth.js 中的 logout 函数
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
+  try {
+    // 删除本地存储的 token 和角色信息
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+  } catch (error) {
+    console.error("登出时清除信息失败", error);
+  }
 };
+
