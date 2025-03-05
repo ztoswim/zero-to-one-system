@@ -1,33 +1,23 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom"; // ✅ 引入 useLocation
+import { FaBars, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import API_BASE_URL from "../api/apiConfig";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); // ✅ 获取当前路径
   const role = localStorage.getItem("role");
 
   const [isCollapsed, setIsCollapsed] = useState(
-    window.innerWidth <= 768 // 小屏幕默认折叠
+    localStorage.getItem("sidebarCollapsed") === "true"
   );
 
   const toggleSidebar = () => {
-    setIsCollapsed((prev) => !prev); // 切换侧边栏折叠状态
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    localStorage.setItem("sidebarCollapsed", newState);
   };
-
-  // 监听窗口大小变化
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setIsCollapsed(true); // 小屏幕自动折叠
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -41,7 +31,7 @@ const Sidebar = () => {
 
       navigate("/login");
     } catch (error) {
-      console.error("退出登录失败", error);
+      console.error("Logout failed", error);
     }
   };
 
@@ -54,39 +44,32 @@ const Sidebar = () => {
   ];
 
   return (
-    <>
-      {/* 小屏幕时的菜单按钮 */}
-      <button className="mobile-menu-button" onClick={toggleSidebar}>
-        {isCollapsed ? <FaBars /> : <FaTimes />}
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      <button className="sidebar-toggle" onClick={toggleSidebar}>
+        <FaBars />
       </button>
-
-      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        <nav className="sidebar-nav">
-          <ul>
-            {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
-              allowedRoles.includes(role) ? (
-                <li key={path}>
-                  <button
-                    className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
-                    onClick={() => {
-                      navigate(path);
-                      if (window.innerWidth <= 768) setIsCollapsed(true); // 点击后自动收起侧边栏
-                    }}
-                  >
-                    <span className="sidebar-icon">{icon}</span>
-                    {!isCollapsed && <span className="sidebar-label">{label}</span>}
-                  </button>
-                </li>
-              ) : null
-            )}
-          </ul>
-        </nav>
-        <button className="sidebar-logout" onClick={handleLogout}>
-          <FaSignOutAlt className="sidebar-icon" />
-          {!isCollapsed && <span className="sidebar-label">退出</span>}
-        </button>
-      </aside>
-    </>
+      <nav className="sidebar-nav">
+        <ul>
+          {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
+            allowedRoles.includes(role) ? (
+              <li key={path}>
+                <button
+                  className={`sidebar-button ${location.pathname === path ? "active" : ""}`} // ✅ 高亮当前页面
+                  onClick={() => navigate(path)}
+                >
+                  <span className="sidebar-icon">{icon}</span>
+                  {!isCollapsed && <span className="sidebar-label">{label}</span>}
+                </button>
+              </li>
+            ) : null
+          )}
+        </ul>
+      </nav>
+      <button className="sidebar-logout" onClick={handleLogout}>
+        <FaSignOutAlt className="sidebar-icon" />
+        {!isCollapsed && <span className="sidebar-label">退出</span>}
+      </button>
+    </aside>
   );
 };
 

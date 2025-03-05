@@ -1,24 +1,23 @@
-/* 侧边栏基础样式 */
+/* Sidebar 基础样式 */
 .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 250px;
     height: 100vh;
+    width: 16rem;
     background-color: #1a202c;
-    transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    color: white;
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    transition: width 0.3s ease-in-out;
   }
   
   /* 折叠状态 */
   .sidebar.collapsed {
-    width: 80px;
+    width: 4rem;
     padding: 1rem 0.5rem;
   }
   
-  /* 菜单项样式 */
+  /* 菜单项 */
   .sidebar-nav ul {
     list-style: none;
     padding: 0;
@@ -31,44 +30,38 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
+    width: 100%;
     text-align: left;
     border-radius: 0.375rem;
-    transition: all 0.3s ease-in-out;
+    transition: background 0.3s ease-in-out;
     font-size: 1rem;
     background: none;
     border: none;
     color: white;
     cursor: pointer;
-    opacity: 1;
   }
   
   .sidebar-button:hover {
     background-color: #2d3748;
-    transform: scale(1.05); /* 轻微放大效果 */
-    color: #fbd38d;
-  }
-  
-  /* 选中状态高亮 */
-  .sidebar-button.active {
-    background-color: #4a5568;
-    color: #fbd38d;
-    font-weight: bold;
-    transform: scale(1.05); /* 选中状态下也有悬停效果 */
   }
   
   /* 侧边栏折叠时，隐藏文字 */
   .sidebar.collapsed .sidebar-label {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    display: none;
   }
   
-  .sidebar.collapsed .sidebar-icon {
-    font-size: 1.4rem;
-    transition: font-size 0.3s ease-in-out;
+  /* 侧边栏折叠时，菜单项居中 */
+  .sidebar.collapsed .sidebar-button {
+    justify-content: center;
+    padding: 0.75rem 0;
   }
   
-  /* 退出按钮样式 */
+  /* 图标样式 */
+  .sidebar-icon {
+    font-size: 22px;
+  }
+  
+  /* 退出按钮 */
   .sidebar-logout {
     display: flex;
     align-items: center;
@@ -87,30 +80,16 @@
   
   .sidebar-logout:hover {
     background-color: #c53030;
-    transform: scale(1.05);
   }
   
-  /* 折叠状态时，退出按钮居中 */
+  /* 折叠状态下，退出按钮居中 */
   .sidebar.collapsed .sidebar-logout {
     justify-content: center;
     padding: 0.75rem 0;
   }
   
-  /* 小屏幕适配 */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 70%;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease-in-out;
-    }
-  
-    .sidebar.collapsed {
-      transform: translateX(0);
-    }
-  }
-  
-  /* 折叠按钮样式 */
-  .mobile-menu-button {
+  /* 折叠展开按钮 */
+  .sidebar-toggle {
     background: none;
     border: none;
     color: white;
@@ -120,7 +99,19 @@
     transition: background 0.3s ease-in-out;
   }
   
-  .mobile-menu-button:hover {
+  .sidebar-toggle:hover {
+    background-color: #2d3748;
+  }
+  
+  /* 选中页面高亮 */
+.sidebar-button.active {
+    background-color: #4a5568; /* 高亮背景 */
+    color: #fbd38d; /* 文字变色 */
+    font-weight: bold;
+  }
+  
+  /* 高亮状态下的鼠标悬浮 */
+  .sidebar-button.active:hover {
     background-color: #2d3748;
   }
   
