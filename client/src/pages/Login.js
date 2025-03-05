@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth } from "../auth";
-import { FaUser, FaLock } from "react-icons/fa"; // ✅ 引入图标
-import logo from "../assets/Logo.png"; // ✅ Logo 位置
-import "../styles/Login.css"; // ✅ 引入样式
+import { FaUser, FaLock } from "react-icons/fa"; // 引入图标
+import logo from "../assets/Logo.png"; // Logo 位置
+import "../styles/Login.css"; // 引入样式
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,19 +13,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const { token } = await login(username, password); // 只返回 token
-    saveUserAuth(token); // 只保存 token，无需角色
+    e.preventDefault();
+    try {
+      // 假设 login 返回 token 和 role
+      const { token, role } = await login(username, password); 
+      
+      // 保存 token 和 role
+      saveUserAuth(token); 
+      localStorage.setItem("userRole", role); // 将角色信息存储到 localStorage
 
-    console.log("登录成功");
-    setTimeout(() => {
-      navigate(`/${role}`); 
-    }, 500);
-  } catch (err) {
-    setError(err.message || "登录失败");
-  }
-};
+      console.log("登录成功");
+      setTimeout(() => {
+        // 登录后根据角色跳转
+        navigate(`/${role}`);
+      }, 500);
+    } catch (err) {
+      setError(err.message || "登录失败");
+    }
+  };
 
   return (
     <div className="login-container">
