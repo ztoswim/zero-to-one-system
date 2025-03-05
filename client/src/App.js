@@ -8,19 +8,15 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import { getUserRole } from "./auth";
 
 const App = () => {
-  const [userRole, setUserRole] = useState(getUserRole());
+  const [userRole, setUserRole] = useState(getUserRole()); // ✅ 监听角色变化
 
   useEffect(() => {
-    const checkRole = () => {
-      const role = getUserRole();
-      if (role !== userRole) {
-        setUserRole(role);
-      }
-    };
+    setUserRole(getUserRole()); // ✅ 登录成功后更新角色
+  }, []);
 
-    window.addEventListener("storage", checkRole);
-    return () => window.removeEventListener("storage", checkRole);
-  }, [userRole]);
+  if (userRole === null) {
+    return <p>加载中...</p>; // ✅ 处理 `userRole` 还未获取的情况
+  }
 
   return (
     <Router>
