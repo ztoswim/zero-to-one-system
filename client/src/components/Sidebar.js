@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie } from "react-icons/fa";
+import { FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import API_BASE_URL from "../api/apiConfig"; // 统一 API 地址
 import "../styles/Sidebar.css";
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   // 根据用户角色定义不同的菜单项
   const menuItems = [
-    { role: ["boss", "admin", "coach", "customer"], label: "首页", icon: <FaHome className="sidebar-icon" />, path: `/${role}-dashboard` },
+    { role: ["boss", "admin", "coach", "customer"], label: "首页", icon: <FaHome className="sidebar-icon" />, path: `/${role}` },
     { role: ["boss", "admin"], label: "用户管理", icon: <FaUsers className="sidebar-icon" />, path: "/users" },
     { role: ["boss", "admin", "coach"], label: "课程管理", icon: <FaChalkboardTeacher className="sidebar-icon" />, path: "/courses" },
     { role: ["boss"], label: "员工管理", icon: <FaUserTie className="sidebar-icon" />, path: "/staff" },
@@ -37,11 +37,11 @@ const Sidebar = () => {
       <h2 className="sidebar-title">Dashboard</h2>
       <nav className="sidebar-nav">
         <ul>
-          {menuItems.map(({ role, label, icon, path }) =>
-            role.includes(role) ? (
+          {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
+            allowedRoles.includes(role) ? (
               <li key={path}>
                 <button className="sidebar-button" onClick={() => navigate(path)}>
-                  {icon} {label}
+                  {icon} <span className="sidebar-label">{label}</span>
                 </button>
               </li>
             ) : null
@@ -49,7 +49,7 @@ const Sidebar = () => {
         </ul>
       </nav>
       <button className="sidebar-logout" onClick={handleLogout}>
-        退出登录
+        <FaSignOutAlt className="sidebar-icon" /> <span className="sidebar-label">退出登录</span>
       </button>
     </aside>
   );
