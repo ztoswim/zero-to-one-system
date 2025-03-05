@@ -16,6 +16,7 @@ const Login = () => {
     e.preventDefault();
 
     logout(); // 清理旧的 Token 和 Role
+    window.location.reload(); // 强制页面刷新
 
     try {
       const { token, role } = await login(username, password);
