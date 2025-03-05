@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import BossDashboard from "./pages/BossDashboard";
@@ -6,9 +6,21 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 
+const App = () => {
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // 从localStorage获取用户角色
+    const role = localStorage.getItem("userRole");
+    if (role) {
+      setUserRole(role);
+    }
+  }, []);
+
+  return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setUserRole={setUserRole} />} />
         <Route path="/" element={<Navigate to={userRole ? `/${userRole}` : "/login"} />} />
         <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
         <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
@@ -17,7 +29,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
-  
-
+  );
+};
 
 export default App;
