@@ -7,7 +7,14 @@ require("dotenv").config();
 const app = express();
 
 // 中间件
-app.use(cors());
+app.use(
+    cors({
+      origin: "https://zero-to-one-system.vercel.app", // 允许 Vercel 前端访问
+      credentials: true, // 允许携带 Cookie 或身份凭证
+      methods: "GET,POST,PUT,DELETE,OPTIONS", 
+      allowedHeaders: "Content-Type,Authorization",
+    })
+  );  
 app.use(express.json());
 
 // 连接数据库
