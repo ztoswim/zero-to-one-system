@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
 import { saveUserAuth } from "../auth";
 import "../styles/Login.css"; // ✅ 引入 CSS
-import logo from "/Logo.png"; // ✅ 引入 Logo
+import logo from "../assets/Logo.png"; // ✅ 引入 Logo
 
 const Login = () => {
   const [username, setUsername] = useState("");
