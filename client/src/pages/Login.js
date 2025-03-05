@@ -20,7 +20,7 @@ const Login = () => {
     if (token && role) {
       navigate(`/${role}`); // 已登录则跳转到对应角色的页面
     }
-  }, [navigate]); // 依赖空数组，组件加载时检查登录状态
+  }, []); // 依赖空数组，组件加载时检查登录状态
 
   const handleLogin = async (e) => {
     e.preventDefault();
