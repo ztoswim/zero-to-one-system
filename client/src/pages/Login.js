@@ -15,19 +15,19 @@ const Login = () => {
       const { token, role } = await login(username, password);
       saveUserAuth(token, role);
 
-      // 根据角色跳转到相应 Dashboard
+      console.log("登录成功，角色:", role); // ✅ 调试
       switch (role) {
         case "boss":
-          navigate("/boss");
+          navigate("/dashboard/boss");
           break;
         case "admin":
-          navigate("/admin");
+          navigate("/dashboard/admin");
           break;
         case "coach":
-          navigate("/coach");
+          navigate("/dashboard/coach");
           break;
         case "customer":
-          navigate("/customer");
+          navigate("/dashboard/customer");
           break;
         default:
           navigate("/dashboard");

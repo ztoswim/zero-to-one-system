@@ -7,11 +7,23 @@ const Dashboard = () => {
 
   useEffect(() => {
     const role = getUserRole();
-    if (role === "boss") navigate("/dashboard/boss");
-    else if (role === "admin") navigate("/dashboard/admin");
-    else if (role === "coach") navigate("/dashboard/coach");
-    else navigate("/dashboard/customer");
-  }, [navigate]);
+    console.log("当前用户角色:", role); // ✅ 调试
+    if (!role) return navigate("/login"); // 防止未登录用户访问 Dashboard
+
+    switch (role) {
+      case "boss":
+        navigate("/dashboard/boss");
+        break;
+      case "admin":
+        navigate("/dashboard/admin");
+        break;
+      case "coach":
+        navigate("/dashboard/coach");
+        break;
+      default:
+        navigate("/dashboard/customer");
+    }
+  }, [navigate, getUserRole]); // ✅ 确保 useEffect 监听 role 变化
 
   return <p>跳转中...</p>;
 };

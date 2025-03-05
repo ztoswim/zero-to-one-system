@@ -10,7 +10,9 @@ export const saveUserAuth = (token, role) => {
 export const getToken = () => localStorage.getItem("token");
 
 // 获取用户角色
-export const getUserRole = () => localStorage.getItem("role") || null;
+export const getUserRole = () => {
+  return localStorage.getItem("role") || null;
+};
 
 // 检查 Token 是否有效
 export const isAuthenticated = () => {
@@ -19,7 +21,7 @@ export const isAuthenticated = () => {
 
   try {
     const decoded = jwtDecode(token);
-    return decoded.exp * 1000 > Date.now(); // 过期时间必须大于当前时间
+    return decoded.exp * 1000 > Date.now(); // 确保 Token 没过期
   } catch (error) {
     return false;
   }
