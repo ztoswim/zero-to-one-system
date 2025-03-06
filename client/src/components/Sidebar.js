@@ -60,7 +60,7 @@ const Sidebar = () => {
           >
             <span className="text-xl">{icon}</span>
             {!isCollapsed && (
-              <span className="ml-4">{label}</span>  {/* Keep label always visible when expanded */}
+              <span className="ml-4">{label}</span>  
             )}
           </button>
         ))}
