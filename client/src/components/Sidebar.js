@@ -32,19 +32,19 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* 顶部 + 中间内容（Logo+文字） + 菜单项 + 底部退出按钮 */}
+      {/* 顶部+中间+底部布局 */}
       <div className="flex flex-col h-full justify-between">
-        {/* 顶部Logo区域 - 居中控制 */}
-        <div className="flex flex-col items-center">
+        {/* 顶部 Logo+文字区域（左右布局） */}
+        <div className="flex items-center justify-center">
           <img
             src={Logo}
             alt="Logo"
             className={`transition-all duration-300 ease-in-out ${
-              isCollapsed ? "w-10 h-10" : "w-32 h-auto"
+              isCollapsed ? "w-10 h-10" : "w-12 h-12"
             } object-contain`}
           />
           {!isCollapsed && (
-            <div className="mt-2 flex flex-col items-center text-xl font-bold tracking-wider uppercase text-indigo-400 leading-tight text-center">
+            <div className="ml-2 flex flex-col text-lg font-bold tracking-wider uppercase text-indigo-400 leading-tight">
               <span>ZERO</span>
               <span>TO</span>
               <span>ONE</span>
@@ -52,11 +52,11 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* 中间分割线和菜单项 */}
+        {/* 中间分割线和菜单 */}
         <div className="flex-1 mt-4">
           <div className="border-t-2 border-gray-700 my-4"></div>
 
-          {/* 菜单项 */}
+          {/* 导航菜单 */}
           <nav className="space-y-2">
             {menuConfig
               .filter(({ role: r }) => r.includes(role))
@@ -68,12 +68,11 @@ const Sidebar = () => {
                     location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
                   }`}
                 >
-                  {/* 图标容器 - 居中+统一大小 */}
+                  {/* 图标容器 - 居中对齐固定宽高 */}
                   <div className="flex items-center justify-center w-12 h-12 text-xl">
                     {icon}
                   </div>
-
-                  {/* 文字（仅展开时显示） */}
+                  {/* 文字（收起时隐藏） */}
                   {!isCollapsed && (
                     <span className="text-base whitespace-nowrap">{label}</span>
                   )}
