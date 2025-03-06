@@ -3,11 +3,11 @@ import Navbar from "./Navbar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="dashboard-container">
+    <div className="flex min-h-screen">
       <Sidebar />
-      <div className="dashboard-content">
+      <div className="flex flex-col flex-grow">
         <Navbar />
-        <main className="main-content">{children}</main>
+        <main className="flex-grow p-4 overflow-auto">{children}</main>
       </div>
     </div>
   );
