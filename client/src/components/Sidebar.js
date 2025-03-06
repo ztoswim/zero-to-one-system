@@ -41,7 +41,7 @@ const Sidebar = () => {
   >
     {/* Logo and Title */}
     <div className="flex items-center mb-8">
-      <img src={logo} alt="Logo" className="w-12" />
+      <img src={Logo} alt="Logo" className="w-12" />
       {!isCollapsed && (
         <span className="ml-4 text-xl font-semibold tracking-wide uppercase text-indigo-400">Zero To One</span>
       )}
