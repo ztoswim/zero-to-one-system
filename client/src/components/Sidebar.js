@@ -75,6 +75,11 @@ const Sidebar = () => {
             </button>
           )}
 
+          {/* Divider Line between menu button and navigation */}
+          {isCollapsed && (
+            <div className="border-t border-gray-700 w-full mb-2"></div>
+          )}
+
           {/* Navigation Menu */}
           <nav className="mt-2 flex-1 w-full">
             {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
@@ -89,17 +94,19 @@ const Sidebar = () => {
             ))}
           </nav>
 
-          {/* Divider Line */}
+          {/* Divider Line between menu and logout */}
           {!isCollapsed && <div className="border-t border-gray-700 my-2 w-full"></div>}
 
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="flex items-center p-3 w-full rounded hover:bg-red-600 mt-4"
-          >
-            <FaSignOutAlt className="text-xl" />
-            {!isCollapsed && <span className="ml-3">退出</span>}
-          </button>
+          {/* Logout Button (placed at the bottom) */}
+          <div className="mt-auto">
+            <button
+              onClick={handleLogout}
+              className="flex items-center p-3 w-full rounded hover:bg-red-600 mt-4"
+            >
+              <FaSignOutAlt className="text-xl" />
+              {!isCollapsed && <span className="ml-3">退出</span>}
+            </button>
+          </div>
         </div>
       </div>
     </aside>
