@@ -54,39 +54,42 @@ const Sidebar = () => {
         {/* Logo */}
         <img src={Logo} alt="Logo" className="w-10 mb-2" />
 
-        {/* Menu Toggle Button (hidden when sidebar is expanded) */}
-        {isCollapsed && (
+        {/* Menu and Logout Button */}
+        <div className="flex flex-col items-center">
+          {/* Menu Toggle Button (hidden when sidebar is expanded) */}
+          {isCollapsed && (
+            <button
+              onClick={toggleSidebar}
+              className="flex items-center p-3 rounded mb-2 hover:bg-gray-700"
+            >
+              <FaBars className="text-xl" />
+            </button>
+          )}
+
+          {/* Navigation Menu */}
+          <nav className="mt-6 flex-1">
+            {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
+              <button
+                key={path}
+                onClick={() => navigate(path)}
+                className={`flex items-center p-3 rounded hover:bg-gray-700 mb-2 ${location.pathname === path ? "bg-gray-700" : ""}`}
+              >
+                <span className="text-xl">{icon}</span>
+                {!isCollapsed && <span className="ml-3">{label}</span>}
+              </button>
+            ))}
+          </nav>
+
+          {/* Logout Button */}
           <button
-            onClick={toggleSidebar}
-            className={`flex items-center p-3 rounded mb-2 hover:bg-gray-700`}
+            onClick={handleLogout}
+            className="flex items-center p-3 rounded hover:bg-red-600 mt-4"
           >
-            <FaBars className="text-xl" />
+            <FaSignOutAlt className="text-xl" />
+            {!isCollapsed && <span className="ml-3">退出</span>}
           </button>
-        )}
+        </div>
       </div>
-
-      {/* Navigation Menu */}
-      <nav className="mt-6 flex-1">
-        {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
-          <button
-            key={path}
-            onClick={() => navigate(path)}
-            className={`flex items-center p-3 rounded hover:bg-gray-700 mb-2 ${location.pathname === path ? "bg-gray-700" : ""}`}
-          >
-            <span className="text-xl">{icon}</span>
-            {!isCollapsed && <span className="ml-3">{label}</span>}
-          </button>
-        ))}
-      </nav>
-
-      {/* Logout Button */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center p-3 rounded hover:bg-red-600 mt-4"
-      >
-        <FaSignOutAlt className="text-xl" />
-        {!isCollapsed && <span className="ml-3">退出</span>}
-      </button>
     </aside>
   );
 };
