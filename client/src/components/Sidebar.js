@@ -12,8 +12,7 @@ const Sidebar = () => {
   const role = getUserRole();
   const menuRef = useRef(null);
 
-  // ✅ 默认收起
-  const [isCollapsed, setIsCollapsed] = useState(true); 
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleMouseEnter = () => {
     setIsCollapsed(false);
@@ -34,19 +33,20 @@ const Sidebar = () => {
       ref={menuRef}
       className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out h-screen p-4 bg-gray-900 text-white shadow-lg ${
         isCollapsed ? "w-16" : "w-64"
-      }`} // 这里直接控制宽度
+      }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Logo区域 */}
+      {/* Logo部分 */}
       <div className="flex items-center mb-8">
         <img src={Logo} alt="Logo" className="w-12" />
         {!isCollapsed && (
-          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400">Zero To One</span>
+          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400">
+            Zero To One
+          </span>
         )}
       </div>
 
-      {/* 分割线 */}
       <div className="border-t-2 border-gray-700 mb-6"></div>
 
       {/* 菜单项 */}
@@ -61,13 +61,17 @@ const Sidebar = () => {
                 location.pathname === path ? "bg-indigo-700" : ""
               }`}
             >
-              <span className="text-xl">{icon}</span>
-              {!isCollapsed && <span className="ml-4">{label}</span>}
+              {/* 图标容器 - 宽度固定让图标对齐，居中 */}
+              <span className="flex items-center justify-center text-2xl w-8 h-8">
+                {icon}
+              </span>
+              {!isCollapsed && (
+                <span className="ml-4 text-base">{label}</span>
+              )}
             </button>
           ))}
       </nav>
 
-      {/* 分割线 */}
       <div className="border-t-2 border-gray-700 mt-6"></div>
 
       {/* 退出按钮 */}
@@ -76,8 +80,11 @@ const Sidebar = () => {
           onClick={handleLogout}
           className="flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out"
         >
-          <FaSignOutAlt className="text-xl" />
-          {!isCollapsed && <span className="ml-4">退出</span>}
+          {/* 退出图标，同样处理 */}
+          <span className="flex items-center justify-center text-2xl w-8 h-8">
+            <FaSignOutAlt />
+          </span>
+          {!isCollapsed && <span className="ml-4 text-base">退出</span>}
         </button>
       </div>
     </aside>
