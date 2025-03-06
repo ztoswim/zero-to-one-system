@@ -53,6 +53,11 @@ const Sidebar = () => {
       <div className="flex flex-col items-center">
         {/* Logo */}
         <img src={Logo} alt="Logo" className="w-10 mb-2" />
+        
+        {/* Zero To One text */}
+        {!isCollapsed && (
+          <span className="text-lg mb-4">Zero To One</span>
+        )}
 
         {/* Menu and Logout Button */}
         <div className="flex flex-col items-center w-full">
