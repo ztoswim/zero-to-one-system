@@ -75,7 +75,7 @@ const Sidebar = () => {
 
           {/* Divider Line between menu button and navigation */}
           {isCollapsed && (
-            <div className="border-t-2 border-gray-700 w-full mb-2"></div>  {/* Thicker divider */}
+            <div className="border-t-2 border-gray-700 w-full mb-2"></div> // Thicker divider
           )}
 
           {/* Navigation Menu */}
