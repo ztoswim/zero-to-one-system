@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/Logo.png";
-import { getUserRole } from "../auth";
+import { getUserRole, logout } from "../auth";
 import menuConfig from "./menuConfig";
 
 const Navbar = () => {
@@ -18,6 +18,11 @@ const Navbar = () => {
     if (isMenuOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4">
@@ -39,6 +44,10 @@ const Navbar = () => {
               <span className="ml-3">{label}</span>
             </button>
           ))}
+          <button onClick={handleLogout} className="flex items-center p-3 w-full text-left rounded hover:bg-red-600 mt-2">
+            <FaSignOutAlt className="text-xl" />
+            <span className="ml-3">退出</span>
+          </button>
         </div>
       )}
     </nav>
