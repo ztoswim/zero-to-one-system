@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
-import menuConfig from "../menuConfig";
+import menuConfig from "./menuConfig";
 import API_BASE_URL from "../api/apiConfig";
 import "../styles/SidebarNavbar.css";
 
