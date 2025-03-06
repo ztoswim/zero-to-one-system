@@ -57,7 +57,7 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
     >
       {/* Logo Section */}
-      <div className="flex items-center mb-6">
+      <div className="flex flex-col items-center justify-center mb-6">
         <img src={Logo} alt="Logo" className="w-10" />
         {!isCollapsed && (
           <span className="ml-4 text-lg font-semibold tracking-wider uppercase">Zero To One</span>
