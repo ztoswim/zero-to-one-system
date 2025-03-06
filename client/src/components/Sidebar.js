@@ -1,11 +1,3 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaSignOutAlt } from "react-icons/fa";
-import { getUserRole, logout } from "../auth";
-import menuConfig from "./menuConfig";
-import API_BASE_URL from "../api/apiConfig";
-import Logo from "../assets/Logo.png";
-
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,10 +58,10 @@ const Sidebar = () => {
         {/* Menu and Logout Button */}
         <div className="flex flex-col items-start w-full">
           {/* Menu Toggle Button (hidden when sidebar is expanded) */}
-          <div className="flex justify-center w-full">
+          <div className={`flex justify-center w-full ${isCollapsed ? "mt-2" : "mt-4"}`}>
             <button
               onClick={toggleSidebar}
-              className={`flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700 ${isCollapsed ? "mt-2" : "mt-4"}`}
+              className={`flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700`}
             >
               <FaBars className="text-xl" />
             </button>
@@ -98,10 +90,10 @@ const Sidebar = () => {
           <div className="border-t-2 border-gray-700 my-2 w-full"></div> {/* Thicker divider */}
 
           {/* Logout Button (placed at the bottom) */}
-          <div className="mt-auto">
+          <div className={`mt-auto flex flex-col ${isCollapsed ? "mb-4" : "mt-4"}`}>
             <button
               onClick={handleLogout}
-              className="flex items-center p-3 w-full rounded hover:bg-red-600 mt-4"
+              className="flex items-center p-3 w-full rounded hover:bg-red-600"
             >
               <FaSignOutAlt className="text-xl" />
               {!isCollapsed && <span className="ml-3">退出</span>}
@@ -112,5 +104,3 @@ const Sidebar = () => {
     </aside>
   );
 };
-
-export default Sidebar;
