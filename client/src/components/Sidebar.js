@@ -54,20 +54,20 @@ const Sidebar = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center w-full rounded-md py-3 px-2 hover:bg-indigo-600 transition-all duration-200 ease-in-out ${
+              className={`relative flex items-center w-full rounded-md py-3 px-2 hover:bg-indigo-600 transition-all duration-200 ease-in-out ${
                 location.pathname === path ? "bg-indigo-700" : ""
-              } ${isCollapsed ? "justify-center" : "justify-start"}`}
+              }`}
             >
-              {/* 图标 */}
+              {/* 图标容器 */}
               <div
-                className={`flex items-center justify-center w-10 h-10 text-xl ${
+                className={`flex items-center justify-center min-w-[40px] h-10 text-xl ${
                   isCollapsed ? "mx-auto" : "mr-3"
                 }`}
               >
                 {icon}
               </div>
 
-              {/* 文字 */}
+              {/* 文字容器 */}
               <span
                 className={`text-base whitespace-nowrap transition-all duration-300 ${
                   isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
@@ -85,17 +85,18 @@ const Sidebar = () => {
       <div className="mt-auto">
         <button
           onClick={handleLogout}
-          className={`flex items-center w-full rounded-md py-3 px-2 hover:bg-red-600 transition-all duration-200 ease-in-out ${
-            isCollapsed ? "justify-center" : "justify-start"
-          }`}
+          className="relative flex items-center w-full rounded-md py-3 px-2 hover:bg-red-600 transition-all duration-200 ease-in-out"
         >
+          {/* 图标容器 */}
           <div
-            className={`flex items-center justify-center w-10 h-10 text-xl ${
+            className={`flex items-center justify-center min-w-[40px] h-10 text-xl ${
               isCollapsed ? "mx-auto" : "mr-3"
             }`}
           >
             <FaSignOutAlt />
           </div>
+
+          {/* 文字容器 */}
           <span
             className={`text-base whitespace-nowrap transition-all duration-300 ${
               isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
