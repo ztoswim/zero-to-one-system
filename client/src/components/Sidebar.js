@@ -32,7 +32,7 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Logo区域 */}
+      {/* Logo + 文字区域 */}
       <div className="flex items-center justify-center mb-8">
         <img
           src={Logo}
@@ -42,9 +42,11 @@ const Sidebar = () => {
           } object-contain`}
         />
         {!isCollapsed && (
-          <span className="ml-3 text-xl font-bold tracking-wider uppercase text-indigo-400">
-            Zero To One
-          </span>
+          <div className="ml-3 flex flex-col text-xl font-bold tracking-wider uppercase text-indigo-400 leading-tight">
+            <span>ZERO</span>
+            <span>TO</span>
+            <span>ONE</span>
+          </div>
         )}
       </div>
 
@@ -62,12 +64,12 @@ const Sidebar = () => {
                 location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
               }`}
             >
-              {/* 图标区：固定尺寸、始终居中 */}
+              {/* 图标容器，固定尺寸+居中 */}
               <div className="flex items-center justify-center w-12 h-12 text-xl">
                 {icon}
               </div>
 
-              {/* 文字区：展开时显示 */}
+              {/* 文字（展开时才显示） */}
               {!isCollapsed && (
                 <span className="text-base whitespace-nowrap">{label}</span>
               )}
