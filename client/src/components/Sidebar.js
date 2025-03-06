@@ -35,13 +35,15 @@ const Sidebar = () => {
       {/* 顶部 Logo + ZERO TO ONE */}
       <div className="flex items-center justify-center h-32 flex-shrink-0">
         {/* Logo */}
-        <img
-          src={Logo}
-          alt="Logo"
-          className={`transition-all duration-300 ${
-            isCollapsed ? "w-16 h-16" : "w-32 h-32"
-          } object-contain`}
-        />
+        <div className="flex justify-center items-center w-16 h-16">
+          <img
+            src={Logo}
+            alt="Logo"
+            className={`transition-all duration-300 ${
+              isCollapsed ? "w-12 h-12" : "w-32 h-32"
+            } object-contain`}
+          />
+        </div>
         {/* ZERO TO ONE 文字 */}
         {!isCollapsed && (
           <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center items-center h-32">
