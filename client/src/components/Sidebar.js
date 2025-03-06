@@ -66,16 +66,18 @@ const Sidebar = () => {
         {/* Menu and Logout Button */}
         <div className="flex flex-col items-start w-full">
           {/* Menu Toggle Button (hidden when sidebar is expanded) */}
-          <button
-            onClick={toggleSidebar}
-            className={`flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700 ${isCollapsed ? "mt-2" : "mt-4"}`}
-          >
-            <FaBars className="text-xl" />
-          </button>
+          <div className="flex justify-center w-full">
+            <button
+              onClick={toggleSidebar}
+              className={`flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700 ${isCollapsed ? "mt-2" : "mt-4"}`}
+            >
+              <FaBars className="text-xl" />
+            </button>
+          </div>
 
           {/* Divider Line between menu button and navigation */}
           {isCollapsed && (
-            <div className="border-t-2 border-gray-700 w-full mb-2"></div>  /* Thicker divider */
+            <div className="border-t-2 border-gray-700 w-full mb-2"></div> 
           )}
 
           {/* Navigation Menu */}
