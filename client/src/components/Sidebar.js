@@ -34,50 +34,52 @@ const Sidebar = () => {
 
   return (
     <aside
-    ref={menuRef}
-    className={`lg:flex flex-col transition-all duration-300 ease-in-out h-screen p-4 bg-gray-900 text-white shadow-lg w-${isCollapsed ? "16" : "64"}`} // Ensure Sidebar is always visible on large screens
-    onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
-    onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
-  >
-    {/* Logo and Title */}
-    <div className="flex items-center mb-8">
-      <img src={Logo} alt="Logo" className="w-12" />
-      {!isCollapsed && (
-        <span className="ml-4 text-xl font-semibold tracking-wide uppercase text-indigo-400">Zero To One</span>
-      )}
-    </div>
-  
-    {/* Divider */}
-    <div className="border-t-2 border-gray-700 mb-6"></div>
-  
-    {/* Navigation Menu */}
-    <nav className="flex-1">
-      {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
+      ref={menuRef}
+      className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out h-screen p-4 bg-gray-900 text-white shadow-lg w-${isCollapsed ? "16" : "64"}`} // Apply transition for width change
+      onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
+      onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
+    >
+      {/* Logo Section */}
+      <div className="flex items-center mb-8">
+        <img src={Logo} alt="Logo" className="w-12" />
+        {!isCollapsed && (
+          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400">Zero To One</span>
+        )}
+      </div>
+
+      {/* Divider */}
+      <div className="border-t-2 border-gray-700 mb-6"></div>
+
+      {/* Navigation Menu */}
+      <nav className="flex-1">
+        {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
+          <button
+            key={path}
+            onClick={() => navigate(path)}
+            className={`flex items-center p-3 w-full rounded-md mb-4 hover:bg-indigo-600 hover:scale-105 transition-all duration-200 ease-in-out ${location.pathname === path ? "bg-indigo-700" : ""}`}
+          >
+            <span className="text-xl">{icon}</span>
+            {!isCollapsed && (
+              <span className="ml-4">{label}</span>  
+            )}
+          </button>
+        ))}
+      </nav>
+
+      {/* Divider */}
+      <div className="border-t-2 border-gray-700 mt-6"></div>
+
+      {/* Logout Button */}
+      <div className="mt-auto">
         <button
-          key={path}
-          onClick={() => navigate(path)}
-          className={`flex items-center p-3 w-full text-left rounded hover:bg-gray-700 ${window.location.pathname === path ? "bg-gray-700" : ""}`}
+          onClick={handleLogout}
+          className="flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out"
         >
-          <span className="text-xl">{icon}</span>
-          {!isCollapsed && (
-            <span className="ml-4">{label}</span>  
-          )}
+          <FaSignOutAlt className="text-xl" />
+          {!isCollapsed && <span className="ml-4">退出</span>}
         </button>
-      ))}
-    </nav>
-  
-    {/* Divider */}
-    <div className="border-t-2 border-gray-700 mt-6"></div>
-  
-    {/* Logout Button */}
-    <div className="mt-auto">
-      <button onClick={handleLogout} className="flex items-center p-3 w-full text-left rounded hover:bg-red-600 mt-2">
-        <FaSignOutAlt className="text-xl" />
-        {!isCollapsed && <span className="ml-4">退出</span>}
-      </button>
-    </div>
-  </aside>
-  
+      </div>
+    </aside>
   );
 };
 
