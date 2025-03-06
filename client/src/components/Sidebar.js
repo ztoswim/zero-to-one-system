@@ -14,13 +14,8 @@ const Sidebar = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const handleMouseEnter = () => {
-    setIsCollapsed(false);
-  };
-
-  const handleMouseLeave = () => {
-    setIsCollapsed(true);
-  };
+  const handleMouseEnter = () => setIsCollapsed(false);
+  const handleMouseLeave = () => setIsCollapsed(true);
 
   const handleLogout = async () => {
     await fetch(`${API_BASE_URL}/auth/logout`, { method: "POST" });
@@ -37,7 +32,7 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Logo部分 */}
+      {/* Logo区 */}
       <div className="flex items-center mb-8">
         <img src={Logo} alt="Logo" className="w-12" />
         {!isCollapsed && (
@@ -61,13 +56,15 @@ const Sidebar = () => {
                 location.pathname === path ? "bg-indigo-700" : ""
               }`}
             >
-              {/* 图标容器 - 宽度固定让图标对齐，居中 */}
-              <span className="flex items-center justify-center text-2xl w-8 h-8">
-                {icon}
+              {/* 图标容器：固定大小 + 图标强制一致大小 */}
+              <span className="flex items-center justify-center w-8 h-8">
+                <span className="w-6 h-6 flex items-center justify-center">
+                  {icon}
+                </span>
               </span>
-              {!isCollapsed && (
-                <span className="ml-4 text-base">{label}</span>
-              )}
+
+              {/* 菜单文字 */}
+              {!isCollapsed && <span className="ml-4 text-base">{label}</span>}
             </button>
           ))}
       </nav>
@@ -80,10 +77,13 @@ const Sidebar = () => {
           onClick={handleLogout}
           className="flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out"
         >
-          {/* 退出图标，同样处理 */}
-          <span className="flex items-center justify-center text-2xl w-8 h-8">
-            <FaSignOutAlt />
+          {/* 退出图标，同样固定大小+强制一致大小 */}
+          <span className="flex items-center justify-center w-8 h-8">
+            <span className="w-6 h-6 flex items-center justify-center">
+              <FaSignOutAlt />
+            </span>
           </span>
+
           {!isCollapsed && <span className="ml-4 text-base">退出</span>}
         </button>
       </div>
