@@ -35,23 +35,15 @@ const Sidebar = () => {
   return (
     <aside
       ref={menuRef}
-      className={`hidden lg:flex flex-col bg-gray-900 text-white h-screen p-4 shadow-lg hover:shadow-2xl`}
-      style={{
-        width: isCollapsed ? '64px' : '250px', // Width transition
-        opacity: isCollapsed ? 0.7 : 1, // Fade effect
-        transition: 'width 0.4s ease-out, opacity 0.4s ease-out', // Add smooth width and opacity transition
-        overflow: 'hidden',  // Prevent overflow during transition
-      }}
+      className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out h-screen p-4 bg-gray-900 text-white shadow-lg w-${isCollapsed ? "16" : "64"}`} // Apply transition for width change
       onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
     >
       {/* Logo Section */}
-      <div className="flex items-center mb-8 transition-all duration-300 ease-in-out">
-        <img src={Logo} alt="Logo" className="w-12 transition-all duration-300 ease-in-out" />
+      <div className="flex items-center mb-8">
+        <img src={Logo} alt="Logo" className="w-12" />
         {!isCollapsed && (
-          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400 opacity-100 transition-all duration-300 ease-in-out">
-            Zero To One
-          </span>
+          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400">Zero To One</span>
         )}
       </div>
 
@@ -68,7 +60,7 @@ const Sidebar = () => {
           >
             <span className="text-xl">{icon}</span>
             {!isCollapsed && (
-              <span className="ml-4 opacity-100 transition-all duration-300 ease-in-out">{label}</span>
+              <span className="ml-4">{label}</span>  {/* Keep label always visible when expanded */}
             )}
           </button>
         ))}
@@ -84,7 +76,7 @@ const Sidebar = () => {
           className="flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out"
         >
           <FaSignOutAlt className="text-xl" />
-          {!isCollapsed && <span className="ml-4 opacity-100 transition-all duration-300 ease-in-out">退出</span>}
+          {!isCollapsed && <span className="ml-4">退出</span>}
         </button>
       </div>
     </aside>
