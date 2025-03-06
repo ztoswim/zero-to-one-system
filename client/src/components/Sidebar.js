@@ -37,11 +37,10 @@ const Sidebar = () => {
       ref={menuRef}
       className={`hidden lg:flex flex-col bg-gray-900 text-white h-screen p-4 shadow-lg hover:shadow-2xl`}
       style={{
-        transform: isCollapsed ? "scaleX(0)" : "scaleX(1)", // Scale effect for expansion
-        transformOrigin: "left", // Animation starts from the left
-        width: '250px',  // Set width to the final expanded size
+        width: isCollapsed ? '64px' : '250px', // Width transition
+        opacity: isCollapsed ? 0.7 : 1, // Fade effect
+        transition: 'width 0.4s ease-out, opacity 0.4s ease-out', // Add smooth width and opacity transition
         overflow: 'hidden',  // Prevent overflow during transition
-        transition: 'transform 0.4s ease-out', // Add transition for smooth scaling
       }}
       onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
