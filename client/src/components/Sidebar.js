@@ -1,77 +1,52 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
-import { getUserRole, logout } from "../auth"; // 引入简化后的 auth.js
+import { useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
+import { getUserRole, logout } from "../auth";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [role, setRole] = useState(getUserRole()); // 使用 getUserRole() 获取角色
-
-  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768); // 小屏幕默认折叠
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isOpen, setIsOpen] = useState(false); // 侧边栏展开/折叠状态
+  const role = getUserRole();
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) setIsCollapsed(true); // 小屏幕自动折叠
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) {
+        setIsCollapsed(false);
+        setIsOpen(false);
+      }
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 监听 localStorage 变化，动态更新角色
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setRole(getUserRole()); // 动态更新角色
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
-
   const handleLogout = () => {
-    logout(); // 清除本地存储的 token 和 role
-    navigate("/login"); // 直接跳转到登录页
+    logout();
+    navigate("/login");
   };
-
-  const menuItems = [
-    { role: ["boss", "admin", "coach", "customer"], label: "首页", icon: <FaHome />, path: `/${role}` },
-    { role: ["boss", "admin"], label: "用户管理", icon: <FaUsers />, path: "/users" },
-    { role: ["boss", "admin", "coach"], label: "课程管理", icon: <FaChalkboardTeacher />, path: "/courses" },
-    { role: ["boss"], label: "员工管理", icon: <FaUserTie />, path: "/staff" },
-    { role: ["boss", "admin", "coach", "customer"], label: "设置", icon: <FaCog />, path: "/settings" },
-  ];
 
   return (
     <>
-      <button className="mobile-menu-button" onClick={toggleSidebar}>
-        {isCollapsed ? <FaBars /> : <FaTimes />}
-      </button>
+      {/* 移动端菜单按钮 */}
+      {isMobile && (
+        <button className="mobile-menu-button" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      )}
 
-      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      {/* 侧边栏 */}
+      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobile && isOpen ? "active" : ""}`}>
         <nav className="sidebar-nav">
           <ul>
-            {menuItems.map(({ role: allowedRoles, label, icon, path }) =>
-              allowedRoles.includes(role) ? (
-                <li key={path}>
-                  <button
-                    className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
-                    onClick={() => {
-                      navigate(path);
-                      if (window.innerWidth <= 768) setIsCollapsed(true); // 点击后自动收起
-                    }}
-                  >
-                    <span className="sidebar-icon">{icon}</span>
-                    {!isCollapsed && <span className="sidebar-label">{label}</span>}
-                  </button>
-                </li>
-              ) : null
-            )}
+            <li>
+              <button className="sidebar-button" onClick={() => navigate("/home")}>
+                <span className="sidebar-icon">🏠</span>
+                {!isCollapsed && <span className="sidebar-label">首页</span>}
+              </button>
+            </li>
           </ul>
         </nav>
         <button className="sidebar-logout" onClick={handleLogout}>
@@ -79,6 +54,9 @@ const Sidebar = () => {
           {!isCollapsed && <span className="sidebar-label">退出</span>}
         </button>
       </aside>
+
+      {/* 遮罩层 */}
+      {isMobile && isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)}></div>}
     </>
   );
 };

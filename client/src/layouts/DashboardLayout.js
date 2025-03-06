@@ -1,32 +1,34 @@
-import React, { useState } from "react";
-import Sidebar from "../components/Sidebar";
+import { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
+import "../styles/DashboardLayout.css";
 
-const DashboardLayout = ({ children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const DashboardLayout = () => {
+  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) setIsCollapsed(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <div style={styles.container}>
-      {/* Sidebar */}
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-
-      {/* 右侧内容区 */}
-      <div style={{ ...styles.content, marginLeft: isCollapsed ? "80px" : "250px" }}>
-        {children}
+    <div className="dashboard-layout">
+      {isMobile ? (
+        <Navbar />
+      ) : (
+        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      )}
+      <div className={`dashboard-content ${isCollapsed ? "collapsed" : ""}`}>
+        <Outlet />
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    height: "100vh",
-  },
-  content: {
-    flexGrow: 1,
-    padding: "20px",
-    transition: "margin-left 0.3s ease",
-  },
 };
 
 export default DashboardLayout;

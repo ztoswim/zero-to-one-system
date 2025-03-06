@@ -1,0 +1,21 @@
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .dashboard-content {
+    flex-grow: 1;
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 16rem;
+  }
+  
+  .dashboard-content.collapsed {
+    margin-left: 4rem;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-content {
+      margin-left: 0;
+    }
+  }
+  
