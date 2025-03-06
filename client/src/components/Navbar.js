@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaSignOutAlt, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie } from "react-icons/fa";
+import { FaBars, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const role = getUserRole();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -24,28 +24,26 @@ const Navbar = () => {
 
   return (
     <header className="navbar">
-      <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
+      <button className="menu-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
         <FaBars />
       </button>
 
-      {menuOpen && (
-        <nav className="mobile-menu">
+      {isMenuOpen && (
+        <nav className="navbar-menu">
           <ul>
             {menuItems.map(({ label, icon: Icon, path }) => (
               <li key={path}>
-                <button className="mobile-menu-item" onClick={() => navigate(path)}>
-                  <Icon className="menu-icon" />
+                <button className="navbar-item" onClick={() => navigate(path)}>
+                  <Icon className="navbar-icon" />
                   <span>{label}</span>
                 </button>
               </li>
             ))}
-            <li>
-              <button className="mobile-menu-item logout" onClick={handleLogout}>
-                <FaSignOutAlt className="menu-icon" />
-                <span>退出</span>
-              </button>
-            </li>
           </ul>
+          <button className="navbar-logout" onClick={handleLogout}>
+            <FaSignOutAlt className="navbar-icon" />
+            <span>退出</span>
+          </button>
         </nav>
       )}
     </header>

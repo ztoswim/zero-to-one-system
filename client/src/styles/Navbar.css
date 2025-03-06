@@ -1,10 +1,10 @@
 .navbar {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: #1a202c;
     color: white;
     padding: 1rem;
-    display: flex;
-    align-items: center;
   }
   
   .menu-button {
@@ -15,37 +15,40 @@
     cursor: pointer;
   }
   
-  .mobile-menu {
+  .navbar-menu {
     position: absolute;
-    top: 3rem;
+    top: 60px;
     left: 0;
     width: 100%;
-    background-color: #1a202c;
+    background-color: #2d3748;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
     padding: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease-in-out;
   }
   
-  .mobile-menu-item {
+  .navbar-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
     padding: 0.75rem;
     width: 100%;
-    border: none;
     background: none;
+    border: none;
     color: white;
     cursor: pointer;
   }
   
-  .mobile-menu-item:hover {
-    background-color: #2d3748;
+  .navbar-item:hover {
+    background-color: #4a5568;
   }
   
-  .logout {
+  .navbar-logout {
     background-color: #e53e3e;
-  }
-  
-  .logout:hover {
-    background-color: #c53030;
+    padding: 0.75rem;
+    width: 100%;
+    border: none;
+    color: white;
+    cursor: pointer;
   }
   

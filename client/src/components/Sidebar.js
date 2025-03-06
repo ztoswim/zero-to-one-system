@@ -4,11 +4,10 @@ import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie
 import { getUserRole, logout } from "../auth";
 import "../styles/Sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [role, setRole] = useState(getUserRole());
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const handleStorageChange = () => setRole(getUserRole());
@@ -50,7 +49,6 @@ const Sidebar = () => {
           ))}
         </ul>
       </nav>
-
       <button className="sidebar-logout" onClick={handleLogout}>
         <FaSignOutAlt className="sidebar-icon" />
         {!isCollapsed && <span className="sidebar-label">退出</span>}
