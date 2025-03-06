@@ -9,27 +9,24 @@ zero-to-one-ststem/
 │   │   ├── 📂 assets/               
 │   │   │   ├── Logo.png      
 │   │   ├── 📂 components/          # 复用组件
-│   │   │   ├── DashboardLayout.js
+│   │   │   ├── DashboardLayout.jsx
 │   │   │   ├── menuConfig.js
-│   │   │   ├── Sidebar.js
-│   │   │   ├── Navbar.js
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Navbar.jsx
 │   │   ├── 📂 pages/               # 页面组件
-│   │   │   ├── Login.js
-│   │   │   ├── Dashboard.js
-│   │   │   ├── BossDashboard.js
-│   │   │   ├── AdminDashboard.js
-│   │   │   ├── CoachDashboard.js
-│   │   │   ├── CustomerDashboard.js
-│   │   ├── 📂 styles/               # 页面组件
-│   │   │   ├── Login.css
-│   │   │   ├── Sidebar.css
-│   │   │   ├── Navbar.css
-│   │   │   ├── DashboardLayout.css
+│   │   │   ├── Login.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── BossDashboard.jsx
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── CoachDashboard.jsx
+│   │   │   ├── CustomerDashboard.jsx
 │   │   ├── auth.js             # 处理 token & 角色
-│   │   ├── App.js
-│   │   ├── index.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── index.css
+│   │   ├── vite.config.js
+│   │   ├── tailwind.config.js
 │   ├── package.json
-│   ├── .env                        # 环境变量
 │   ├── .gitignore
 │
 ├── 📂 server/         # 后端代码 (Node.js + Express + MongoDB)
