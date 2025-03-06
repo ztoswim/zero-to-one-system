@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Logo.png";
-import { getUserRole, logout } from "../auth";
+import { useAuth, logout } from "../auth";
 import menuConfig from "./menuConfig";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const role = getUserRole();
+  const [role] = useAuth(); // 使用自定义 Hook 获取角色
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -19,45 +20,64 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
   return (
-    <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4 shadow-lg">
-      {/* Logo and title */}
+    <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4 shadow-lg relative">
+      {/* Logo */}
       <div className="flex items-center">
-        <img src={logo} alt="Logo" className="w-12" />
-        <span className="ml-4 text-xl font-semibold tracking-wide uppercase">Zero To One</span>
+        <img src={logo} alt="Logo" className="w-12 transition-all duration-300" />
+        <span className="ml-4 text-xl font-semibold tracking-wide uppercase transition-all duration-300">
+          Zero To One
+        </span>
       </div>
 
-      {/* Menu Toggle Button */}
-      <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
-        <FaBars className="text-white text-2xl" />
-      </button>
+      {/* 菜单按钮（展开后隐藏） */}
+      {!isMenuOpen && (
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="p-2 transition-all duration-300 transform hover:scale-110 hover:bg-gray-800 rounded-md"
+        >
+          <FaBars className="text-white text-2xl" />
+        </button>
+      )}
 
-      {/* Dropdown Menu */}
-      {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-14 right-4 bg-gray-900 text-white shadow-lg rounded-lg w-48 p-2">
-          {/* Menu Items */}
-          {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
+      {/* 下拉菜单 */}
+      <div
+        ref={menuRef}
+        className={`absolute top-14 right-4 bg-gray-900 text-white shadow-lg rounded-lg w-48 p-2 transition-all duration-300 ${
+          isMenuOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
+        {/* 菜单项 */}
+        {menuConfig
+          .filter(({ role: r }) => r.includes(role))
+          .map(({ label, icon, path }) => (
             <button
               key={path}
-              onClick={() => navigate(path)}
-              className={`flex items-center p-3 w-full text-left rounded hover:bg-gray-700 ${window.location.pathname === path ? "bg-gray-700" : ""}`}
+              onClick={() => {
+                navigate(path);
+                setIsMenuOpen(false);
+              }}
+              className={`flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out ${
+                location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
+              }`}
             >
               <span className="text-xl">{icon}</span>
-              <span className="ml-3">{label}</span>
+              <span className="ml-3 transition-opacity duration-300">{label}</span>
             </button>
           ))}
-          {/* Logout Button */}
-          <button onClick={handleLogout} className="flex items-center p-3 w-full text-left rounded hover:bg-red-600 mt-2">
-            <FaSignOutAlt className="text-xl" />
-            <span className="ml-3">退出</span>
-          </button>
-        </div>
-      )}
+
+        {/* 退出按钮 */}
+        <button
+          onClick={() => {
+            logout();
+            navigate("/login");
+          }}
+          className="flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out hover:bg-red-600 mt-2"
+        >
+          <FaSignOutAlt className="text-xl" />
+          <span className="ml-3 transition-opacity duration-300">退出</span>
+        </button>
+      </div>
     </nav>
   );
 };
