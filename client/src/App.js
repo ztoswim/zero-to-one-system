@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./auth"; // 引入自定义 Hook
 import Login from "./pages/Login";
 import BossDashboard from "./pages/BossDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 
+import { useAuth } from "./auth";
+
 const App = () => {
-  const userRole = useAuth(); // 直接使用自定义 Hook 获取角色
+  const userRole = useAuth(); // ✅ 确保 useAuth() 被正确调用
+
+  console.log("当前用户角色:", userRole);
 
   return (
     <Router>
