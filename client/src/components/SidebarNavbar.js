@@ -7,7 +7,7 @@ import API_BASE_URL from "../api/apiConfig";
 import Logo from "../assets/Logo.png";
 import "../styles/SidebarNavbar.css";
 
-const SidebarNavbar = ({ isMobileSidebarOpen, closeMobileSidebar }) => {
+const SidebarNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -31,7 +31,7 @@ const SidebarNavbar = ({ isMobileSidebarOpen, closeMobileSidebar }) => {
   };
 
   return (
-    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobileSidebarOpen ? "mobile-open" : ""}`}>
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
         <img src={Logo} alt="Logo" className="sidebar-logo" />
         {!isCollapsed && <span className="sidebar-title">Zero To One Academy</span>}
@@ -47,10 +47,7 @@ const SidebarNavbar = ({ isMobileSidebarOpen, closeMobileSidebar }) => {
               <li key={path}>
                 <button
                   className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
-                  onClick={() => {
-                    navigate(path);
-                    if (isMobileSidebarOpen) closeMobileSidebar(); // 关闭移动端 Sidebar
-                  }}
+                  onClick={() => navigate(path)}
                 >
                   <span className="sidebar-icon">{icon}</span>
                   {!isCollapsed && <span className="sidebar-label">{label}</span>}
