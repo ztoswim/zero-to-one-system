@@ -39,15 +39,15 @@ const Sidebar = () => {
           src={Logo}
           alt="Logo"
           className={`transition-all duration-300 ${
-            isCollapsed ? "w-10 h-10" : "w-14 h-14"
-          } object-contain`}
+            isCollapsed ? "w-10 h-10" : "w-20 h-20"
+          } object-contain"}
         />
         {/* ZERO TO ONE 文字 */}
         {!isCollapsed && (
-          <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center text-left h-14">
-            <span className="tracking-wider">ZERO</span>
-            <span className="tracking-wider">TO</span>
-            <span className="tracking-wider">ONE</span>
+          <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center items-center h-20">
+            <span className="tracking-wider text-center">ZERO</span>
+            <span className="tracking-wider text-center">TO</span>
+            <span className="tracking-wider text-center">ONE</span>
           </div>
         )}
       </div>
