@@ -45,7 +45,7 @@ const Sidebar = () => {
           />
           {/* ZERO TO ONE 竖排文字 */}
           {!isCollapsed && (
-            <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center">
+            <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col items-center text-center">
               <span className="tracking-wider">ZERO</span>
               <span className="tracking-wider mt-1">TO</span>
               <span className="tracking-wider mt-1">ONE</span>
