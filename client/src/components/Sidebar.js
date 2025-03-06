@@ -85,6 +85,9 @@ const Sidebar = () => {
             ))}
           </nav>
 
+          {/* Divider Line */}
+          {!isCollapsed && <div className="border-t border-gray-700 my-2 w-full"></div>}
+
           {/* Logout Button */}
           <button
             onClick={handleLogout}
