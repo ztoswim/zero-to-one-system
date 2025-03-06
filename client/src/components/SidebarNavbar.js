@@ -4,13 +4,14 @@ import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import menuConfig from "./menuConfig";
 import API_BASE_URL from "../api/apiConfig";
+import Logo from "../assets/Logo.png";
 import "../styles/SidebarNavbar.css";
 
-const SidebarNavbar = () => {
+const SidebarNavbar = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const role = getUserRole(); // 获取当前角色
+  const role = getUserRole();
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -22,7 +23,6 @@ const SidebarNavbar = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
-
       logout();
       navigate("/login");
     } catch (error) {
@@ -31,29 +31,20 @@ const SidebarNavbar = () => {
   };
 
   return (
-    <div className="sidebar-navbar-container">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <span className="navbar-title">Zero To One Academy</span>
-        </div>
-        <div className="navbar-right">
-          <button className="mobile-menu-button" onClick={toggleSidebar}>
-            {isCollapsed ? <FaBars /> : <FaTimes />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Sidebar (仅大屏显示) */}
+    <div className="dashboard-layout">
+      {/* Sidebar (固定在左侧) */}
       <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+        <div className="sidebar-header">
+          <img src={Logo} alt="Logo" className="sidebar-logo" />
+          {!isCollapsed && <span className="sidebar-title">Zero To One Academy</span>}
+        </div>
         <button className="sidebar-toggle" onClick={toggleSidebar}>
           {isCollapsed ? <FaBars /> : <FaTimes />}
         </button>
-
         <nav className="sidebar-nav">
           <ul>
             {menuConfig
-              .filter((item) => item.role.includes(role)) // 过滤菜单
+              .filter((item) => item.role.includes(role))
               .map(({ label, icon, path }) => (
                 <li key={path}>
                   <button
@@ -67,13 +58,21 @@ const SidebarNavbar = () => {
               ))}
           </ul>
         </nav>
-
-        {/* 退出按钮 */}
         <button className="sidebar-logout" onClick={handleLogout}>
           <FaSignOutAlt className="sidebar-icon" />
           {!isCollapsed && <span className="sidebar-label">退出</span>}
         </button>
       </aside>
+
+      {/* Navbar (小屏幕时显示) */}
+      <nav className="navbar">
+        <button className="mobile-menu-button" onClick={toggleSidebar}>
+          <FaBars />
+        </button>
+      </nav>
+
+      {/* 主要内容区域 */}
+      <main className="main-content">{children}</main>
     </div>
   );
 };
