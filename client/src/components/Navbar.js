@@ -41,7 +41,7 @@ const Navbar = () => {
               </li>
             ))}
           <li>
-            <button className="nav-button logout" onClick={logout}>
+            <button className="nav-button logout" onClick={() => { logout(); navigate("/login"); }}>
               退出
             </button>
           </li>

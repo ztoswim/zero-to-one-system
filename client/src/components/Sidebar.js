@@ -15,11 +15,6 @@ const Sidebar = () => {
     localStorage.setItem("sidebarCollapsed", isCollapsed);
   }, [isCollapsed]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
   return (
     <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <button className="toggle-button" onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -39,7 +34,7 @@ const Sidebar = () => {
             ))}
         </ul>
       </nav>
-      <button className="sidebar-logout" onClick={handleLogout}>
+      <button className="sidebar-logout" onClick={() => { logout(); navigate("/login"); }}>
         <FaSignOutAlt className="sidebar-icon" />
         {!isCollapsed && <span className="sidebar-label">退出</span>}
       </button>
