@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBars } from "react-icons/fa";
-import Sidebar from "./Sidebar";
+import Sidebar from "./SidebarNavbar";
 import logo from "../assets/Logo.png";
 
 const Navbar = ({ toggleSidebar }) => {
