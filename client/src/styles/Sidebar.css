@@ -1,4 +1,3 @@
-/* 侧边栏 */
 .sidebar {
   height: 100vh;
   width: 16rem;
@@ -7,119 +6,51 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   transition: width 0.3s ease-in-out;
 }
 
-/* 折叠状态 */
 .sidebar.collapsed {
   width: 4rem;
-  padding: 1rem 0.5rem;
 }
 
-/* 折叠按钮 */
 .sidebar-toggle {
   background: none;
   border: none;
   color: white;
   font-size: 1.5rem;
-  padding: 0.5rem;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
   margin-bottom: 1rem;
 }
 
-/* 按钮悬浮效果 */
-.sidebar-toggle:hover {
-  background-color: #2d3748;
-}
-
-/* 导航菜单 */
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  flex: 1;
 }
 
-/* 菜单按钮 */
 .sidebar-button {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   padding: 0.75rem;
   width: 100%;
-  text-align: left;
-  border-radius: 0.375rem;
-  transition: background 0.3s ease-in-out;
-  font-size: 1rem;
-  background: none;
   border: none;
+  background: none;
   color: white;
   cursor: pointer;
 }
 
-/* 鼠标悬浮 */
 .sidebar-button:hover {
   background-color: #2d3748;
 }
 
-/* 折叠时隐藏文字 */
 .sidebar.collapsed .sidebar-label {
   display: none;
 }
 
-/* 折叠状态下菜单项居中 */
-.sidebar.collapsed .sidebar-button {
-  justify-content: center;
-  padding: 0.75rem 0;
-}
-
-/* 图标样式 */
-.sidebar-icon {
-  font-size: 22px;
-}
-
-/* 退出按钮 */
 .sidebar-logout {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  width: 100%;
-  text-align: left;
-  border-radius: 0.375rem;
   background-color: #e53e3e;
-  transition: background 0.3s ease-in-out;
-  font-size: 1rem;
   border: none;
   color: white;
+  padding: 0.75rem;
   cursor: pointer;
-}
-
-/* 退出按钮悬浮 */
-.sidebar-logout:hover {
-  background-color: #c53030;
-}
-
-/* 折叠时 退出按钮 居中 */
-.sidebar.collapsed .sidebar-logout {
-  justify-content: center;
-  padding: 0.75rem 0;
-}
-
-/* 选中页面高亮 */
-.sidebar-button.active {
-  background-color: #4a5568;
-  color: #fbd38d;
-  font-weight: bold;
-}
-
-/* 高亮状态下的鼠标悬浮 */
-.sidebar-button.active:hover {
-  background-color: #2d3748;
 }

@@ -16,9 +16,8 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen">
-      {!isMobile && <Sidebar />} {/* 大屏幕时显示 Sidebar */}
+      {isMobile ? <Navbar /> : <Sidebar />} {/* 小屏显示 Navbar，大屏显示 Sidebar */}
       <div className="flex-1 flex flex-col">
-        {isMobile && <Navbar />} {/* 小屏幕时显示 Navbar */}
         <main className="p-4">{children}</main>
       </div>
     </div>
