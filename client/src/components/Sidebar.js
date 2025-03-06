@@ -34,12 +34,14 @@ const Sidebar = () => {
     >
       {/* Logo区 */}
       <div className="flex items-center mb-8">
-        <img src={Logo} alt="Logo" className="w-12" />
-        {!isCollapsed && (
-          <span className="ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400">
-            Zero To One
-          </span>
-        )}
+        <img src={Logo} alt="Logo" className="w-12 transition-transform duration-300" />
+        <span
+          className={`ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400 transition-opacity duration-300 ${
+            isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
+          }`}
+        >
+          Zero To One
+        </span>
       </div>
 
       <div className="border-t-2 border-gray-700 mb-6"></div>
@@ -54,7 +56,7 @@ const Sidebar = () => {
               onClick={() => navigate(path)}
               className={`flex items-center p-3 w-full rounded-md mb-4 hover:bg-indigo-600 hover:scale-105 transition-all duration-200 ease-in-out ${
                 location.pathname === path ? "bg-indigo-700" : ""
-              } ${isCollapsed ? "justify-center" : "justify-start"}`}  // 关键: 控制图标居中/靠左
+              } ${isCollapsed ? "justify-center" : "justify-start"}`}
             >
               {/* 图标容器 */}
               <span className="flex items-center justify-center w-8 h-8">
@@ -63,8 +65,14 @@ const Sidebar = () => {
                 </span>
               </span>
 
-              {/* 菜单文字 */}
-              {!isCollapsed && <span className="ml-4 text-base">{label}</span>}
+              {/* 菜单文字：加上淡入淡出+位移动画 */}
+              <span
+                className={`ml-4 text-base whitespace-nowrap transition-opacity duration-300 ${
+                  isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
+                }`}
+              >
+                {label}
+              </span>
             </button>
           ))}
       </nav>
@@ -77,7 +85,7 @@ const Sidebar = () => {
           onClick={handleLogout}
           className={`flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out ${
             isCollapsed ? "justify-center" : "justify-start"
-          }`}  // 关键: 控制图标居中/靠左
+          }`}
         >
           {/* 退出图标容器 */}
           <span className="flex items-center justify-center w-8 h-8">
@@ -86,7 +94,14 @@ const Sidebar = () => {
             </span>
           </span>
 
-          {!isCollapsed && <span className="ml-4 text-base">退出</span>}
+          {/* 退出文字：加上淡入淡出+位移动画 */}
+          <span
+            className={`ml-4 text-base whitespace-nowrap transition-opacity duration-300 ${
+              isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
+            }`}
+          >
+            退出
+          </span>
         </button>
       </div>
     </aside>
