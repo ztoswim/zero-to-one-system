@@ -12,7 +12,7 @@ const Sidebar = () => {
   const role = getUserRole();
   const menuRef = useRef(null);
 
-  const [isCollapsed, setIsCollapsed] = useState(true);  // 默认收起
+  const [isCollapsed, setIsCollapsed] = useState(true); // 默认收起
 
   const handleMouseEnter = () => setIsCollapsed(false);
   const handleMouseLeave = () => setIsCollapsed(true);
@@ -34,7 +34,13 @@ const Sidebar = () => {
     >
       {/* Logo区域 */}
       <div className="flex items-center justify-center mb-8">
-        <img src={Logo} alt="Logo" className="w-10 h-10" />
+        <img
+          src={Logo}
+          alt="Logo"
+          className={`transition-all duration-300 ease-in-out ${
+            isCollapsed ? "w-10 h-10" : "w-32 h-auto"
+          } object-contain`}
+        />
         {!isCollapsed && (
           <span className="ml-3 text-xl font-bold tracking-wider uppercase text-indigo-400">
             Zero To One
@@ -44,7 +50,7 @@ const Sidebar = () => {
 
       <div className="border-t-2 border-gray-700 mb-6"></div>
 
-      {/* 菜单 */}
+      {/* 菜单项 */}
       <nav className="flex-1 space-y-2">
         {menuConfig
           .filter(({ role: r }) => r.includes(role))
@@ -56,12 +62,12 @@ const Sidebar = () => {
                 location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
               }`}
             >
-              {/* 图标容器：固定宽高，始终居中 */}
+              {/* 图标区：固定尺寸、始终居中 */}
               <div className="flex items-center justify-center w-12 h-12 text-xl">
                 {icon}
               </div>
 
-              {/* 文字：展开时显示 */}
+              {/* 文字区：展开时显示 */}
               {!isCollapsed && (
                 <span className="text-base whitespace-nowrap">{label}</span>
               )}
@@ -77,12 +83,9 @@ const Sidebar = () => {
           onClick={handleLogout}
           className="flex items-center w-full rounded-md py-3 transition-all duration-200 ease-in-out hover:bg-red-600"
         >
-          {/* 图标容器：固定宽高，始终居中 */}
           <div className="flex items-center justify-center w-12 h-12 text-xl">
             <FaSignOutAlt />
           </div>
-
-          {/* 文字：展开时显示 */}
           {!isCollapsed && <span className="text-base">退出</span>}
         </button>
       </div>
