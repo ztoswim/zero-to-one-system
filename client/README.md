@@ -10,6 +10,7 @@ zero-to-one-ststem/
 │   │   │   ├── Logo.png      
 │   │   ├── 📂 components/          # 复用组件
 │   │   │   ├── Sidebar.js
+│   │   │   ├── Navbar.js
 │   │   ├── 📂 layouts/          # 复用组件
 │   │   │   ├── DashboardLayout.js
 │   │   ├── 📂 pages/               # 页面组件
@@ -21,6 +22,9 @@ zero-to-one-ststem/
 │   │   │   ├── CustomerDashboard.js
 │   │   ├── 📂 styles/               # 页面组件
 │   │   │   ├── Login.css
+│   │   │   ├── Sidebar.css
+│   │   │   ├── Navbar.css
+│   │   │   ├── DashboardLayout.css
 │   │   ├── auth.js             # 处理 token & 角色
 │   │   ├── App.js
 │   │   ├── index.js

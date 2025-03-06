@@ -1,31 +1,25 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import "../styles/DashboardLayout.css";
 
-const DashboardLayout = () => {
-  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+const DashboardLayout = ({ children }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) setIsCollapsed(false);
+      setIsMobile(window.innerWidth < 768);
     };
+    
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className="dashboard-layout">
-      {isMobile ? (
-        <Navbar />
-      ) : (
-        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      )}
-      <div className={`dashboard-content ${isCollapsed ? "collapsed" : ""}`}>
-        <Outlet />
+    <div className="flex min-h-screen">
+      {!isMobile && <Sidebar />} {/* 大屏幕时显示 Sidebar */}
+      <div className="flex-1 flex flex-col">
+        {isMobile && <Navbar />} {/* 小屏幕时显示 Navbar */}
+        <main className="p-4">{children}</main>
       </div>
     </div>
   );

@@ -1,26 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import "../styles/Sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed }) => {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [isOpen, setIsOpen] = useState(false); // 侧边栏展开/折叠状态
-  const role = getUserRole();
+  const location = useLocation();
+  const [role, setRole] = useState(getUserRole());
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) {
-        setIsCollapsed(false);
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const handleStorageChange = () => setRole(getUserRole());
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleLogout = () => {
@@ -28,36 +20,36 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  return (
-    <>
-      {/* 移动端菜单按钮 */}
-      {isMobile && (
-        <button className="mobile-menu-button" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <FaTimes /> : <FaBars />}
-        </button>
-      )}
+  const menuItems = [
+    { roles: ["boss", "admin", "coach", "customer"], label: "首页", icon: FaHome, path: `/${role}` },
+    { roles: ["boss", "admin"], label: "用户管理", icon: FaUsers, path: "/users" },
+    { roles: ["boss", "admin", "coach"], label: "课程管理", icon: FaChalkboardTeacher, path: "/courses" },
+    { roles: ["boss"], label: "员工管理", icon: FaUserTie, path: "/staff" },
+    { roles: ["boss", "admin", "coach", "customer"], label: "设置", icon: FaCog, path: "/settings" },
+  ].filter(item => item.roles.includes(role));
 
-      {/* 侧边栏 */}
-      <aside className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobile && isOpen ? "active" : ""}`}>
-        <nav className="sidebar-nav">
-          <ul>
-            <li>
-              <button className="sidebar-button" onClick={() => navigate("/home")}>
-                <span className="sidebar-icon">🏠</span>
-                {!isCollapsed && <span className="sidebar-label">首页</span>}
+  return (
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      <nav className="sidebar-nav">
+        <ul>
+          {menuItems.map(({ label, icon: Icon, path }) => (
+            <li key={path}>
+              <button
+                className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
+                onClick={() => navigate(path)}
+              >
+                <Icon className="sidebar-icon" />
+                {!isCollapsed && <span className="sidebar-label">{label}</span>}
               </button>
             </li>
-          </ul>
-        </nav>
-        <button className="sidebar-logout" onClick={handleLogout}>
-          <FaSignOutAlt className="sidebar-icon" />
-          {!isCollapsed && <span className="sidebar-label">退出</span>}
-        </button>
-      </aside>
-
-      {/* 遮罩层 */}
-      {isMobile && isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)}></div>}
-    </>
+          ))}
+        </ul>
+      </nav>
+      <button className="sidebar-logout" onClick={handleLogout}>
+        <FaSignOutAlt className="sidebar-icon" />
+        {!isCollapsed && <span className="sidebar-label">退出</span>}
+      </button>
+    </aside>
   );
 };
 
