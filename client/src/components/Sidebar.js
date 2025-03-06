@@ -34,7 +34,7 @@ const Sidebar = () => {
     >
       {/* 顶部 Logo + ZERO TO ONE */}
       <div className="flex flex-col justify-center items-center h-32 flex-shrink-0">
-        <div className="flex items-center">
+        <div className="flex flex-col items-center text-center">
           {/* Logo */}
           <img
             src={Logo}
@@ -45,7 +45,7 @@ const Sidebar = () => {
           />
           {/* ZERO TO ONE 竖排文字 */}
           {!isCollapsed && (
-            <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col items-center text-center">
+            <div className="text-indigo-400 font-bold text-lg leading-tight flex flex-col items-center text-center w-14 h-14">
               <span className="tracking-wider">ZERO</span>
               <span className="tracking-wider mt-1">TO</span>
               <span className="tracking-wider mt-1">ONE</span>
