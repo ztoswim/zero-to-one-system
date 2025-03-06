@@ -50,17 +50,21 @@ const Sidebar = () => {
       ref={menuRef}
       className={`hidden lg:flex flex-col w-${isCollapsed ? "16" : "64"} bg-gray-900 text-white h-screen p-4`}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-start">
         {/* Logo */}
-        <img src={Logo} alt="Logo" className="w-10 mb-2" />
-        
-        {/* Zero To One text */}
-        {!isCollapsed && (
-          <span className="text-lg mb-4">Zero To One</span>
-        )}
+        <div className="flex items-center mb-2">
+          <img src={Logo} alt="Logo" className="w-10" />
+          {/* Zero To One text in uppercase and to the right of logo */}
+          {!isCollapsed && (
+            <span className="ml-2 text-lg font-semibold tracking-wider uppercase">Zero To One</span>
+          )}
+        </div>
+
+        {/* Divider Line (always visible) */}
+        <div className="border-t border-gray-700 my-2 w-full"></div>
 
         {/* Menu and Logout Button */}
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col items-start w-full">
           {/* Menu Toggle Button (hidden when sidebar is expanded) */}
           {isCollapsed && (
             <button
