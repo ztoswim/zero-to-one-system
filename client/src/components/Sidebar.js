@@ -5,42 +5,42 @@ import { getUserRole, logout } from "../auth";
 import menuConfig from "./menuConfig";
 import API_BASE_URL from "../api/apiConfig";
 import Logo from "../assets/Logo.png";
-import "../styles/Sidebar.css"; // 引入 CSS
+import "../styles/Sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const role = getUserRole();
 
-  const [isCollapsed, setIsCollapsed] = useState(
-    localStorage.getItem("sidebarCollapsed") === "true"
-  );
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-    localStorage.setItem("sidebarCollapsed", !isCollapsed);
-  };
+  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   const handleLogout = async () => {
-    await fetch(`${API_BASE_URL}/auth/logout`, { method: "POST" });
-    logout();
-    navigate("/login");
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   return (
-    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""} ${className}`}>
       <div className="sidebar-header">
         <img src={Logo} alt="Logo" className="sidebar-logo" />
-        {!isCollapsed && <span className="sidebar-title">Zero To One</span>}
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
-          <FaBars />
-        </button>
+        {!isCollapsed && <span className="sidebar-title">Zero To One Academy</span>}
       </div>
-
+      <button className="sidebar-toggle" onClick={toggleSidebar}>
+        <FaBars />
+      </button>
       <nav className="sidebar-nav">
         <ul>
           {menuConfig
-            .filter(({ role: r }) => r.includes(role))
+            .filter((item) => item.role.includes(role))
             .map(({ label, icon, path }) => (
               <li key={path}>
                 <button
@@ -54,7 +54,6 @@ const Sidebar = () => {
             ))}
         </ul>
       </nav>
-
       <button className="sidebar-logout" onClick={handleLogout}>
         <FaSignOutAlt className="sidebar-icon" />
         {!isCollapsed && <span className="sidebar-label">退出</span>}

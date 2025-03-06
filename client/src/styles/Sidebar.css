@@ -52,12 +52,6 @@
   margin-top: 1rem;
 }
 
-.sidebar-nav ul {
-  list-style: none;
-  padding: 0;
-  width: 100%;
-}
-
 .sidebar-button {
   display: flex;
   align-items: center;

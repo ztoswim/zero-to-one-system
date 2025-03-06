@@ -5,9 +5,13 @@ import "../styles/DashboardLayout.css";
 const DashboardLayout = ({ children }) => {
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      {/* 仅在大屏显示 Sidebar */}
+      <Sidebar className="lg:block hidden" />
+
       <div className="dashboard-content">
-        <Navbar />
+        {/* 仅在小屏显示 Navbar */}
+        <Navbar className="lg:hidden block" />
+
         <main className="main-content">{children}</main>
       </div>
     </div>
