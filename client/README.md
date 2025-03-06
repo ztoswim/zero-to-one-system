@@ -9,10 +9,10 @@ zero-to-one-ststem/
 │   │   ├── 📂 assets/               
 │   │   │   ├── Logo.png      
 │   │   ├── 📂 components/          # 复用组件
+│   │   │   ├── DashboardLayout.js
+│   │   │   ├── menuConfig.js
 │   │   │   ├── Sidebar.js
 │   │   │   ├── Navbar.js
-│   │   ├── 📂 layouts/          # 复用组件
-│   │   │   ├── DashboardLayout.js
 │   │   ├── 📂 pages/               # 页面组件
 │   │   │   ├── Login.js
 │   │   │   ├── Dashboard.js
