@@ -56,8 +56,8 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
     >
-      {/* Logo Section */}
-      <div className="flex flex-col items-center justify-center mb-6">
+      {/* Logo Section (Logo and text side by side) */}
+      <div className="flex items-center mb-6">
         <img src={Logo} alt="Logo" className="w-10" />
         {!isCollapsed && (
           <span className="ml-4 text-lg font-semibold tracking-wider uppercase">Zero To One</span>
