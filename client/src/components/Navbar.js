@@ -8,16 +8,27 @@ import menuConfig from "./menuConfig";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [role] = useAuth(); // 使用自定义 Hook 获取角色
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const [role] = useAuth(); // 使用自定义 Hook 获取角色
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setIsMenuOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMenuOpen(false);
+      }
     };
-    if (isMenuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [isMenuOpen]);
 
   return (
@@ -61,18 +72,16 @@ const Navbar = () => {
                 location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
               }`}
             >
-              <span className="text-xl">{icon}</span>
+              <div className="text-xl">{icon}</div>
               <span className="ml-3 transition-opacity duration-300">{label}</span>
             </button>
           ))}
 
         {/* 退出按钮 */}
+        <div className="w-full border-t border-gray-700 my-2"></div>
         <button
-          onClick={() => {
-            logout();
-            navigate("/login");
-          }}
-          className="flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out hover:bg-red-600 mt-2"
+          onClick={handleLogout}
+          className="flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out hover:bg-red-600"
         >
           <FaSignOutAlt className="text-xl" />
           <span className="ml-3 transition-opacity duration-300">退出</span>
