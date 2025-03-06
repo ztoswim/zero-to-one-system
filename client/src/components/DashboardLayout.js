@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import "../styles/DashboardLayout.css"; // 引入 CSS
+import "../styles/DashboardLayout.css";
 
 const DashboardLayout = ({ children }) => {
   return (
