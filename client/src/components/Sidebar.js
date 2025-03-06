@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import menuConfig from "./menuConfig";
 import API_BASE_URL from "../api/apiConfig";
 import Logo from "../assets/Logo.png";
-import "../styles/SidebarNavbar.css";
+import "../styles/Sidebar.css";
 
-const SidebarNavbar = () => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -31,13 +31,13 @@ const SidebarNavbar = () => {
   };
 
   return (
-    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+    <aside className={`sidebar lg:block hidden ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
         <img src={Logo} alt="Logo" className="sidebar-logo" />
         {!isCollapsed && <span className="sidebar-title">Zero To One Academy</span>}
       </div>
       <button className="sidebar-toggle" onClick={toggleSidebar}>
-        {isCollapsed ? <FaBars /> : <FaTimes />}
+        <FaBars />
       </button>
       <nav className="sidebar-nav">
         <ul>
@@ -64,4 +64,4 @@ const SidebarNavbar = () => {
   );
 };
 
-export default SidebarNavbar;
+export default Sidebar;

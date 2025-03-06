@@ -1,0 +1,36 @@
+.navbar {
+    width: 100%;
+    background-color: #1a202c;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+  }
+  
+  .navbar-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .navbar-logo {
+    width: 40px;
+  }
+  
+  .navbar-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .navbar-menu-button {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: white;
+  }
+  
