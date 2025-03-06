@@ -61,15 +61,17 @@ const Sidebar = () => {
       {/* Divider */}
       <div className="border-t-2 border-gray-700 mb-4"></div>
 
-      {/* Menu Toggle Button */}
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={toggleSidebar}
-          className="flex items-center p-3 w-full rounded hover:bg-gray-700"
-        >
-          <FaBars className="text-xl" />
-        </button>
-      </div>
+      {/* Menu Toggle Button (Only visible when sidebar is collapsed) */}
+      {isCollapsed && (
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={toggleSidebar}
+            className="flex items-center p-3 w-full rounded hover:bg-gray-700"
+          >
+            <FaBars className="text-xl" />
+          </button>
+        </div>
+      )}
 
       {/* Navigation Menu */}
       <nav className="flex-1">
