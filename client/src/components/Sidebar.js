@@ -35,10 +35,13 @@ const Sidebar = () => {
   return (
     <aside
       ref={menuRef}
-      className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out bg-gray-900 text-white h-screen p-4 shadow-lg hover:shadow-2xl`}
+      className={`hidden lg:flex flex-col bg-gray-900 text-white h-screen p-4 shadow-lg hover:shadow-2xl`}
       style={{
-        width: isCollapsed ? '64px' : '250px',  // Dynamic width for expanded/collapsed sidebar
-        overflow: 'hidden',                    // Prevent overflow while transitioning
+        transform: isCollapsed ? "scaleX(0)" : "scaleX(1)", // Scale effect for expansion
+        transformOrigin: "left", // Animation starts from the left
+        width: '250px',  // Set width to the final expanded size
+        overflow: 'hidden',  // Prevent overflow during transition
+        transition: 'transform 0.4s ease-out', // Add transition for smooth scaling
       }}
       onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
