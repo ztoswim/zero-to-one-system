@@ -65,13 +65,13 @@ const Sidebar = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center w-full rounded-md py-3 transition-all duration-200 ease-in-out ${
+              className={`flex items-center justify-center w-full rounded-md py-3 transition-all duration-200 ease-in-out ${
                 location.pathname === path
                   ? "bg-indigo-700"
                   : "hover:bg-indigo-600"
               }`}
             >
-              <div className="flex items-center justify-center w-12 h-12 text-xl">
+              <div className="flex items-center justify-center w-16 h-12 text-xl">
                 {icon}
               </div>
               {!isCollapsed && (
@@ -86,9 +86,9 @@ const Sidebar = () => {
         <div className="w-full border-t border-gray-700 my-4"></div>
         <button
           onClick={handleLogout}
-          className="flex items-center w-full rounded-md py-3 transition-all duration-200 ease-in-out hover:bg-red-600"
+          className="flex items-center justify-center w-full rounded-md py-3 transition-all duration-200 ease-in-out hover:bg-red-600"
         >
-          <div className="flex items-center justify-center w-12 h-12 text-xl">
+          <div className="flex items-center justify-center w-16 h-12 text-xl">
             <FaSignOutAlt />
           </div>
           {!isCollapsed && <span className="text-base">退出</span>}
