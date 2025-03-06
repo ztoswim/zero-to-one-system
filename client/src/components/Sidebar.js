@@ -40,7 +40,7 @@ const Sidebar = () => {
           alt="Logo"
           className={`transition-all duration-300 ${
             isCollapsed ? "w-10 h-10" : "w-20 h-20"
-          } object-contain"}
+          } object-contain`}
         />
         {/* ZERO TO ONE 文字 */}
         {!isCollapsed && (
