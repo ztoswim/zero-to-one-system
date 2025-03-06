@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./auth";
 import Login from "./pages/Login";
 import BossDashboard from "./pages/BossDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -7,14 +8,7 @@ import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 
 const App = () => {
-  const [userRole, setUserRole] = useState(localStorage.getItem("role") || null);
-
-  useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (role) {
-      setUserRole(role); // **确保 useState 更新**
-    }
-  }, []);
+  const [userRole, setUserRole] = useAuth(); // ✅ 直接使用 Hook 获取角色
 
   return (
     <Router>
