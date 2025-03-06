@@ -35,7 +35,11 @@ const Sidebar = () => {
   return (
     <aside
       ref={menuRef}
-      className={`hidden lg:flex flex-col w-${isCollapsed ? "16" : "64"} bg-gray-900 text-white h-screen p-4 transition-all duration-300 ease-in-out shadow-lg hover:shadow-2xl`}
+      className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out bg-gray-900 text-white h-screen p-4 shadow-lg hover:shadow-2xl`}
+      style={{
+        width: isCollapsed ? '64px' : '250px',  // Dynamic width for expanded/collapsed sidebar
+        overflow: 'hidden',                    // Prevent overflow while transitioning
+      }}
       onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
       onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
     >
