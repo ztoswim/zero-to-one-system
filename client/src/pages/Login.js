@@ -8,17 +8,21 @@ const Login = ({ setUserRole }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);  // 新增 loading 状态
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);  // 开始loading
     try {
       const role = await login(username, password);
-
       setUserRole(role);
       navigate(`/${role}`);
     } catch (err) {
       setError(err.message || "登录失败");
+    } finally {
+      setLoading(false);  // 请求结束，关闭loading
     }
   };
 
@@ -55,9 +59,33 @@ const Login = ({ setUserRole }) => {
 
           <button
             type="submit"
-            className="w-full max-w-xs bg-blue-500 text-white py-3 rounded-md text-base font-medium hover:bg-blue-600 transition-colors"
+            className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+            disabled={loading}  // 登录中禁用按钮
           >
-            登录
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
+                  ></path>
+                </svg>
+                登录中...
+              </>
+            ) : (
+              "登录"
+            )}
           </button>
         </form>
       </div>
