@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaChalkboardTeacher, FaUserTie, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import "../styles/Sidebar.css";
 
-const Sidebar = ({ isCollapsed }) => {
+const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [role, setRole] = useState(getUserRole());
@@ -30,6 +30,12 @@ const Sidebar = ({ isCollapsed }) => {
 
   return (
     <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      {/* 折叠按钮 */}
+      <button className="sidebar-toggle" onClick={() => setIsCollapsed(!isCollapsed)}>
+        {isCollapsed ? <FaBars /> : <FaTimes />}
+      </button>
+
+      {/* 导航菜单 */}
       <nav className="sidebar-nav">
         <ul>
           {menuItems.map(({ label, icon: Icon, path }) => (
@@ -45,6 +51,8 @@ const Sidebar = ({ isCollapsed }) => {
           ))}
         </ul>
       </nav>
+
+      {/* 退出按钮 */}
       <button className="sidebar-logout" onClick={handleLogout}>
         <FaSignOutAlt className="sidebar-icon" />
         {!isCollapsed && <span className="sidebar-label">退出</span>}
