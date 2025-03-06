@@ -27,3 +27,13 @@ export const logout = () => {
   localStorage.removeItem("role");
 };
 
+// 自定义 Hook：管理用户角色
+export const useAuth = () => {
+  const [userRole, setUserRole] = useState(getUserRole());
+
+  useEffect(() => {
+    setUserRole(getUserRole()); // 确保 useState 更新
+  }, []);
+
+  return userRole;
+};
