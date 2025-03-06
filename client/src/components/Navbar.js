@@ -25,25 +25,33 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4">
+    <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4 shadow-lg">
+      {/* Logo and title */}
       <div className="flex items-center">
-        <img src={logo} alt="Logo" className="w-10" />
-        <span className="ml-2 text-lg">Zero To One</span>
+        <img src={logo} alt="Logo" className="w-12" />
+        <span className="ml-4 text-xl font-semibold tracking-wide uppercase">Zero To One</span>
       </div>
 
+      {/* Menu Toggle Button */}
       <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
-        <FaBars />
+        <FaBars className="text-white text-2xl" />
       </button>
 
+      {/* Dropdown Menu */}
       {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-14 right-4 bg-white text-black shadow-md rounded-lg w-48">
+        <div ref={menuRef} className="absolute top-14 right-4 bg-gray-900 text-white shadow-lg rounded-lg w-48 p-2">
+          {/* Menu Items */}
           {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
-            <button key={path} onClick={() => navigate(path)}
-              className={`flex items-center p-3 w-full text-left rounded hover:bg-gray-700 ${window.location.pathname === path ? "bg-gray-700" : ""}`}>
+            <button
+              key={path}
+              onClick={() => navigate(path)}
+              className={`flex items-center p-3 w-full text-left rounded hover:bg-gray-700 ${window.location.pathname === path ? "bg-gray-700" : ""}`}
+            >
               <span className="text-xl">{icon}</span>
               <span className="ml-3">{label}</span>
             </button>
           ))}
+          {/* Logout Button */}
           <button onClick={handleLogout} className="flex items-center p-3 w-full text-left rounded hover:bg-red-600 mt-2">
             <FaSignOutAlt className="text-xl" />
             <span className="ml-3">退出</span>
