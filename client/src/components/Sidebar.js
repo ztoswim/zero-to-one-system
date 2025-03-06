@@ -32,64 +32,67 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* 顶部 Logo + ZERO TO ONE */}
-      <div className="flex flex-col items-center justify-center h-40 flex-shrink-0">
-        {/* Logo */}
-        <div className={`flex justify-center items-center transition-all duration-300 ${isCollapsed ? "w-12 h-12" : "w-32 h-32"}`}>
+      {/* 顶部 Logo */}
+      <div className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? "h-16" : "h-36"} flex-shrink-0`}>
+        <div className={`flex justify-center items-center transition-all duration-300 ${isCollapsed ? "w-16 h-16" : "w-36 h-36"}`}>
           <img
             src={Logo}
             alt="Logo"
-            className="w-full h-full object-contain"
+            className={`transition-all duration-300 ${
+              isCollapsed ? "w-12 h-12" : "w-40 h-40"
+            } object-contain`}
           />
         </div>
-        {/* ZERO TO ONE 文字 */}
-        {!isCollapsed && (
-          <div className="text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center items-center mt-2">
-            <span className="tracking-wider text-center">ZERO</span>
-            <span className="tracking-wider text-center">TO</span>
-            <span className="tracking-wider text-center">ONE</span>
-          </div>
-        )}
       </div>
 
       {/* 分割线 */}
-      <div className="w-full border-t border-gray-700 my-4"></div>
+      <div className={`w-full border-t border-gray-700 transition-all duration-300 ${isCollapsed ? "mt-1" : "my-1.5"}`}></div>
 
       {/* 导航菜单 */}
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-1.5 px-2">
         {menuConfig
           .filter(({ role: r }) => r.includes(role))
           .map(({ label, icon, path }) => (
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center w-full rounded-md py-3 transition-all duration-200 ease-in-out ${
+              className={`flex items-center w-full rounded-md py-2 px-4 transition-all duration-200 ease-in-out ${
                 location.pathname === path
-                  ? "bg-indigo-700"
+                  ? "bg-indigo-700"  // 选中时样式
                   : "hover:bg-indigo-600"
               }`}
             >
-              <div className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? "w-16" : "w-12"} h-12 text-xl`}>
+              <div className={`flex items-center justify-center ${isCollapsed ? "w-16" : "w-14 -ml-4"} h-10 text-xl`}>
                 {icon}
               </div>
-              {!isCollapsed && (
-                <span className="text-base whitespace-nowrap">{label}</span>
-              )}
+              <span
+                className={`text-base whitespace-nowrap transition-opacity duration-300 ${
+                  isCollapsed ? "opacity-0 invisible" : "opacity-100 visible"
+                } -ml-1`}
+              >
+                {label}
+              </span>
             </button>
           ))}
       </nav>
 
       {/* 底部退出按钮 */}
-      <div className="mt-auto">
-        <div className="w-full border-t border-gray-700 my-4"></div>
+      <div className="mt-auto px-2">
+        <div className="w-full border-t border-gray-700 my-1.5"></div>
         <button
           onClick={handleLogout}
-          className="flex items-center w-full rounded-md py-3 transition-all duration-200 ease-in-out hover:bg-red-600"
+          className="flex items-center w-full rounded-md py-2 px-4 transition-all duration-200 ease-in-out hover:bg-red-600"
         >
-          <div className={`flex items-center justify-center transition-all duration-300 ${isCollapsed ? "w-16" : "w-12"} h-12 text-xl`}>
+          <div className={`flex items-center justify-center ${isCollapsed ? "w-16" : "w-14 -ml-4"} h-10 text-xl`}>
             <FaSignOutAlt />
           </div>
-          {!isCollapsed && <span className="text-base">退出</span>}
+          <span
+            className={`text-base transition-opacity duration-300 ${
+              isCollapsed ? "opacity-0 invisible" : "opacity-100 visible"
+            }`}
+          >
+            退出
+          </span>
         </button>
       </div>
     </aside>
