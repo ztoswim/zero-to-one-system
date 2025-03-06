@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useAuth, logout } from "../auth";
 import menuConfig from "./menuConfig";
-import API_BASE_URL from "../api/apiConfig";
 import Logo from "../assets/Logo.png";
 
 const Sidebar = () => {
