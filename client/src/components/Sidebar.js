@@ -15,10 +15,14 @@ const Sidebar = () => {
     localStorage.getItem("sidebarCollapsed") === "true"
   );
 
-  // Toggle sidebar collapse
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-    localStorage.setItem("sidebarCollapsed", !isCollapsed);
+  // Handle mouse enter to expand sidebar
+  const handleMouseEnter = () => {
+    setIsCollapsed(false);
+  };
+
+  // Handle mouse leave to collapse sidebar
+  const handleMouseLeave = () => {
+    setIsCollapsed(true);
   };
 
   // Close sidebar when clicking outside of it
@@ -49,6 +53,8 @@ const Sidebar = () => {
     <aside
       ref={menuRef}
       className={`hidden lg:flex flex-col w-${isCollapsed ? "16" : "64"} bg-gray-900 text-white h-screen p-4`}
+      onMouseEnter={handleMouseEnter}   // Mouse enter expands sidebar
+      onMouseLeave={handleMouseLeave}   // Mouse leave collapses sidebar
     >
       {/* Logo Section */}
       <div className="flex items-center mb-6">
@@ -60,18 +66,6 @@ const Sidebar = () => {
 
       {/* Divider */}
       <div className="border-t-2 border-gray-700 mb-4"></div>
-
-      {/* Menu Toggle Button (Only visible when sidebar is collapsed) */}
-      {isCollapsed && (
-        <div className="flex justify-center mb-6">
-          <button
-            onClick={toggleSidebar}
-            className="flex items-center p-3 w-full rounded hover:bg-gray-700"
-          >
-            <FaBars className="text-xl" />
-          </button>
-        </div>
-      )}
 
       {/* Navigation Menu */}
       <nav className="flex-1">
