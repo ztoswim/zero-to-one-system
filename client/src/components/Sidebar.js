@@ -54,9 +54,9 @@ const Sidebar = () => {
               onClick={() => navigate(path)}
               className={`flex items-center p-3 w-full rounded-md mb-4 hover:bg-indigo-600 hover:scale-105 transition-all duration-200 ease-in-out ${
                 location.pathname === path ? "bg-indigo-700" : ""
-              }`}
+              } ${isCollapsed ? "justify-center" : "justify-start"}`}  // 关键: 控制图标居中/靠左
             >
-              {/* 图标容器：固定大小 + 图标强制一致大小 */}
+              {/* 图标容器 */}
               <span className="flex items-center justify-center w-8 h-8">
                 <span className="w-6 h-6 flex items-center justify-center">
                   {icon}
@@ -75,9 +75,11 @@ const Sidebar = () => {
       <div className="mt-auto">
         <button
           onClick={handleLogout}
-          className="flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out"
+          className={`flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out ${
+            isCollapsed ? "justify-center" : "justify-start"
+          }`}  // 关键: 控制图标居中/靠左
         >
-          {/* 退出图标，同样固定大小+强制一致大小 */}
+          {/* 退出图标容器 */}
           <span className="flex items-center justify-center w-8 h-8">
             <span className="w-6 h-6 flex items-center justify-center">
               <FaSignOutAlt />
