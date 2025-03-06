@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBars } from "react-icons/fa";
-import Sidebar from "./SidebarNavbar";
+import SidebarNavbar from "./SidebarNavbar";
 import logo from "../assets/Logo.png";
 
 const Navbar = ({ toggleSidebar }) => {
@@ -16,12 +16,22 @@ const Navbar = ({ toggleSidebar }) => {
 
 const DashboardLayout = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen">
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      {/* 仅在大屏幕显示 SidebarNavbar */}
+      <div className="hidden lg:block">
+        <SidebarNavbar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      </div>
+      {/* 小屏幕 Sidebar 仅在打开时显示 */}
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden" onClick={() => setIsMobileSidebarOpen(false)}>
+          <SidebarNavbar isCollapsed={false} setIsCollapsed={() => {}} />
+        </div>
+      )}
       <div className="flex-1 flex flex-col">
-        <Navbar toggleSidebar={() => setIsCollapsed(!isCollapsed)} />
+        <Navbar toggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} />
         <main className="flex-1 p-4 mt-[3rem] lg:mt-0">{children}</main>
       </div>
     </div>
