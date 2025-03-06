@@ -61,7 +61,7 @@ const Sidebar = () => {
         </div>
 
         {/* Divider Line (always visible) */}
-        <div className="border-t border-gray-700 my-2 w-full"></div>
+        <div className="border-t-2 border-gray-700 my-2 w-full"></div> {/* Made the divider thicker */}
 
         {/* Menu and Logout Button */}
         <div className="flex flex-col items-start w-full">
@@ -75,7 +75,7 @@ const Sidebar = () => {
 
           {/* Divider Line between menu button and navigation */}
           {isCollapsed && (
-            <div className="border-t border-gray-700 w-full mb-2"></div>
+            <div className="border-t-2 border-gray-700 w-full mb-2"></div>  {/* Thicker divider */}
           )}
 
           {/* Navigation Menu */}
@@ -93,7 +93,7 @@ const Sidebar = () => {
           </nav>
 
           {/* Divider Line between menu and logout */}
-          {!isCollapsed && <div className="border-t border-gray-700 my-2 w-full"></div>}
+          <div className="border-t-2 border-gray-700 my-2 w-full"></div> {/* Thicker divider */}
 
           {/* Logout Button (placed at the bottom) */}
           <div className="mt-auto">
