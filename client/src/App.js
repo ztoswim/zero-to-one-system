@@ -6,18 +6,21 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 
-import { useAuth } from "./auth";
-
 const App = () => {
-  const userRole = useAuth(); // ✅ 确保 useAuth() 被正确调用
+  const [userRole, setUserRole] = useState(localStorage.getItem("role") || null);
 
-  console.log("当前用户角色:", userRole);
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role) {
+      setUserRole(role); // **确保 useState 更新**
+    }
+  }, []);
 
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to={userRole ? `/${userRole}` : "/login"} />} />
+        <Route path="/login" element={<Login setUserRole={setUserRole} />} />
+        <Route path="/" element={userRole ? <Navigate to={`/${userRole}`} /> : <Navigate to="/login" />} />
         <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
         <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
         <Route path="/coach" element={userRole === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />
