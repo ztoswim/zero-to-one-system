@@ -1,13 +1,14 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import "../styles/DashboardLayout.css"; // 引入 CSS
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="flex min-h-screen">
+    <div className="dashboard-container">
       <Sidebar />
-      <div className="flex flex-col flex-grow">
+      <div className="dashboard-content">
         <Navbar />
-        <main className="flex-grow p-4 overflow-auto">{children}</main>
+        <main className="main-content">{children}</main>
       </div>
     </div>
   );

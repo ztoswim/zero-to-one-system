@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import { getUserRole, logout } from "../auth";
 import menuConfig from "./menuConfig";
 import API_BASE_URL from "../api/apiConfig";
 import Logo from "../assets/Logo.png";
+import "../styles/Sidebar.css"; // 引入 CSS
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -27,26 +28,36 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className={`hidden lg:flex flex-col w-${isCollapsed ? "16" : "64"} bg-gray-900 text-white h-screen p-4`}>
-      <div className="flex items-center justify-between">
-        <img src={Logo} alt="Logo" className="w-10" />
-        {!isCollapsed && <span className="text-lg">Zero To One</span>}
-        <button onClick={toggleSidebar}><FaBars /></button>
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      <div className="sidebar-header">
+        <img src={Logo} alt="Logo" className="sidebar-logo" />
+        {!isCollapsed && <span className="sidebar-title">Zero To One</span>}
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          <FaBars />
+        </button>
       </div>
 
-      <nav className="mt-6 flex-1">
-        {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
-          <button key={path} onClick={() => navigate(path)}
-            className={`flex items-center p-3 rounded hover:bg-gray-700 ${location.pathname === path ? "bg-gray-700" : ""}`}>
-            <span className="text-xl">{icon}</span>
-            {!isCollapsed && <span className="ml-3">{label}</span>}
-          </button>
-        ))}
+      <nav className="sidebar-nav">
+        <ul>
+          {menuConfig
+            .filter(({ role: r }) => r.includes(role))
+            .map(({ label, icon, path }) => (
+              <li key={path}>
+                <button
+                  className={`sidebar-button ${location.pathname === path ? "active" : ""}`}
+                  onClick={() => navigate(path)}
+                >
+                  <span className="sidebar-icon">{icon}</span>
+                  {!isCollapsed && <span className="sidebar-label">{label}</span>}
+                </button>
+              </li>
+            ))}
+        </ul>
       </nav>
 
-      <button onClick={handleLogout} className="flex items-center p-3 rounded hover:bg-red-600">
-        <FaSignOutAlt className="text-xl" />
-        {!isCollapsed && <span className="ml-3">退出</span>}
+      <button className="sidebar-logout" onClick={handleLogout}>
+        <FaSignOutAlt className="sidebar-icon" />
+        {!isCollapsed && <span className="sidebar-label">退出</span>}
       </button>
     </aside>
   );
