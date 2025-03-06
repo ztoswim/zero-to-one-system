@@ -33,10 +33,9 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}
     >
       {/* 顶部 Logo + ZERO TO ONE */}
-      <div className="flex flex-col items-center justify-center flex-shrink-0 h-32">
-        {/* Logo 和 文本组合 */}
+      <div className="flex flex-col justify-center items-center h-32 flex-shrink-0">
         <div className="flex items-center">
-          {/* Logo部分 */}
+          {/* Logo */}
           <img
             src={Logo}
             alt="Logo"
@@ -44,19 +43,12 @@ const Sidebar = () => {
               isCollapsed ? "w-10 h-10" : "w-14 h-14"
             } object-contain`}
           />
-
-          {/* 竖排文字部分 */}
+          {/* ZERO TO ONE 竖排文字 */}
           {!isCollapsed && (
-            <div className="ml-3 flex flex-col items-center text-indigo-400 font-bold text-lg leading-5">
-              <span>Z</span>
-              <span>E</span>
-              <span>R</span>
-              <span>O</span>
-              <span className="mt-1">T</span>
-              <span>O</span>
-              <span className="mt-1">O</span>
-              <span>N</span>
-              <span>E</span>
+            <div className="ml-3 text-indigo-400 font-bold text-lg leading-tight flex flex-col justify-center">
+              <span className="tracking-wider">ZERO</span>
+              <span className="tracking-wider mt-1">TO</span>
+              <span className="tracking-wider mt-1">ONE</span>
             </div>
           )}
         </div>
@@ -79,7 +71,6 @@ const Sidebar = () => {
                   : "hover:bg-indigo-600"
               }`}
             >
-              {/* 图标 - 居中对齐，保持尺寸一致 */}
               <div className="flex items-center justify-center w-12 h-12 text-xl">
                 {icon}
               </div>
@@ -90,7 +81,7 @@ const Sidebar = () => {
           ))}
       </nav>
 
-      {/* 底部分割线和退出按钮 */}
+      {/* 底部退出按钮 */}
       <div className="mt-auto">
         <div className="w-full border-t border-gray-700 my-4"></div>
         <button
