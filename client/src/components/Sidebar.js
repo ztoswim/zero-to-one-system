@@ -34,7 +34,7 @@ const Sidebar = () => {
     >
       {/* Logo区 */}
       <div className="flex items-center mb-8">
-        <img src={Logo} alt="Logo" className="w-12 transition-transform duration-300" />
+        <img src={Logo} alt="Logo" className="w-12" />
         <span
           className={`ml-4 text-xl font-bold tracking-wider uppercase text-indigo-400 transition-opacity duration-300 ${
             isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
@@ -47,27 +47,29 @@ const Sidebar = () => {
       <div className="border-t-2 border-gray-700 mb-6"></div>
 
       {/* 菜单项 */}
-      <nav className="flex-1">
+      <nav className="flex-1 space-y-2">
         {menuConfig
           .filter(({ role: r }) => r.includes(role))
           .map(({ label, icon, path }) => (
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center p-3 w-full rounded-md mb-4 hover:bg-indigo-600 hover:scale-105 transition-all duration-200 ease-in-out ${
+              className={`flex items-center w-full rounded-md py-3 px-2 hover:bg-indigo-600 transition-all duration-200 ease-in-out ${
                 location.pathname === path ? "bg-indigo-700" : ""
               } ${isCollapsed ? "justify-center" : "justify-start"}`}
             >
-              {/* 图标容器 */}
-              <span className="flex items-center justify-center w-8 h-8">
-                <span className="w-6 h-6 flex items-center justify-center">
-                  {icon}
-                </span>
-              </span>
+              {/* 图标 */}
+              <div
+                className={`flex items-center justify-center w-10 h-10 text-xl ${
+                  isCollapsed ? "mx-auto" : "mr-3"
+                }`}
+              >
+                {icon}
+              </div>
 
-              {/* 菜单文字：加上淡入淡出+位移动画 */}
+              {/* 文字 */}
               <span
-                className={`ml-4 text-base whitespace-nowrap transition-opacity duration-300 ${
+                className={`text-base whitespace-nowrap transition-all duration-300 ${
                   isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
                 }`}
               >
@@ -83,20 +85,19 @@ const Sidebar = () => {
       <div className="mt-auto">
         <button
           onClick={handleLogout}
-          className={`flex items-center p-3 w-full rounded-md hover:bg-red-600 hover:scale-105 transition-all duration-200 ease-in-out ${
+          className={`flex items-center w-full rounded-md py-3 px-2 hover:bg-red-600 transition-all duration-200 ease-in-out ${
             isCollapsed ? "justify-center" : "justify-start"
           }`}
         >
-          {/* 退出图标容器 */}
-          <span className="flex items-center justify-center w-8 h-8">
-            <span className="w-6 h-6 flex items-center justify-center">
-              <FaSignOutAlt />
-            </span>
-          </span>
-
-          {/* 退出文字：加上淡入淡出+位移动画 */}
+          <div
+            className={`flex items-center justify-center w-10 h-10 text-xl ${
+              isCollapsed ? "mx-auto" : "mr-3"
+            }`}
+          >
+            <FaSignOutAlt />
+          </div>
           <span
-            className={`ml-4 text-base whitespace-nowrap transition-opacity duration-300 ${
+            className={`text-base whitespace-nowrap transition-all duration-300 ${
               isCollapsed ? "opacity-0 translate-x-[-10px]" : "opacity-100 translate-x-0"
             }`}
           >
