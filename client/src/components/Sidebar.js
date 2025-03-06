@@ -30,12 +30,12 @@ const Sidebar = () => {
     <aside className={`hidden lg:flex flex-col w-${isCollapsed ? "16" : "64"} bg-gray-900 text-white h-screen p-4`}>
       <div className="flex flex-col items-center">
         {/* Logo */}
-        <img src={Logo} alt="Logo" className="w-10 mb-4" />
+        <img src={Logo} alt="Logo" className="w-10 mb-2" />
         
         {/* Menu Toggle Button */}
         <button
           onClick={toggleSidebar}
-          className={`flex items-center p-3 rounded mb-4 hover:bg-gray-700 ${location.pathname === '/' ? "bg-gray-700" : ""}`}
+          className={`flex items-center p-3 rounded mb-2 hover:bg-gray-700 ${location.pathname === '/' ? "bg-gray-700" : ""}`}
         >
           <FaBars className="text-xl" />
         </button>

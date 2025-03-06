@@ -2,11 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/Logo.png";
+import { getUserRole } from "../auth";
+import menuConfig from "./menuConfig";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const role = getUserRole();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -23,14 +26,17 @@ const Navbar = () => {
         <span className="ml-2 text-lg">Zero To One</span>
       </div>
 
-      <button onClick={() => setIsMenuOpen(!isMenuOpen)}><FaBars /></button>
+      <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
+        <FaBars />
+      </button>
 
       {isMenuOpen && (
         <div ref={menuRef} className="absolute top-14 right-4 bg-white text-black shadow-md rounded-lg w-48">
-          {["/dashboard", "/profile", "/logout"].map((path, i) => (
-            <button key={i} onClick={() => navigate(path)}
-              className="block w-full text-left p-3 hover:bg-gray-200">
-              {path === "/logout" ? "退出" : path === "/profile" ? "个人资料" : "Dashboard"}
+          {menuConfig.filter(({ role: r }) => r.includes(role)).map(({ label, icon, path }) => (
+            <button key={path} onClick={() => navigate(path)}
+              className={`flex items-center p-3 w-full text-left rounded hover:bg-gray-700 ${window.location.pathname === path ? "bg-gray-700" : ""}`}>
+              <span className="text-xl">{icon}</span>
+              <span className="ml-3">{label}</span>
             </button>
           ))}
         </div>
