@@ -66,14 +66,12 @@ const Sidebar = () => {
         {/* Menu and Logout Button */}
         <div className="flex flex-col items-start w-full">
           {/* Menu Toggle Button (hidden when sidebar is expanded) */}
-          {isCollapsed && (
-            <button
-              onClick={toggleSidebar}
-              className="flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700"
-            >
-              <FaBars className="text-xl" />
-            </button>
-          )}
+          <button
+            onClick={toggleSidebar}
+            className={`flex items-center p-3 w-full rounded mb-2 hover:bg-gray-700 ${isCollapsed ? "mt-2" : ""}`}
+          >
+            <FaBars className="text-xl" />
+          </button>
 
           {/* Divider Line between menu button and navigation */}
           {isCollapsed && (
