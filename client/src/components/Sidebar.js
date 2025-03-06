@@ -16,11 +16,10 @@ const Sidebar = () => {
   const handleMouseEnter = () => setIsCollapsed(false);
   const handleMouseLeave = () => setIsCollapsed(true);
 
-  const handleLogout = async () => {
-    await fetch(`${API_BASE_URL}/auth/logout`, { method: "POST" });
-    logout();
-    navigate("/login");
-  };
+  const handleLogout = () => {
+    logout(); // 清除 JWT Token
+    navigate("/login"); // 跳转到登录页
+  };  
 
   return (
     <aside
