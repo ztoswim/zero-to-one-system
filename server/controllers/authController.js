@@ -21,6 +21,8 @@ const loginUser = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "账号或密码错误" });
 
     const token = generateToken(user._id);
+    console.log("生成的 token:", token); // 打印生成的 token
+
     res.json({ token, role: user.role });
   } catch (error) {
     res.status(500).json({ message: "服务器错误" });

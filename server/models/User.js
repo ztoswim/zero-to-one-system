@@ -8,6 +8,6 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // 确保 username 大小写不敏感唯一
-userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
 
 module.exports = mongoose.model("User", userSchema);
