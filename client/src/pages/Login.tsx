@@ -36,12 +36,11 @@ const Login = () => {
   
     } catch (err: any) {
       console.error("登录失败:", err);
-      setError(err.response?.data?.message || "用户名或密码错误");
+      setError(err.response ? err.response.data.message : "用户名或密码错误");
     } finally {
       setLoading(false);
     }
   };
-  
   
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100 p-4">

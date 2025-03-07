@@ -10,7 +10,7 @@ export const login = async (
 ): Promise<{ token: string; role: UserRole }> => {
   const { data } = await apiClient.post<{ token: string }>(`${AUTH_API_URL}/login`, { username, password });
 
-  console.log("API 返回的数据:", data); // 打印数据
+  console.log("API 返回的数据:", data); // 打印数据，确保 token 被正确返回
 
   if (!data || !data.token) {
     throw new Error("没有返回有效的 token");
@@ -35,10 +35,7 @@ export const registerCustomer = async (
   username: string, 
   password: string
 ): Promise<string> => {
-  const { data } = await apiClient.post<{ message: string }>(
-    `${AUTH_API_URL}/register/customer`, 
-    { email, username, password }
-  );
+  const { data } = await apiClient.post<{ message: string }>(`${AUTH_API_URL}/register/customer`, { email, username, password });
   return data.message;
 };
 
@@ -47,10 +44,7 @@ export const registerEmployee = async (
   password: string, 
   role: string
 ): Promise<string> => {
-  const { data } = await apiClient.post<{ message: string }>(
-    `${AUTH_API_URL}/register/employee`,
-    { username, password, role }
-  );
+  const { data } = await apiClient.post<{ message: string }>(`${AUTH_API_URL}/register/employee`, { username, password, role });
   return data.message;
 };
 
@@ -59,9 +53,6 @@ export const resetPassword = async (
   username: string, 
   newPassword: string
 ): Promise<string> => {
-  const { data } = await apiClient.put<{ message: string }>(
-    `${AUTH_API_URL}/reset-password`, 
-    { email, username, newPassword }
-  );
+  const { data } = await apiClient.put<{ message: string }>(`${AUTH_API_URL}/reset-password`, { email, username, newPassword });
   return data.message;
 };
