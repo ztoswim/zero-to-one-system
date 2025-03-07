@@ -10,6 +10,12 @@ export const login = async (
 ): Promise<{ token: string; role: UserRole }> => {
   const { data } = await apiClient.post<{ token: string }>(`${AUTH_API_URL}/login`, { username, password });
 
+  console.log("API 返回的数据:", data); // 打印数据
+
+  if (!data || !data.token) {
+    throw new Error("没有返回有效的 token");
+  }
+
   // ✅ 确保 jwtDecode 正确解析 token
   const decoded = jwtDecode<{ role: string }>(data.token);
 
