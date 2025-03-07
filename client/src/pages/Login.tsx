@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/authApi"; // API 请求
-import { saveUserAuth } from "../auth"; // 存储 Token
+import { saveUserAuth, UserRole } from "../auth"; // 存储 Token
 import { User, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,14 +18,22 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
+  
     try {
-      const { token, role } = await login(username, password);
-      if (!token) throw new Error("服务器返回数据不完整");
-
-      saveUserAuth(token);
-      navigate(`/${role}`);
-
+      const response = await login(username, password); // 调用登录 API
+      console.log("登录成功:", response); // 确保 API 返回正确
+  
+      const { token, role } = response;
+  
+      // 🚨 确保角色是有效的 "boss" | "admin" | "coach" | "customer"
+      if (!token || !role || !["boss", "admin", "coach", "customer"].includes(role)) {
+        throw new Error("服务器返回的角色信息无效");
+      }
+  
+      // 保存用户角色和 Token
+      saveUserAuth(role as UserRole, token); // 这里传递两个参数，确保类型正确
+      navigate(`/${role}`); // 跳转到相应的角色页面
+  
     } catch (err: any) {
       console.error("登录失败:", err);
       setError(err.response?.data?.message || "用户名或密码错误");
@@ -33,7 +41,8 @@ const Login = () => {
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8 text-center">
