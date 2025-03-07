@@ -1,33 +1,37 @@
 import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
 
-// 定义 Token 结构
+// Token 结构
 interface DecodedToken {
   exp: number;
-  [key: string]: any; // 允许其他 JWT 字段
+  role: string;
 }
 
 // 获取 Token & 角色
-export const getToken = (): string | null => localStorage.getItem("token");
-export const getUserRole = (): string | null => localStorage.getItem("role");
+export const getToken = () => localStorage.getItem("token");
+export const getUserRole = () => localStorage.getItem("role");
 
 // 存储 Token & 角色
-export const saveUserAuth = (token: string, role: string) => {
-  localStorage.setItem("token", token);
-  localStorage.setItem("role", role);
-  window.dispatchEvent(new Event("storage")); // 通知其他组件
+export const saveUserAuth = (token: string) => {
+  try {
+    const decoded: DecodedToken = jwtDecode(token);
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", decoded.role);
+    window.dispatchEvent(new Event("storage")); // 通知其他组件
+  } catch (error) {
+    console.error("解析 Token 失败:", error);
+  }
 };
 
-// 检查 Token 是否有效
-export const isAuthenticated = (): boolean => {
+// 检查是否已认证
+export const checkAuth = () => {
   const token = getToken();
   if (!token) return false;
 
   try {
     const decoded: DecodedToken = jwtDecode(token);
-    return decoded.exp * 1000 > Date.now();
-  } catch (error) {
-    console.error("Token 解析失败:", error);
+    return decoded.exp * 1000 > Date.now(); // 过期时间是秒，转为毫秒比较
+  } catch {
     return false;
   }
 };
@@ -36,33 +40,23 @@ export const isAuthenticated = (): boolean => {
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
-  window.dispatchEvent(new Event("storage"));
+  window.dispatchEvent(new Event("storage")); // 通知组件状态更新
 };
 
-// 自定义 Hook：监听用户角色
-export const useAuth = (): [string | null, (role: string | null) => void] => {
-  const [userRole, setUserRoleState] = useState<string | null>(getUserRole());
+// 自定义 Hook：全局管理认证状态
+export const useAuth = () => {
+  const [userRole, setUserRole] = useState<string | null>(getUserRole());
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(checkAuth());
 
   useEffect(() => {
-    const updateRole = () => setUserRoleState(getUserRole());
-    window.addEventListener("storage", updateRole);
+    const updateAuth = () => {
+      setUserRole(getUserRole());
+      setIsAuthenticated(checkAuth());
+    };
 
-    // 在页面加载时同步状态
-    updateRole();
-
-    return () => window.removeEventListener("storage", updateRole);
+    window.addEventListener("storage", updateAuth);
+    return () => window.removeEventListener("storage", updateAuth);
   }, []);
 
-  // 确保 setUserRole 也会存入 localStorage
-  const setUserRole = (role: string | null) => {
-    if (role) {
-      localStorage.setItem("role", role);
-    } else {
-      localStorage.removeItem("role");
-    }
-    setUserRoleState(role);
-    window.dispatchEvent(new Event("storage"));
-  };
-
-  return [userRole, setUserRole];
+  return { userRole, isAuthenticated, logout };
 };

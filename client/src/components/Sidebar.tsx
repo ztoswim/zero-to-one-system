@@ -1,23 +1,23 @@
 import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut } from "lucide-react"; // 替换 FaSignOutAlt
-import { useAuth, logout } from "../auth";
+import { LogOut } from "lucide-react";
+import { useAuth } from "../auth";  // 这里修正
 import menuConfig from "./menuConfig";
 import Logo from "../assets/Logo.png";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [role] = useAuth(); // 用自定义 Hook 获取角色
+  const { userRole, logout } = useAuth();  // 修正：正确解构 useAuth
+  const role = userRole || ""; // 确保 role 是字符串
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(true); // 默认收起
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
-  const handleMouseEnter = () => setIsCollapsed(false);
-  const handleMouseLeave = () => setIsCollapsed(true);
+  const toggleCollapse = (collapse: boolean) => setIsCollapsed(collapse);
 
   const handleLogout = () => {
-    logout(); // 清除 JWT Token
-    navigate("/login"); // 跳转到登录页
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -26,10 +26,10 @@ const Sidebar: React.FC = () => {
       className={`hidden lg:flex flex-col h-screen bg-gray-900 text-white shadow-lg transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-64"
       }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => toggleCollapse(false)}
+      onMouseLeave={() => toggleCollapse(true)}
     >
-      {/* 顶部 Logo */}
+      {/* Logo */}
       <div className={`flex items-center justify-center transition-all ${isCollapsed ? "h-16" : "h-36"}`}>
         <img
           src={Logo}
@@ -44,27 +44,30 @@ const Sidebar: React.FC = () => {
       {/* 导航菜单 */}
       <nav className="flex-1 space-y-1 px-2">
         {menuConfig
-          .filter(({ role: r }) => r.includes(role || ""))
-          .map(({ label, icon, path }) => (
-            <button
-              key={path}
-              onClick={() => navigate(typeof path === "function" ? path(role) : path)}
-              className={`flex items-center w-full rounded-md py-2 px-4 transition-all ${
-                location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
-              }`}
-            >
-              <div className={`flex items-center justify-center ${isCollapsed ? "w-16" : "w-14 -ml-4"} h-10 text-xl`}>
-                {icon}
-              </div>
-              <span
-                className={`text-base whitespace-nowrap transition-opacity duration-300 ${
-                  isCollapsed ? "opacity-0 invisible" : "opacity-100 visible"
-                } -ml-1`}
+          .filter(({ role: r }) => r.includes(role))
+          .map(({ label, icon, path }) => {
+            const resolvedPath = typeof path === "function" ? path(role) : path;
+            return (
+              <button
+                key={resolvedPath}
+                onClick={() => navigate(resolvedPath)}
+                className={`flex items-center w-full rounded-md py-2 px-4 transition-all ${
+                  location.pathname === resolvedPath ? "bg-indigo-700" : "hover:bg-indigo-600"
+                }`}
               >
-                {label}
-              </span>
-            </button>
-          ))}
+                <div className={`flex items-center justify-center ${isCollapsed ? "w-16" : "w-14 -ml-4"} h-10 text-xl`}>
+                  {icon}
+                </div>
+                <span
+                  className={`text-base whitespace-nowrap transition-opacity duration-300 ${
+                    isCollapsed ? "opacity-0 invisible" : "opacity-100 visible"
+                  } -ml-1`}
+                >
+                  {label}
+                </span>
+              </button>
+            );
+          })}
       </nav>
 
       {/* 底部退出按钮 */}
@@ -75,7 +78,7 @@ const Sidebar: React.FC = () => {
           className="flex items-center w-full rounded-md py-2 px-4 transition-all hover:bg-red-600"
         >
           <div className={`flex items-center justify-center ${isCollapsed ? "w-16" : "w-14 -ml-4"} h-10 text-xl`}>
-            <LogOut size={20} /> {/* 替换 FaSignOutAlt */}
+            <LogOut size={20} />
           </div>
           <span
             className={`text-base transition-opacity duration-300 ${

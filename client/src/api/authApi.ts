@@ -1,66 +1,48 @@
-import axios from "axios";
-import API_BASE_URL from "./apiConfig";
-import { saveUserAuth } from "../auth"; 
+import { jwtDecode } from "jwt-decode";
+import { apiClient } from "./apiConfig";
+import { saveUserAuth } from "../auth";
 
-const AUTH_API_URL = `${API_BASE_URL}/auth`;
+const AUTH_API_URL = "/auth";
 
-// 登录
-export const login = async (username, password) => {
+export const login = async (username: string, password: string) => {
   try {
-    const res = await axios.post(
-      `${AUTH_API_URL}/login`, 
-      { username, password },
-      { withCredentials: true }
-    );
-    saveUserAuth(res.data.token, res.data.role);
-    return res.data.role;
-  } catch (error) {
-    console.error("登录失败", error.response?.data || error.message);
+    const { data } = await apiClient.post<{ token: string }>(`${AUTH_API_URL}/login`, { username, password });
+
+    saveUserAuth(data.token);
+    const decoded = jwtDecode<{ role: string }>(data.token);
+    return { token: data.token, role: decoded.role }; // ✅ 返回 token 和 role
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || "登录失败");
   }
 };
 
-// 顾客注册
-export const registerCustomer = async (email, username, password) => {
+export const registerCustomer = async (email: string, username: string, password: string) => {
   try {
-    const res = await axios.post(`${AUTH_API_URL}/register/customer`, {
-      email,
-      username,
-      password,
-    });
-    return res.data;
-  } catch (error) {
-    console.error("注册失败", error.response?.data || error.message);
+    const { data } = await apiClient.post(`${AUTH_API_URL}/register/customer`, { email, username, password });
+    return data;
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || "注册失败");
   }
 };
 
-// Boss 注册员工
-export const registerEmployee = async (username, password, role, token) => {
+export const registerEmployee = async (username: string, password: string, role: string, token: string) => {
   try {
-    const res = await axios.post(
+    const { data } = await apiClient.post(
       `${AUTH_API_URL}/register/employee`,
       { username, password, role },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    return res.data;
-  } catch (error) {
-    console.error("员工注册失败", error.response?.data || error.message);
+    return data;
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || "员工注册失败");
   }
 };
 
-// 重置密码
-export const resetPassword = async (email, username, newPassword) => {
+export const resetPassword = async (email: string, username: string, newPassword: string) => {
   try {
-    const res = await axios.put(`${AUTH_API_URL}/reset-password`, {
-      email,
-      username,
-      newPassword,
-    });
-    return res.data;
-  } catch (error) {
-    console.error("密码重置失败", error.response?.data || error.message);
+    const { data } = await apiClient.put(`${AUTH_API_URL}/reset-password`, { email, username, newPassword });
+    return data;
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || "密码重置失败");
   }
 };

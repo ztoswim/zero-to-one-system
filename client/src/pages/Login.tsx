@@ -1,28 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/authApi";
-import { User, Lock } from "lucide-react"; // 替换 FaUser 和 FaLock
+import { login } from "../api/authApi"; // API 请求
+import { saveUserAuth } from "../auth"; // 存储 Token
+import { User, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "../assets/Logo.png";
 
-const Login = ({ setUserRole }) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false); // 添加 loading 状态
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
     try {
-      const role = await login(username, password);
-      setUserRole(role);
+      const { token, role } = await login(username, password);
+      if (!token) throw new Error("服务器返回数据不完整");
+
+      saveUserAuth(token);
       navigate(`/${role}`);
-    } catch (err) {
-      setError(err.message || "登录失败");
+
+    } catch (err: any) {
+      console.error("登录失败:", err);
+      setError(err.response?.data?.message || "用户名或密码错误");
     } finally {
       setLoading(false);
     }
@@ -31,11 +37,10 @@ const Login = ({ setUserRole }) => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8 text-center">
-        <img src={logo} alt="Logo" className="w-3/4 max-w-xs mx-auto mb-4 transition-transform duration-300 hover:scale-110" />
+        <img src={logo} alt="Logo" className="w-3/4 max-w-xs mx-auto mb-4 hover:scale-110 transition-transform" />
         {error && <p className="text-red-500 mb-3">{error}</p>}
 
         <form className="flex flex-col items-center" onSubmit={handleLogin}>
-          {/* 用户名输入框 */}
           <div className="flex items-center w-full max-w-xs bg-white border border-gray-300 rounded-md p-2 mb-3 focus-within:border-blue-500">
             <User className="text-gray-500 mr-2" size={20} />
             <Input
@@ -44,11 +49,10 @@ const Login = ({ setUserRole }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full outline-none text-base border-none shadow-none focus:ring-0"
+              className="w-full outline-none border-none shadow-none focus:ring-0"
             />
           </div>
 
-          {/* 密码输入框 */}
           <div className="flex items-center w-full max-w-xs bg-white border border-gray-300 rounded-md p-2 mb-3 focus-within:border-blue-500">
             <Lock className="text-gray-500 mr-2" size={20} />
             <Input
@@ -57,32 +61,12 @@ const Login = ({ setUserRole }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full outline-none text-base border-none shadow-none focus:ring-0"
+              className="w-full outline-none border-none shadow-none focus:ring-0"
             />
           </div>
 
-          {/* 登录按钮 */}
           <Button type="submit" className="w-full max-w-xs py-3" disabled={loading}>
-            {loading ? (
-              <>
-                <svg
-                  className="animate-spin h-5 w-5 mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
-                  ></path>
-                </svg>
-                登录中...
-              </>
-            ) : (
-              "登录"
-            )}
+            {loading ? "登录中..." : "登录"}
           </Button>
         </form>
       </div>

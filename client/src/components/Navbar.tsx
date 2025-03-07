@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, LogOut } from "lucide-react"; // 替换 FaBars 和 FaSignOutAlt
+import { Menu, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Logo.png";
-import { useAuth, logout } from "../auth";
+import { useAuth } from "../auth";
 import menuConfig from "./menuConfig";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [role] = useAuth(); // 使用自定义 Hook 获取角色
+  const { userRole, logout } = useAuth(); // 使用正确的解构方式
+  const role = userRole || ""; // 确保 role 始终是字符串
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,7 +49,7 @@ const Navbar: React.FC = () => {
           onClick={() => setIsMenuOpen(true)}
           className="p-2 transition-all duration-300 transform hover:scale-110 hover:bg-gray-800 rounded-md"
         >
-          <Menu className="text-white" size={28} /> {/* 替换 FaBars */}
+          <Menu className="text-white" size={28} />
         </button>
       )}
 
@@ -61,22 +62,25 @@ const Navbar: React.FC = () => {
       >
         {/* 菜单项 */}
         {menuConfig
-          .filter(({ role: r }) => r.includes(role || ""))
-          .map(({ label, icon, path }) => (
-            <button
-              key={path}
-              onClick={() => {
-                navigate(path);
-                setIsMenuOpen(false);
-              }}
-              className={`flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out ${
-                location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
-              }`}
-            >
-              <div className="text-xl">{icon}</div>
-              <span className="ml-3 transition-opacity duration-300">{label}</span>
-            </button>
-          ))}
+          .filter(({ role: r }) => r.includes(role))
+          .map(({ label, icon, path }) => {
+            const resolvedPath = typeof path === "function" ? path(role) : path;
+            return (
+              <button
+                key={resolvedPath}
+                onClick={() => {
+                  navigate(resolvedPath);
+                  setIsMenuOpen(false);
+                }}
+                className={`flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out ${
+                  location.pathname === resolvedPath ? "bg-indigo-700" : "hover:bg-indigo-600"
+                }`}
+              >
+                <div className="text-xl">{icon}</div>
+                <span className="ml-3 transition-opacity duration-300">{label}</span>
+              </button>
+            );
+          })}
 
         {/* 退出按钮 */}
         <div className="w-full border-t border-gray-700 my-2"></div>
@@ -84,7 +88,7 @@ const Navbar: React.FC = () => {
           onClick={handleLogout}
           className="flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out hover:bg-red-600"
         >
-          <LogOut size={24} /> {/* 替换 FaSignOutAlt */}
+          <LogOut size={24} />
           <span className="ml-3 transition-opacity duration-300">退出</span>
         </button>
       </div>

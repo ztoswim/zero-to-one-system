@@ -1,20 +1,25 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { ReactNode } from "react";
 
-const DashboardLayout = ({ children }) => {
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar 只在大屏显示 */}
-      <div className="hidden md:block">
+      <aside className="hidden md:block">
         <Sidebar />
-      </div>
+      </aside>
 
       {/* 主内容区域 */}
       <div className="flex flex-col flex-grow">
         {/* Navbar 只在小屏幕显示 */}
-        <div className="block md:hidden">
+        <header className="block md:hidden">
           <Navbar />
-        </div>
+        </header>
 
         {/* 主要内容 */}
         <main className="flex-grow p-4 overflow-auto">{children}</main>
