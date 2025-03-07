@@ -12,14 +12,13 @@ export const getToken = () => localStorage.getItem("token");
 export const getUserRole = () => localStorage.getItem("role");
 
 // 存储 Token & 角色
-export const saveUserAuth = (token: string) => {
+export const saveUserAuth = (role: string, token: string) => {
   try {
-    const decoded: DecodedToken = jwtDecode(token);
     localStorage.setItem("token", token);
-    localStorage.setItem("role", decoded.role);
+    localStorage.setItem("role", role);
     window.dispatchEvent(new Event("storage")); // 通知其他组件
   } catch (error) {
-    console.error("解析 Token 失败:", error);
+    console.error("保存用户身份信息失败:", error);
   }
 };
 

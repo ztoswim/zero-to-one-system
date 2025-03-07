@@ -4,7 +4,7 @@ require("dotenv").config();
 // 获取用户信息
 const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id).select("username role email"); // ✅ 明确返回 email
     if (!user) {
       return res.status(404).json({ message: "用户不存在" });
     }
