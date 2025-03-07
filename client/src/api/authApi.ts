@@ -1,65 +1,61 @@
 import { jwtDecode } from "jwt-decode";
 import { apiClient } from "./apiConfig";
-import { saveUserAuth } from "../auth";
+import { saveUserAuth, UserRole } from "../auth";
 
 const AUTH_API_URL = "/auth";
 
-// 定义错误处理函数
-const handleApiError = (error: unknown, defaultMessage: string) => {
-  if (error instanceof Error) {
-    return error.message;
+export const login = async (
+  username: string, 
+  password: string
+): Promise<{ token: string; role: UserRole }> => {
+  const { data } = await apiClient.post<{ token: string }>(`${AUTH_API_URL}/login`, { username, password });
+
+  // ✅ 确保 jwtDecode 正确解析 token
+  const decoded = jwtDecode<{ role: string }>(data.token);
+
+  // 🚨 修正类型，确保 role 是 "boss" | "admin" | "coach" | "customer"
+  if (!["boss", "admin", "coach", "customer"].includes(decoded.role)) {
+    throw new Error("服务器返回的角色信息无效");
   }
-  if (typeof error === "object" && error !== null && "response" in error) {
-    const axiosError = error as { response?: { data?: { message?: string } } };
-    return axiosError.response?.data?.message || defaultMessage;
-  }
-  return defaultMessage;
+
+  // ✅ 传递正确类型的 role
+  saveUserAuth(decoded.role as UserRole, data.token);
+
+  return { token: data.token, role: decoded.role as UserRole };
 };
 
-export const login = async (username: string, password: string): Promise<{ token: string; role: string }> => {
-  try {
-    const { data } = await apiClient.post<{ token: string }>(`${AUTH_API_URL}/login`, { username, password });
-
-    saveUserAuth(data.token);
-    const decoded = jwtDecode<{ role: string }>(data.token);
-    return { token: data.token, role: decoded.role }; 
-  } catch (error) {
-    throw new Error(handleApiError(error, "登录失败"));
-  }
-};
-
-export const registerCustomer = async (email: string, username: string, password: string): Promise<any> => {
-  try {
-    const { data } = await apiClient.post(`${AUTH_API_URL}/register/customer`, { email, username, password });
-    return data;
-  } catch (error) {
-    throw new Error(handleApiError(error, "注册失败"));
-  }
+export const registerCustomer = async (
+  email: string, 
+  username: string, 
+  password: string
+): Promise<string> => {
+  const { data } = await apiClient.post<{ message: string }>(
+    `${AUTH_API_URL}/register/customer`, 
+    { email, username, password }
+  );
+  return data.message;
 };
 
 export const registerEmployee = async (
   username: string, 
   password: string, 
-  role: string, 
-  token: string
-): Promise<any> => {
-  try {
-    const { data } = await apiClient.post(
-      `${AUTH_API_URL}/register/employee`,
-      { username, password, role },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return data;
-  } catch (error) {
-    throw new Error(handleApiError(error, "员工注册失败"));
-  }
+  role: string
+): Promise<string> => {
+  const { data } = await apiClient.post<{ message: string }>(
+    `${AUTH_API_URL}/register/employee`,
+    { username, password, role }
+  );
+  return data.message;
 };
 
-export const resetPassword = async (email: string, username: string, newPassword: string): Promise<any> => {
-  try {
-    const { data } = await apiClient.put(`${AUTH_API_URL}/reset-password`, { email, username, newPassword });
-    return data;
-  } catch (error) {
-    throw new Error(handleApiError(error, "密码重置失败"));
-  }
+export const resetPassword = async (
+  email: string, 
+  username: string, 
+  newPassword: string
+): Promise<string> => {
+  const { data } = await apiClient.put<{ message: string }>(
+    `${AUTH_API_URL}/reset-password`, 
+    { email, username, newPassword }
+  );
+  return data.message;
 };

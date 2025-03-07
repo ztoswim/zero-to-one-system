@@ -2,46 +2,33 @@ import { apiClient } from "./apiConfig";
 
 const USER_API_URL = "/users";
 
-interface UserProfile {
+export interface UserProfile {
+  _id?: string; // MongoDB ID
   username: string;
   role: string;
-  email: string; // ✅ 新增 email 字段
+  email: string;
 }
 
-interface ApiResponse<T> {
-  message: string;
-  data?: T;
-}
+// 🔹 获取当前登录用户的信息
+export const getUserProfile = async (): Promise<UserProfile> => {
+  const { data } = await apiClient.get<UserProfile>(`${USER_API_URL}/profile`);
+  
+  // ✅ 统一存储到 localStorage，方便全局管理
+  localStorage.setItem("username", data.username);
+  localStorage.setItem("role", data.role);
+  localStorage.setItem("email", data.email);
 
-// 统一错误处理
-const handleApiError = (error: unknown, defaultMessage: string) => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  if (typeof error === "object" && error !== null && "response" in error) {
-    const axiosError = error as { response?: { data?: { message?: string } } };
-    return axiosError.response?.data?.message || defaultMessage;
-  }
-  return defaultMessage;
+  return data;
 };
 
-// 获取用户信息
-export const getUserProfile = async (): Promise<UserProfile> => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("用户未登录");
+// 🔹 Boss 编辑员工角色
+export const updateEmployee = async (userId: string, role: string): Promise<string> => {
+  const { data } = await apiClient.put<{ message: string }>(`${USER_API_URL}/edit`, { userId, role });
+  return data.message;
+};
 
-    const { data } = await apiClient.get<UserProfile>(`${USER_API_URL}/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    // ✅ 存储 email 到 localStorage
-    localStorage.setItem("username", data.username);
-    localStorage.setItem("role", data.role);
-    localStorage.setItem("email", data.email);
-
-    return data;
-  } catch (error) {
-    throw new Error(handleApiError(error, "获取用户信息失败"));
-  }
+// 🔹 Boss 删除用户
+export const deleteUser = async (userId: string): Promise<string> => {
+  const { data } = await apiClient.delete<{ message: string }>(`${USER_API_URL}/delete/${userId}`);
+  return data.message;
 };
