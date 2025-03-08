@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/userApi";
+import { loginUser } from "../auth";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,9 +10,7 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token, role } = await login({ username, password });
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+      const role = await loginUser(username, password);
       navigate(`/${role}-dashboard`);
     } catch (error) {
       console.error("登录失败", error);

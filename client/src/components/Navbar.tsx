@@ -1,95 +1,69 @@
-import { useState, useEffect, useRef } from "react";
-import { FaBars, FaSignOutAlt } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/Logo.png";
-import { useAuth, logout } from "../auth";
-import menuConfig from "./menuConfig";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../auth";
 
-const Navbar = () => {
+const menuConfig: Record<string, { label: string; path: string }[]> = {
+  boss: [
+    { label: "仪表盘", path: "/boss-dashboard" },
+    { label: "用户管理", path: "/users" },
+    { label: "学生管理", path: "/students" },
+  ],
+  admin: [
+    { label: "仪表盘", path: "/admin-dashboard" },
+    { label: "用户管理", path: "/users" },
+  ],
+  coach: [
+    { label: "仪表盘", path: "/coach-dashboard" },
+    { label: "学生管理", path: "/students" },
+  ],
+  customer: [
+    { label: "仪表盘", path: "/customer-dashboard" },
+  ],
+};
+
+const Navbar = ({ role }: { role: string }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [role] = useAuth(); // 使用自定义 Hook 获取角色
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    logoutUser();
     navigate("/login");
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-      setIsMenuOpen(false);
-      }
-    };
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMenuOpen]);
-
   return (
-    <nav className="flex lg:hidden items-center justify-between bg-gray-900 text-white p-4 shadow-lg relative">
-      {/* Logo */}
-      <div className="flex items-center">
-        <img src={logo} alt="Logo" className="w-12 transition-all duration-300" />
-        <span className="ml-4 text-xl font-semibold tracking-wide uppercase transition-all duration-300">
-          Zero To One
-        </span>
-      </div>
-
-      {/* 菜单按钮（展开后隐藏） */}
-      {!isMenuOpen && (
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="p-2 transition-all duration-300 transform hover:scale-110 hover:bg-gray-800 rounded-md"
-        >
-          <FaBars className="text-white text-2xl" />
-        </button>
+    <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
+      <h1 className="text-xl font-bold">Zero To One</h1>
+      <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
+        ☰
+      </button>
+      {menuOpen && (
+        <div className="absolute top-12 right-4 bg-gray-700 rounded shadow-lg w-48">
+          <ul>
+            {menuConfig[role]?.map((item) => (
+              <li key={item.path}>
+                <button
+                  onClick={() => {
+                    navigate(item.path);
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-600"
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 bg-red-500 hover:bg-red-600 text-white"
+              >
+                退出登录
+              </button>
+            </li>
+          </ul>
+        </div>
       )}
-
-      {/* 下拉菜单 */}
-      <div
-        ref={menuRef}
-        className={`absolute top-14 right-4 bg-gray-900 text-white shadow-lg rounded-lg w-48 p-2 transition-all duration-300 ${
-          isMenuOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-        }`}
-      >
-        {/* 菜单项 */}
-        {menuConfig
-          .filter(({ role: r }) => r.includes(role as string))
-          .map(({ label, icon, path }) => (
-            <button
-              key={typeof path === "string" ? path : undefined}
-              onClick={() => {
-                if (typeof path === "string") {
-                  navigate(path);
-                }
-                setIsMenuOpen(false);
-              }}
-              className={`flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out ${
-                location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
-              }`}
-            >
-              <div className="text-xl">{icon}</div>
-              <span className="ml-3 transition-opacity duration-300">{label}</span>
-            </button>
-          ))}
-
-        {/* 退出按钮 */}
-        <div className="w-full border-t border-gray-700 my-2"></div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out hover:bg-red-600"
-        >
-          <FaSignOutAlt className="text-xl" />
-          <span className="ml-3 transition-opacity duration-300">退出</span>
-        </button>
-      </div>
-    </nav>
+    </div>
   );
 };
 

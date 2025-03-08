@@ -1,7 +1,6 @@
+import { ReactNode } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-
-import { ReactNode } from "react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -9,11 +8,21 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex flex-col flex-grow">
-        <Navbar />
-        <main className="flex-grow p-4 overflow-auto">{children}</main>
+    <div className="flex h-screen">
+      {/* 大屏显示 Sidebar */}
+      <div className="hidden md:block w-64">
+        <Sidebar />
+      </div>
+
+      {/* 内容区域 */}
+      <div className="flex-1 flex flex-col">
+        {/* 小屏显示 Navbar */}
+        <div className="md:hidden">
+          <Navbar />
+        </div>
+
+        {/* Dashboard 主要内容 */}
+        <main className="p-4">{children}</main>
       </div>
     </div>
   );
