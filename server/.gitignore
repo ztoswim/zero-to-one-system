@@ -1,0 +1,19 @@
+ # 忽略 Node.js 依赖
+node_modules/
+package-lock.json
+
+# TypeScript 编译后的文件
+dist/
+
+# 环境变量文件（防止泄露）
+.env
+
+# 日志文件
+logs/
+*.log
+
+# VSCode 相关
+.vscode/
+
+# Render 部署相关
+.render-build/
