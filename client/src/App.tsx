@@ -1,29 +1,28 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./auth";
-import { Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import BossDashboard from "./pages/BossDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
-import LoginComponent from "./pages/Login";
+import Login from "./pages/Login";
 
-interface LoginProps {
-  setUserRole: Dispatch<SetStateAction<string | null>>;
-}
+const App = () => {
+  const [role, setRole] = useState<string | null>(null);
 
-const App: React.FC<LoginProps> = ({ setUserRole }) => {
-  const [userRole] = useAuth(); // ✅ 直接使用 Hook 获取角色
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    if (storedRole) setRole(storedRole);
+  }, []);
 
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginComponent setUserRole={setUserRole} />} />
-        <Route path="/" element={userRole ? <Navigate to={`/${userRole}`} /> : <Navigate to="/login" />} />
-        <Route path="/boss" element={userRole === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
-        <Route path="/admin" element={userRole === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
-        <Route path="/coach" element={userRole === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />
-        <Route path="/customer" element={userRole === "customer" ? <CustomerDashboard /> : <Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to={role ? `/${role}-dashboard` : "/login"} />} />
+        <Route path="/boss-dashboard" element={role === "boss" ? <BossDashboard /> : <Navigate to="/login" />} />
+        <Route path="/admin-dashboard" element={role === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
+        <Route path="/coach-dashboard" element={role === "coach" ? <CoachDashboard /> : <Navigate to="/login" />} />
+        <Route path="/customer-dashboard" element={role === "customer" ? <CustomerDashboard /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );
