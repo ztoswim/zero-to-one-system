@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const [role] = useAuth(); // 使用自定义 Hook 获取角色
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
     logout();
@@ -18,9 +18,9 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsMenuOpen(false);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      setIsMenuOpen(false);
       }
     };
     if (isMenuOpen) {
@@ -60,12 +60,14 @@ const Navbar = () => {
       >
         {/* 菜单项 */}
         {menuConfig
-          .filter(({ role: r }) => r.includes(role))
+          .filter(({ role: r }) => r.includes(role as string))
           .map(({ label, icon, path }) => (
             <button
-              key={path}
+              key={typeof path === "string" ? path : undefined}
               onClick={() => {
-                navigate(path);
+                if (typeof path === "string") {
+                  navigate(path);
+                }
                 setIsMenuOpen(false);
               }}
               className={`flex items-center p-3 w-full text-left rounded-md transition-all duration-200 ease-in-out ${

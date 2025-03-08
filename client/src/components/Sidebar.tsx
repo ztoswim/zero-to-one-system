@@ -44,11 +44,11 @@ const Sidebar = () => {
       {/* 导航菜单 */}
       <nav className="flex-1 space-y-1 px-2">
         {menuConfig
-          .filter(({ role: r }) => r.includes(role))
+          .filter(({ role: r }) => r.includes(role as string))
           .map(({ label, icon, path }) => (
             <button
-              key={path}
-              onClick={() => navigate(path)}
+              key={typeof path === "string" ? path : ""}
+              onClick={() => typeof path === "string" && navigate(path)}
               className={`flex items-center w-full rounded-md py-2 px-4 transition-all ${
                 location.pathname === path ? "bg-indigo-700" : "hover:bg-indigo-600"
               }`}
