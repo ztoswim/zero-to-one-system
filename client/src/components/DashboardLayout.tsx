@@ -1,28 +1,39 @@
-import { ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUserRole } from "../auth";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-}
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const [role, setRole] = useState<string | null>(null);
 
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  useEffect(() => {
+    const userRole = getUserRole();
+    if (!userRole) {
+      navigate("/login"); // 没有角色信息，跳转到登录页
+    } else {
+      setRole(userRole);
+    }
+  }, [navigate]);
+
+  if (!role) return null; // 等待角色信息加载
+
   return (
     <div className="flex h-screen">
-      {/* 大屏显示 Sidebar */}
-      <div className="hidden md:block w-64">
-        <Sidebar />
+      {/* 大屏幕显示 Sidebar */}
+      <div className="hidden md:block w-64 bg-gray-800">
+        <Sidebar role={role} />
       </div>
-
-      {/* 内容区域 */}
+      
       <div className="flex-1 flex flex-col">
-        {/* 小屏显示 Navbar */}
+        {/* 小屏幕显示 Navbar */}
         <div className="md:hidden">
-          <Navbar />
+          <Navbar role={role} />
         </div>
-
-        {/* Dashboard 主要内容 */}
-        <main className="p-4">{children}</main>
+        
+        {/* 页面内容区域 */}
+        <div className="flex-1 p-4">{children}</div>
       </div>
     </div>
   );
