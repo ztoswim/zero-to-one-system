@@ -26,5 +26,7 @@ mongoose
   .then(() => console.log("MongoDB 连接成功！"))
   .catch((err) => console.error("MongoDB 连接失败", err));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`服务器运行在 http://localhost:${PORT}`));
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 服务器运行在端口 ${PORT}`);
+  });
