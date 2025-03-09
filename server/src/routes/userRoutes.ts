@@ -9,11 +9,6 @@ interface AuthenticatedRequest extends Request {
 
 const router = express.Router();
 
-router.get("/me", authMiddleware, async (req: AuthenticatedRequest, res) => {
-  const user = await User.findById(req.userId);
-  res.json(user);
-});
-
 // 获取用户信息
 router.get("/me", authMiddleware, async (req: AuthenticatedRequest, res) => {
   const user = await User.findById(req.userId);
