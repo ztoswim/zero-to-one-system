@@ -15,20 +15,24 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 输入验证
     if (!username || !password) {
       toast.error("用户名和密码不能为空！");
       return;
     }
 
     setLoading(true); // 开始加载
+
     try {
+      // 登录并获取角色
       const role = await loginUser(username, password);
       toast.success("登录成功 🎉");
 
-      localStorage.setItem("role", role);
+      // 设置角色并跳转到对应仪表盘
       setRole(role);
       navigate(`/${role}-dashboard`);
     } catch (error: any) {
+      // 错误处理
       toast.error(error?.response?.data?.message || "登录失败，请检查用户名或密码！");
       console.error("登录失败", error);
     } finally {
