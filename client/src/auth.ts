@@ -4,20 +4,10 @@ import { login } from "./api/userApi";
 export const loginUser = async (username: string, password: string) => {
   try {
     const { token, role } = await login({ username, password });
-    
-    // 输出 token 和 role
-    console.log("Token:", token);
-    console.log("Role:", role);
-
-    // 如果没有 token 或 role，抛出错误
-    if (!token || !role) {
-      throw new Error("登录成功，但缺少 token 或 role");
-    }
-
     // 存储 token 和 role 到 localStorage
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
-    return role;
+    return role; // 返回 role 以便页面跳转
   } catch (error: any) {
     console.error("登录失败:", error?.response?.data?.message || error.message);
     throw new Error(error?.response?.data?.message || "登录失败，请重试");

@@ -1,19 +1,16 @@
-import jwt from 'jsonwebtoken';
-import { NextFunction, Response } from 'express';
+import { Request, Response, NextFunction } from "express";
 
-const authMiddleware = (req: any, res: Response, next: NextFunction): void => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) {
-    res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
-    return;
-  }
+interface AuthRequest extends Request {
+  user?: any; // Add your user type here
+}
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    req.user = decoded;
+const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  // Authentication logic here
+  const authenticated = req.user != null; // Example logic, replace with your own
+  if (authenticated) {
     next();
-  } catch (ex) {
-    res.status(400).json({ success: false, message: 'Invalid token.' });
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
   }
 };
 

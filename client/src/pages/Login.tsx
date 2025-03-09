@@ -14,30 +14,21 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    if (!username || !password) {
-      toast.error("用户名和密码不能为空！");
-      return;
-    }
-  
     setLoading(true); // 开始加载
-  
     try {
-      const result = await loginUser(username, password);
-      console.log("Login Success:", result);  // 输出登录成功返回的数据
-  
+      const role = await loginUser(username, password);
       toast.success("登录成功 🎉");
-  
-      // 设置角色并跳转到对应仪表盘
-      setRole(result);
-      navigate(`/${result}-dashboard`);
-    } catch (error: any) {
-      toast.error(error?.message || "登录失败，请检查用户名或密码！");
+
+      localStorage.setItem("role", role);
+      setRole(role);
+      navigate(`/${role}-dashboard`);
+    } catch (error) {
+      toast.error("登录失败，请检查用户名或密码！");
       console.error("登录失败", error);
     } finally {
       setLoading(false); // 结束加载
     }
-  };  
+  };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-blue-100 to-blue-300">
@@ -53,7 +44,6 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
-          {/* 用户名输入框 */}
           <div className="relative">
             <FiUser className="absolute left-3 top-3.5 text-gray-500" />
             <input
@@ -64,8 +54,6 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
               className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
-
-          {/* 密码输入框 */}
           <div className="relative">
             <FiLock className="absolute left-3 top-3.5 text-gray-500" />
             <input
@@ -77,7 +65,6 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
             />
           </div>
 
-          {/* 登录按钮 */}
           <button
             type="submit"
             className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${

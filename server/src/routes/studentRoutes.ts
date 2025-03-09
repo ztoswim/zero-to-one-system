@@ -8,9 +8,9 @@ const router = express.Router();
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const students = await Student.find();
-    res.json({ success: true, message: "学生数据获取成功", data: students });
+    res.json(students);
   } catch (error) {
-    res.status(500).json({ success: false, message: "获取学生数据失败" });
+    res.status(500).json({ error: "获取学生数据失败" });
   }
 });
 
@@ -19,12 +19,12 @@ router.get("/:id", authMiddleware, async (req, res): Promise<void> => {
   try {
     const student = await Student.findById(req.params.id);
     if (!student) {
-      res.status(404).json({ success: false, message: "学生未找到" });
+      res.status(404).json({ error: "学生未找到" });
       return;
     }
-    res.json({ success: true, message: "学生信息获取成功", data: student });
+    res.json(student);
   } catch (error) {
-    res.status(500).json({ success: false, message: "获取学生信息失败" });
+    res.status(500).json({ error: "获取学生信息失败" });
   }
 });
 
@@ -34,10 +34,8 @@ router.post("/", authMiddleware, async (req, res): Promise<void> => {
     const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } =
       req.body;
 
-    if (!studentName || !gender || !birthDate || !parentContact) {
-      res.status(400).json({ success: false, message: "缺少必填字段" });
-      return;
-    }
+    if (!studentName || !gender || !birthDate || !parentContact)
+      res.status(400).json({ error: "缺少必填字段" });
 
     const newStudent = new Student({
       studentName,
@@ -52,9 +50,11 @@ router.post("/", authMiddleware, async (req, res): Promise<void> => {
     });
 
     await newStudent.save();
-    res.status(201).json({ success: true, message: "学生创建成功", data: newStudent });
+    res.status(201).json({ message: "学生创建成功" });
+    return;
   } catch (error) {
-    res.status(500).json({ success: false, message: "创建学生失败" });
+    res.status(500).json({ error: "创建学生失败" });
+    return;
   }
 });
 
@@ -71,13 +71,15 @@ router.put("/:id", authMiddleware, async (req, res): Promise<void> => {
     );
 
     if (!updatedStudent) {
-      res.status(404).json({ success: false, message: "学生未找到" });
+      res.status(404).json({ error: "学生未找到" });
       return;
     }
 
-    res.json({ success: true, message: "学生信息更新成功", data: updatedStudent });
+    res.json({ message: "学生信息更新成功", student: updatedStudent });
+    return;
   } catch (error) {
-    res.status(500).json({ success: false, message: "更新学生信息失败" });
+    res.status(500).json({ error: "更新学生信息失败" });
+    return;
   }
 });
 
@@ -86,13 +88,15 @@ router.delete("/:id", authMiddleware, async (req, res): Promise<void> => {
   try {
     const student = await Student.findByIdAndDelete(req.params.id);
     if (!student) {
-      res.status(404).json({ success: false, message: "学生未找到" });
+      res.status(404).json({ error: "学生未找到" });
       return;
     }
 
-    res.json({ success: true, message: "学生删除成功", data: null });
+    res.json({ message: "学生删除成功" });
+    return;
   } catch (error) {
-    res.status(500).json({ success: false, message: "删除学生失败" });
+    res.status(500).json({ error: "删除学生失败" });
+    return;
   }
 });
 

@@ -23,8 +23,6 @@ const App = () => {
 
   // 角色验证组件
   const ProtectedRoute = ({ children, roleRequired }: { children: JSX.Element, roleRequired: string }) => {
-    const role = localStorage.getItem("role"); // 从 localStorage 直接获取角色
-
     if (role !== roleRequired) {
       toast.error("您没有权限访问此页面，请先登录！");
       return <Navigate to="/login" />;
