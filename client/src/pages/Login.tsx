@@ -14,31 +14,30 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // 输入验证
+  
     if (!username || !password) {
       toast.error("用户名和密码不能为空！");
       return;
     }
-
+  
     setLoading(true); // 开始加载
-
+  
     try {
-      // 登录并获取角色
-      const role = await loginUser(username, password);
+      const result = await loginUser(username, password);
+      console.log("Login Success:", result);  // 输出登录成功返回的数据
+  
       toast.success("登录成功 🎉");
-
+  
       // 设置角色并跳转到对应仪表盘
-      setRole(role);
-      navigate(`/${role}-dashboard`);
+      setRole(result);
+      navigate(`/${result}-dashboard`);
     } catch (error: any) {
-      // 错误处理
-      toast.error(error?.response?.data?.message || "登录失败，请检查用户名或密码！");
+      toast.error(error?.message || "登录失败，请检查用户名或密码！");
       console.error("登录失败", error);
     } finally {
       setLoading(false); // 结束加载
     }
-  };
+  };  
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-blue-100 to-blue-300">

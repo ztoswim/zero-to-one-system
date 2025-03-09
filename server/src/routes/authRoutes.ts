@@ -88,7 +88,12 @@ router.post("/login", async (req, res): Promise<void> => {
     return;
   }
 
+  // 生成 token
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  
+  // 打印生成的 token
+  console.log("Generated Token: ", token);
+
   res.json({ success: true, message: "登录成功", token, role: user.role });
 });
 

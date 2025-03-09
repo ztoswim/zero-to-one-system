@@ -3,21 +3,20 @@ import { login } from "./api/userApi";
 // 登录用户
 export const loginUser = async (username: string, password: string) => {
   try {
-    // 调用 login 函数，获取 token 和 role
     const { token, role } = await login({ username, password });
+    
+    // 输出 token 和 role
+    console.log("Token:", token);
+    console.log("Role:", role);
 
-    // 确保 token 和 role 存在
+    // 如果没有 token 或 role，抛出错误
     if (!token || !role) {
-      throw new Error("登录失败，缺少 token 或角色信息");
+      throw new Error("登录成功，但缺少 token 或 role");
     }
 
     // 存储 token 和 role 到 localStorage
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
-
-    console.log(`登录成功，用户角色：${role}`);
-    
-    // 返回 role 以便页面跳转
     return role;
   } catch (error: any) {
     console.error("登录失败:", error?.response?.data?.message || error.message);
