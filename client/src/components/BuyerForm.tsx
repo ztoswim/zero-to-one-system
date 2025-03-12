@@ -1,130 +1,176 @@
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import { createBuyer, updateBuyer } from '../api/buyerAPI'; // Importing the API functions
+import React, { useState, useEffect } from 'react';
 
-// Address interface type definition
-interface Address {
-  addressLine0: string;
-  addressLine1: string;
-  addressLine2: string;
-  postalZone: string;
-  cityName: string;
-  state: string;
-  country: string;
-}
-
-// BuyerFormProps interface to define the structure for props
 interface BuyerFormProps {
   selectedBuyer: any | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void>;
+  onSubmit: (buyerId: string, buyerData: any) => Promise<void>;
 }
 
-const BuyerForm: React.FC<BuyerFormProps> = ({ selectedBuyer, onClose, onSuccess }) => {
-  const [buyer, setBuyer] = useState<any>(selectedBuyer || {});  // Initializing buyer state
-  const [address, setAddress] = useState<Address>(selectedBuyer?.address || {
-    addressLine0: '',
-    addressLine1: '',
-    addressLine2: '',
-    postalZone: '',
-    cityName: '',
-    state: '',
-    country: ''
+const BuyerForm = ({ selectedBuyer, onClose, onSuccess, onSubmit }: BuyerFormProps) => {
+  // 初始化表单数据
+  const [formData, setFormData] = useState<any>({
+    name: '',
+    tin: '',
+    registrationNumber: '',
+    registrationScheme: '',
+    sst: '',
+    email: '',
+    contact: '',
+    address: {
+      addressLine0: '',
+      addressLine1: '',
+      addressLine2: '',
+      postalZone: '',
+      cityName: '',
+      state: '',
+      country: ''
+    }
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    setBuyer({ ...buyer, [field]: e.target.value });
+  // 初始化表单数据（编辑模式时）
+  useEffect(() => {
+    if (selectedBuyer) {
+      setFormData({ ...selectedBuyer }); // 编辑时填充数据
+    }
+  }, [selectedBuyer]);
+
+  // 表单输入变化时更新 state
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev: typeof formData) => ({
+      ...prev, // 保持之前的值不变
+      [name]: value // 更新当前字段的值
+    }));
   };
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    setAddress({ ...address, [field]: e.target.value });
-  };
-
-  const handleSubmit = async () => {
-    const buyerData = { ...buyer, address };
+  // 提交表单
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      if (selectedBuyer) {
-        await updateBuyer(selectedBuyer.id, buyerData);  // Update the existing buyer
-      } else {
-        await createBuyer(buyerData);  // Create a new buyer
-      }
-      onSuccess();
+      await onSubmit(selectedBuyer?.id, formData); // 调用父组件传递的 onSubmit 函数
+      await onSuccess(); // 调用成功后的回调
+      onClose(); // 关闭表单
     } catch (error) {
-      toast.error("Error saving buyer");
+      console.error('提交失败', error);
     }
   };
 
   return (
-    <div>
-      <div>
-        <h2>{selectedBuyer ? 'Edit Buyer' : 'New Buyer'}</h2>
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
         <div>
-          <label>Name</label>
-          <input type="text" value={buyer.name} onChange={(e) => handleInputChange(e, 'name')} />
+          <label>姓名</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label>TIN</label>
-          <input type="text" value={buyer.tin} onChange={(e) => handleInputChange(e, 'tin')} />
+          <input
+            type="text"
+            name="tin"
+            value={formData.tin}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>Registration Number</label>
-          <input type="text" value={buyer.registrationNumber} onChange={(e) => handleInputChange(e, 'registrationNumber')} />
+          <label>注册号</label>
+          <input
+            type="text"
+            name="registrationNumber"
+            value={formData.registrationNumber}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>Registration Scheme</label>
-          <input type="text" value={buyer.registrationScheme} onChange={(e) => handleInputChange(e, 'registrationScheme')} />
+          <label>注册方案</label>
+          <input
+            type="text"
+            name="registrationScheme"
+            value={formData.registrationScheme}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label>SST</label>
-          <input type="text" value={buyer.sst} onChange={(e) => handleInputChange(e, 'sst')} />
+          <input
+            type="text"
+            name="sst"
+            value={formData.sst}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>Email</label>
-          <input type="email" value={buyer.email} onChange={(e) => handleInputChange(e, 'email')} />
+          <label>电子邮件</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <label>Contact</label>
-          <input type="text" value={buyer.contact} onChange={(e) => handleInputChange(e, 'contact')} />
+          <label>联系方式</label>
+          <input
+            type="text"
+            name="contact"
+            value={formData.contact}
+            onChange={handleChange}
+          />
         </div>
-
-        {/* Address Fields */}
+        <h3>地址</h3>
         <div>
-          <h3>Address</h3>
-          <div>
-            <label>Address Line 0</label>
-            <input type="text" value={address.addressLine0} onChange={(e) => handleAddressChange(e, 'addressLine0')} />
-          </div>
-          <div>
-            <label>Address Line 1</label>
-            <input type="text" value={address.addressLine1} onChange={(e) => handleAddressChange(e, 'addressLine1')} />
-          </div>
-          <div>
-            <label>Address Line 2</label>
-            <input type="text" value={address.addressLine2} onChange={(e) => handleAddressChange(e, 'addressLine2')} />
-          </div>
-          <div>
-            <label>Postal Zone</label>
-            <input type="text" value={address.postalZone} onChange={(e) => handleAddressChange(e, 'postalZone')} />
-          </div>
-          <div>
-            <label>City Name</label>
-            <input type="text" value={address.cityName} onChange={(e) => handleAddressChange(e, 'cityName')} />
-          </div>
-          <div>
-            <label>State</label>
-            <input type="text" value={address.state} onChange={(e) => handleAddressChange(e, 'state')} />
-          </div>
-          <div>
-            <label>Country</label>
-            <input type="text" value={address.country} onChange={(e) => handleAddressChange(e, 'country')} />
-          </div>
+          <label>地址行 1</label>
+          <input
+            type="text"
+            name="addressLine0"
+            value={formData.address.addressLine0}
+            onChange={handleChange}
+          />
         </div>
-
         <div>
-          <button onClick={handleSubmit}>Save</button>
-          <button onClick={onClose}>Cancel</button>
+          <label>地址行 2</label>
+          <input
+            type="text"
+            name="addressLine1"
+            value={formData.address.addressLine1 || ''}
+            onChange={handleChange}
+          />
         </div>
-      </div>
+        <div>
+          <label>城市</label>
+          <input
+            type="text"
+            name="cityName"
+            value={formData.address.cityName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>州/省</label>
+          <input
+            type="text"
+            name="state"
+            value={formData.address.state}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>国家</label>
+          <input
+            type="text"
+            name="country"
+            value={formData.address.country}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit">提交</button>
+        <button type="button" onClick={onClose}>关闭</button>
+      </form>
     </div>
   );
 };

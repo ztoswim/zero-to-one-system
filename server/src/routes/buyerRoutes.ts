@@ -1,14 +1,19 @@
 // src/routes/buyerRoutes.ts
-
 import express from 'express';
-import { getBuyers, createBuyer } from '../controllers/buyerController'; // 引入 controller
+import { getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../controllers/buyerController';
 
 const router = express.Router();
 
 // 获取买家列表
-router.get('/buyers', getBuyers);
+router.get('/', getBuyers);
 
-// 新建买家
-router.post('/buyers', createBuyer);
+// 创建新买家
+router.post('/', createBuyer);
+
+// 编辑买家
+router.put('/:buyerId', updateBuyer);
+
+// 删除买家
+router.delete('/:buyerId', deleteBuyer);
 
 export default router;
