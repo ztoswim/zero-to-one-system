@@ -1,4 +1,3 @@
-// src/routes/buyerRoutes.ts
 import express from 'express';
 import { getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../controllers/buyerController';
 
