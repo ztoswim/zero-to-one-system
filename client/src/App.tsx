@@ -3,12 +3,17 @@ import { useEffect, useState, JSX } from "react";
 import { ToastContainer, toast } from "react-toastify"; // 引入 ToastContainer 和 toast
 import "react-toastify/dist/ReactToastify.css"; // 引入样式
 
+// 引入布局和页面组件
 import DashboardLayout from "./components/DashboardLayout";
 import BossDashboard from "./pages/BossDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Login from "./pages/Login";
+import CustomerManagement from "./pages/CustomerManagement";
+import CoursePackages from "./pages/CoursePackages";
+import InvoicePage from "./pages/InvoicePage"; // 引入发票页面
+import BuyerPage from "./pages/BuyerPage"; // 引入买家管理页面
 
 const App = () => {
   const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
@@ -42,6 +47,7 @@ const App = () => {
         {/* Dashboard 页面，角色验证 */}
         {role ? (
           <Route element={<DashboardLayout><Outlet /></DashboardLayout>}>
+            {/* Boss 和 Admin 角色的 dashboard 页面 */}
             <Route 
               path="/boss-dashboard" 
               element={<ProtectedRoute roleRequired="boss"><BossDashboard /></ProtectedRoute>} 
@@ -58,8 +64,38 @@ const App = () => {
               path="/customer-dashboard" 
               element={<ProtectedRoute roleRequired="customer"><CustomerDashboard /></ProtectedRoute>} 
             />
+
+            {/* 发票管理页面，只允许 boss 和 admin 角色访问 */}
+            <Route 
+              path="/invoices" 
+              element={<ProtectedRoute roleRequired="boss"><InvoicePage /></ProtectedRoute>} 
+            />
+            <Route 
+              path="/invoices" 
+              element={<ProtectedRoute roleRequired="admin"><InvoicePage /></ProtectedRoute>} 
+            />
+
+            {/* 买家管理页面，只允许 boss 和 admin 角色访问 */}
+            <Route 
+              path="/buyers" 
+              element={<ProtectedRoute roleRequired="boss"><BuyerPage /></ProtectedRoute>} 
+            />
+            <Route 
+              path="/buyers" 
+              element={<ProtectedRoute roleRequired="admin"><BuyerPage /></ProtectedRoute>} 
+            />
           </Route>
         ) : null}
+
+        {/* 角色特定的页面 */}
+        <Route 
+          path="/customers" 
+          element={<ProtectedRoute roleRequired="boss"><CustomerManagement /></ProtectedRoute>} 
+        />
+        <Route
+          path="/courses"
+          element={<ProtectedRoute roleRequired="boss"><CoursePackages /></ProtectedRoute>}
+        />
 
         {/* 404 页面，默认回到登录 */}
         <Route path="*" element={<Navigate to="/login" />} />
