@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 // 获取买家列表
 export const getBuyers = async () => {
   try {
-    const response = await api.get('/buyer'); // 后端 API 路径 /api/buyer
+    const response = await api.get('/buyer');  // 确保这个 URL 是 '/buyer'，如果后端使用 '/api/buyer'
     return response.data;
   } catch (error) {
     console.error('获取买家列表失败', error);
@@ -17,7 +17,7 @@ export const getBuyers = async () => {
 // 创建新买家
 export const createBuyer = async (buyerData: any) => {
   try {
-    const response = await api.post('/buyer', buyerData); // 后端 API 路径 /api/buyer
+    const response = await api.post('/buyer', buyerData);  // 创建请求时使用 '/buyer' 作为 URL
     toast.success('买家创建成功');
     return response.data;
   } catch (error) {

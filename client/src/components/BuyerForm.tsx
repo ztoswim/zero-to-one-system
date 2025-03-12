@@ -8,13 +8,28 @@ interface BuyerFormProps {
 }
 
 const BuyerForm = ({ selectedBuyer, onClose, onSuccess, onSubmit }: BuyerFormProps) => {
-  const [buyerData, setBuyerData] = useState<any>(selectedBuyer || {});
+  const [buyerData, setBuyerData] = useState<any>(selectedBuyer || {
+    name: '',
+    tin: '',
+    registrationNumber: '',
+    registrationScheme: '',
+    sst: '',
+    email: '',
+    contact: '',
+    address: {
+      addressLine0: '',
+      addressLine1: '',
+      addressLine2: '',
+      postalZone: '',
+      cityName: '',
+      state: '',
+      country: ''
+    }
+  });
 
   useEffect(() => {
     if (selectedBuyer) {
-      setBuyerData(selectedBuyer);  // 如果是编辑，加载现有买家数据
-    } else {
-      setBuyerData({});  // 新建买家时，表单为空
+      setBuyerData(selectedBuyer);
     }
   }, [selectedBuyer]);
 
@@ -23,42 +38,215 @@ const BuyerForm = ({ selectedBuyer, onClose, onSuccess, onSubmit }: BuyerFormPro
     setBuyerData({ ...buyerData, [name]: value });
   };
 
+  // 处理地址字段的变化
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const [section, field] = name.split('.');  // 拆分成数组并获取字段
+    setBuyerData({
+      ...buyerData,
+      address: {
+        ...buyerData.address,
+        [field]: value
+      }
+    });
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(buyerData.id || '', buyerData);  // 提交数据
+    await onSubmit(buyerData.id || '', buyerData);  // 新建时没有 id，编辑时有
     onSuccess();  // 提交成功后调用 onSuccess 更新列表
     onClose();  // 关闭表单
   };
 
   return (
-    <div className="modal">
-      <form onSubmit={handleFormSubmit}>
-        <label>姓名</label>
-        <input
-          type="text"
-          name="name"
-          value={buyerData.name || ''}
-          onChange={handleInputChange}
-        />
+    <div className="modal p-6">
+      <form onSubmit={handleFormSubmit} className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* 买家信息 */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">{selectedBuyer ? '编辑买家' : '新建买家'}</h2>
 
-        <label>TIN</label>
-        <input
-          type="text"
-          name="tin"
-          value={buyerData.tin || ''}
-          onChange={handleInputChange}
-        />
+          <div>
+            <label>姓名</label>
+            <input
+              type="text"
+              name="name"
+              value={buyerData.name}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
 
-        <label>注册号</label>
-        <input
-          type="text"
-          name="registrationNumber"
-          value={buyerData.registrationNumber || ''}
-          onChange={handleInputChange}
-        />
+          <div>
+            <label>TIN</label>
+            <input
+              type="text"
+              name="tin"
+              value={buyerData.tin}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
 
-        <button type="submit">提交</button>
-        <button type="button" onClick={onClose}>取消</button>
+          <div>
+            <label>注册号</label>
+            <input
+              type="text"
+              name="registrationNumber"
+              value={buyerData.registrationNumber}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>注册方案</label>
+            <input
+              type="text"
+              name="registrationScheme"
+              value={buyerData.registrationScheme}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>SST</label>
+            <input
+              type="text"
+              name="sst"
+              value={buyerData.sst}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>邮箱</label>
+            <input
+              type="email"
+              name="email"
+              value={buyerData.email}
+              onChange={handleInputChange}
+              className="input"
+            />
+          </div>
+
+          <div>
+            <label>联系方式</label>
+            <input
+              type="text"
+              name="contact"
+              value={buyerData.contact}
+              onChange={handleInputChange}
+              className="input"
+              required
+            />
+          </div>
+        </div>
+
+        {/* 地址信息 */}
+        <div className="space-y-4">
+          <h3 className="font-semibold">地址信息</h3>
+
+          <div>
+            <label>地址行 0</label>
+            <input
+              type="text"
+              name="address.addressLine0"
+              value={buyerData.address.addressLine0}
+              onChange={handleAddressChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>地址行 1</label>
+            <input
+              type="text"
+              name="address.addressLine1"
+              value={buyerData.address.addressLine1}
+              onChange={handleAddressChange}
+              className="input"
+            />
+          </div>
+
+          <div>
+            <label>地址行 2</label>
+            <input
+              type="text"
+              name="address.addressLine2"
+              value={buyerData.address.addressLine2}
+              onChange={handleAddressChange}
+              className="input"
+            />
+          </div>
+
+          <div>
+            <label>邮政区号</label>
+            <input
+              type="text"
+              name="address.postalZone"
+              value={buyerData.address.postalZone}
+              onChange={handleAddressChange}
+              className="input"
+            />
+          </div>
+
+          <div>
+            <label>城市</label>
+            <input
+              type="text"
+              name="address.cityName"
+              value={buyerData.address.cityName}
+              onChange={handleAddressChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>州/省</label>
+            <input
+              type="text"
+              name="address.state"
+              value={buyerData.address.state}
+              onChange={handleAddressChange}
+              className="input"
+              required
+            />
+          </div>
+
+          <div>
+            <label>国家</label>
+            <input
+              type="text"
+              name="address.country"
+              value={buyerData.address.country}
+              onChange={handleAddressChange}
+              className="input"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 flex justify-end space-x-4">
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+            提交
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-500 text-white rounded"
+          >
+            取消
+          </button>
+        </div>
       </form>
     </div>
   );
