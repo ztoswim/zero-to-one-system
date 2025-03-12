@@ -31,7 +31,7 @@ app.use("/api/auth", authRoutes);  // 认证相关路由
 app.use("/api/users", userRoutes);  // 用户管理路由
 app.use("/api/students", studentRoutes);  // 学生管理路由
 app.use("/api/invoice", invoiceRoutes);  // 发票相关路由
-app.use('/api/buyer', buyerRoutes);  // 买家管理路由
+app.use('/api/buyers', buyerRoutes);  // 买家管理路由
 
 // 连接数据库
 mongoose
