@@ -22,7 +22,7 @@ export const fixedSupplier: Supplier = {
   tourismTax: "NA",
   email: "zerooo.to.ooone@gmail.com",
   msic: "85419",
-  businessActivity: "Not Specified",
+  businessActivity: "Any other sports and recreation education n.e.c",
   address: "53, JALAN BAKAWALI 10, TAMAN JOHOR JAYA, 81100, JOHOR BAHRU, JOHOR, MALAYSIA",
   telephone: "0108654399",
 };
