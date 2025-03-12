@@ -127,7 +127,7 @@ const BuyerPage = () => {
           selectedBuyer={selectedBuyer}  // 如果是编辑，则传递当前买家的信息
           onClose={() => setShowForm(false)}  // 关闭表单
           onSuccess={fetchBuyers}  // 成功后重新获取买家列表
-          onSubmit={selectedBuyer ? handleEditBuyer : handleAddBuyer}  // 确保传递正确的提交函数
+          onSubmit={selectedBuyer ? handleEditBuyer : handleAddBuyer} // 根据是否编辑来选择方法
         />
       )}
     </div>

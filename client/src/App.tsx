@@ -48,49 +48,49 @@ const App = () => {
         {role ? (
           <Route element={<DashboardLayout><Outlet /></DashboardLayout>}>
             {/* Boss 和 Admin 角色的 dashboard 页面 */}
-            <Route 
-              path="/boss-dashboard" 
-              element={<ProtectedRoute roleRequired="boss"><BossDashboard /></ProtectedRoute>} 
+            <Route
+              path="/boss-dashboard"
+              element={<ProtectedRoute roleRequired="boss"><BossDashboard /></ProtectedRoute>}
             />
-            <Route 
-              path="/admin-dashboard" 
-              element={<ProtectedRoute roleRequired="admin"><AdminDashboard /></ProtectedRoute>} 
+            <Route
+              path="/admin-dashboard"
+              element={<ProtectedRoute roleRequired="admin"><AdminDashboard /></ProtectedRoute>}
             />
-            <Route 
-              path="/coach-dashboard" 
-              element={<ProtectedRoute roleRequired="coach"><CoachDashboard /></ProtectedRoute>} 
+            <Route
+              path="/coach-dashboard"
+              element={<ProtectedRoute roleRequired="coach"><CoachDashboard /></ProtectedRoute>}
             />
-            <Route 
-              path="/customer-dashboard" 
-              element={<ProtectedRoute roleRequired="customer"><CustomerDashboard /></ProtectedRoute>} 
+            <Route
+              path="/customer-dashboard"
+              element={<ProtectedRoute roleRequired="customer"><CustomerDashboard /></ProtectedRoute>}
             />
 
             {/* 发票管理页面，只允许 boss 和 admin 角色访问 */}
-            <Route 
-              path="/invoices" 
-              element={<ProtectedRoute roleRequired="boss"><InvoicePage /></ProtectedRoute>} 
+            <Route
+              path="/invoices"
+              element={<ProtectedRoute roleRequired="boss"><InvoicePage /></ProtectedRoute>}
             />
-            <Route 
-              path="/invoices" 
-              element={<ProtectedRoute roleRequired="admin"><InvoicePage /></ProtectedRoute>} 
+            <Route
+              path="/invoices"
+              element={<ProtectedRoute roleRequired="admin"><InvoicePage /></ProtectedRoute>}
             />
 
             {/* 买家管理页面，只允许 boss 和 admin 角色访问 */}
-            <Route 
-              path="/buyers" 
-              element={<ProtectedRoute roleRequired="boss"><BuyerPage /></ProtectedRoute>} 
+            <Route
+              path="/buyers"
+              element={<ProtectedRoute roleRequired="boss"><BuyerPage /></ProtectedRoute>}
             />
-            <Route 
-              path="/buyers" 
-              element={<ProtectedRoute roleRequired="admin"><BuyerPage /></ProtectedRoute>} 
+            <Route
+              path="/buyers"
+              element={<ProtectedRoute roleRequired="admin"><BuyerPage /></ProtectedRoute>}
             />
           </Route>
         ) : null}
 
         {/* 角色特定的页面 */}
-        <Route 
-          path="/customers" 
-          element={<ProtectedRoute roleRequired="boss"><CustomerManagement /></ProtectedRoute>} 
+        <Route
+          path="/customers"
+          element={<ProtectedRoute roleRequired="boss"><CustomerManagement /></ProtectedRoute>}
         />
         <Route
           path="/courses"
