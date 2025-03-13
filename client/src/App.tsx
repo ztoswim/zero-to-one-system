@@ -88,7 +88,7 @@ const App = () => {
 
         {/* 角色特定的页面 */}
         <Route
-          path="/product"
+          path="/products"
           element={<ProtectedRoute roleRequired="boss"><ProductPage /></ProtectedRoute>}
         />
 
