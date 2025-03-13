@@ -73,6 +73,7 @@ const BuyerPage: React.FC = () => {
     try {
       await deleteBuyer(buyerId); // 使用 buyerAPI 删除买家
       fetchBuyers(); // 刷新列表
+      setShowModal(false); // 关闭 Modal
     } catch (error) {
       console.error('删除买家失败', error);
     }
@@ -82,19 +83,30 @@ const BuyerPage: React.FC = () => {
     fetchBuyers();
   }, []);
 
-  return (
-    <div>
-      <h1>买家列表</h1>
-      <button onClick={() => setShowModal(true)}>添加新买家</button>
+  // 新建买家，清空编辑数据
+  const handleCreateNew = () => {
+    setEditingBuyer(null); // 清空表单数据
+    setShowModal(true); // 显示新建表单
+  };
 
-      {/* 确保 buyers 是数组 */}
+  return (
+    <div style={{ padding: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <h1>买家列表</h1>
+        <button onClick={handleCreateNew} style={{ padding: '10px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '5px' }}>添加新买家</button>
+      </div>
+
+      {/* 买家列表 */}
       {Array.isArray(buyers) && buyers.length > 0 ? (
-        <ul>
+        <ul style={{ listStyleType: 'none', padding: '0' }}>
           {buyers.map((buyer) => (
-            <li key={buyer._id}>
-              <span>{buyer.name} - {buyer.contact}</span>
-              <button onClick={() => { setEditingBuyer(buyer); setShowModal(true); }}>编辑</button>
-              <button onClick={() => handleDeleteBuyer(buyer._id)}>删除</button>
+            <li key={buyer._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span
+                onClick={() => { setEditingBuyer(buyer); setShowModal(true); }}
+                style={{ cursor: 'pointer', color: 'blue', fontWeight: 'bold' }}
+              >
+                {buyer.name}
+              </span>
             </li>
           ))}
         </ul>
@@ -112,6 +124,7 @@ const BuyerPage: React.FC = () => {
           buyer={editingBuyer}
           onSubmit={editingBuyer ? handleEditBuyer : handleCreateBuyer}
           onClose={() => setShowModal(false)}
+          onDelete={editingBuyer ? handleDeleteBuyer : undefined} // 删除按钮只在编辑时显示
         />
       </ReactModal>
     </div>

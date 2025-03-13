@@ -12,6 +12,7 @@ export const menuConfig: Record<string, MenuItem[]> = {
     { label: "课程配套", path: "/courses" },
     { label: "发票管理", path: "/invoices" }, // 添加发票管理页面
     { label: "买家管理", path: "/buyers" }, // 添加买家管理页面
+    { label: "商品管理", path: "/products" }, // 添加商品管理页面
   ],
   admin: [
     { label: "仪表盘", path: "/admin-dashboard" },

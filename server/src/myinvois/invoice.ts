@@ -55,42 +55,28 @@ export function generateInvoiceJSON(invoice: Invoice): object {
         }
       }
     ],
-    "cac:TaxTotal": [
-      {
-        "cac:TaxSubtotal": {
-          "cbc:TaxAmount": {
-            "currencyID": "MYR",
-            "value": invoice.totalTaxAmount.toFixed(2) // 总税额
-          }
-        }
-      },
-      {
+    "cac:TaxTotal": {
+      "cac:TaxSubtotal": {
         "cbc:TaxAmount": {
           "currencyID": "MYR",
           "value": invoice.totalTaxAmount.toFixed(2) // 总税额
         }
       }
-    ],
-    "cac:LegalMonetaryTotal": [
-      {
-        "cbc:TaxExclusiveAmount": {
-          "currencyID": "MYR",
-          "value": invoice.totalExcludingTax.toFixed(2) // 税前总额
-        }
+    },
+    "cac:LegalMonetaryTotal": {
+      "cbc:TaxExclusiveAmount": {
+        "currencyID": "MYR",
+        "value": invoice.totalExcludingTax.toFixed(2) // 税前总额
       },
-      {
-        "cbc:TaxInclusiveAmount": {
-          "currencyID": "MYR",
-          "value": invoice.totalIncludingTax.toFixed(2) // 税后总额
-        }
+      "cbc:TaxInclusiveAmount": {
+        "currencyID": "MYR",
+        "value": invoice.totalIncludingTax.toFixed(2) // 税后总额
       },
-      {
-        "cbc:PayableAmount": {
-          "currencyID": "MYR",
-          "value": invoice.totalPayableAmount.toFixed(2) // 应付总额
-        }
+      "cbc:PayableAmount": {
+        "currencyID": "MYR",
+        "value": invoice.totalPayableAmount.toFixed(2) // 应付总额
       }
-    ]
+    }
   };
 
   return invoiceJson;

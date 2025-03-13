@@ -8,6 +8,7 @@ import userRoutes from './routes/userRoutes';
 import studentRoutes from './routes/studentRoutes';
 import invoiceRoutes from './routes/invoiceRoutes';
 import buyerRoutes from './routes/buyerRoutes';  // 引入买家路由
+import productRoutes from './routes/productRoutes';
 
 dotenv.config();  // 加载环境变量
 const app = express();
@@ -32,6 +33,7 @@ app.use("/api/users", userRoutes);  // 用户管理路由
 app.use("/api/students", studentRoutes);  // 学生管理路由
 app.use("/api/invoice", invoiceRoutes);  // 发票相关路由
 app.use('/api/buyers', buyerRoutes);  // 买家管理路由
+app.use('/api/product-item', productRoutes);
 
 // 连接数据库
 mongoose
