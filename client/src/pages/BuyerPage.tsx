@@ -1,23 +1,77 @@
-import { useState, useEffect } from 'react';
-import { getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../api/buyerAPI';
+import React, { useEffect, useState } from 'react';
+import { getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../api/buyerAPI'; // 引入 buyerAPI
 import BuyerForm from '../components/BuyerForm';
-import { toast } from 'react-toastify';
+import ReactModal from 'react-modal';
 
-const BuyerPage = () => {
-  const [buyers, setBuyers] = useState<any[]>([]);
-  const [selectedBuyer, setSelectedBuyer] = useState<any | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [loading, setLoading] = useState(true);
+// 设置 Modal 的根元素
+ReactModal.setAppElement('#root');
+
+interface Address {
+  addressLine0: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  postalZone?: string;
+  cityName: string;
+  state: string;
+  country: string;
+}
+
+interface Buyer {
+  _id: string;
+  name: string;
+  tin: string;
+  registrationNumber: string;
+  registrationScheme: string;
+  sst: string;
+  email?: string;
+  contact: string;
+  address: Address;
+}
+
+const BuyerPage: React.FC = () => {
+  const [buyers, setBuyers] = useState<Buyer[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingBuyer, setEditingBuyer] = useState<Buyer | null>(null);
 
   // 获取买家列表
   const fetchBuyers = async () => {
     try {
-      const response = await getBuyers();
-      setBuyers(response);
-      setLoading(false);
+      const data = await getBuyers(); // 使用 buyerAPI 获取数据
+      setBuyers(data);
     } catch (error) {
-      toast.error('获取买家列表失败');
-      setLoading(false);
+      console.error('获取买家列表失败', error);
+    }
+  };
+
+  // 创建新买家
+  const handleCreateBuyer = async (newBuyer: Buyer) => {
+    try {
+      await createBuyer(newBuyer); // 使用 buyerAPI 创建买家
+      fetchBuyers(); // 刷新列表
+      setShowModal(false); // 关闭 Modal
+    } catch (error) {
+      console.error('创建买家失败', error);
+    }
+  };
+
+  // 编辑买家
+  const handleEditBuyer = async (buyer: Buyer) => {
+    try {
+      await updateBuyer(buyer._id, buyer); // 使用 buyerAPI 更新买家
+      fetchBuyers(); // 刷新列表
+      setShowModal(false); // 关闭 Modal
+    } catch (error) {
+      console.error('编辑买家失败', error);
+    }
+  };  
+
+  // 删除买家
+  const handleDeleteBuyer = async (buyerId: string) => {
+    try {
+      await deleteBuyer(buyerId); // 使用 buyerAPI 删除买家
+      fetchBuyers(); // 刷新列表
+    } catch (error) {
+      console.error('删除买家失败', error);
     }
   };
 
@@ -25,65 +79,38 @@ const BuyerPage = () => {
     fetchBuyers();
   }, []);
 
-  // 提交新买家或编辑买家
-  const handleSubmit = async (buyerId: string, buyerData: any) => {
-    try {
-      if (buyerId) {
-        // 编辑
-        await updateBuyer(buyerId, buyerData);
-        toast.success('编辑买家成功！');
-      } else {
-        // 新建
-        await createBuyer(buyerData);
-        toast.success('新建买家成功！');
-      }
-      fetchBuyers(); // 成功后重新获取买家列表
-      setShowForm(false); // 关闭表单
-    } catch (error) {
-      toast.error('操作失败，请重试');
-    }
-  };
-
-  const handleDelete = async (buyerId: string) => {
-    try {
-      await deleteBuyer(buyerId);
-      setBuyers(buyers.filter(buyer => buyer._id !== buyerId)); // 确保删除使用 _id
-      toast.success('买家删除成功');
-    } catch (error) {
-      toast.error('删除买家失败');
-    }
-  };
-
   return (
     <div>
-      <h1>买家管理</h1>
-      <button onClick={() => { setSelectedBuyer(null); setShowForm(true); }} className="btn btn-primary mb-4">
-        新建买家
-      </button>
-      
-      {loading ? <div>加载中...</div> : (
-        <div className="flex flex-wrap">
+      <h1>买家列表</h1>
+      <button onClick={() => setShowModal(true)}>添加新买家</button>
+
+      {/* 确保 buyers 是数组 */}
+      {Array.isArray(buyers) && buyers.length > 0 ? (
+        <ul>
           {buyers.map((buyer) => (
-            <button
-              key={buyer._id} // 确保每个按钮有唯一的 key
-              onClick={() => { setSelectedBuyer(buyer); setShowForm(true); }}
-              className="btn btn-secondary m-2"
-              onDoubleClick={() => handleDelete(buyer._id)} // 使用 _id 进行删除
-            >
-              {buyer.name}
-            </button>
+            <li key={buyer._id}>
+              <span>{buyer.name} - {buyer.contact}</span>
+              <button onClick={() => { setEditingBuyer(buyer); setShowModal(true); }}>编辑</button>
+              <button onClick={() => handleDeleteBuyer(buyer._id)}>删除</button>
+            </li>
           ))}
-        </div>
+        </ul>
+      ) : (
+        <p>没有买家数据</p>
       )}
 
-      {showForm && (
+      {/* 买家表单 Modal */}
+      <ReactModal
+        isOpen={showModal}
+        onRequestClose={() => setShowModal(false)}
+        contentLabel="买家表单"
+      >
         <BuyerForm
-          selectedBuyer={selectedBuyer}
-          onClose={() => setShowForm(false)}
-          onSuccess={fetchBuyers}
-          onSubmit={handleSubmit}  // 传递 onSubmit 函数
+          buyer={editingBuyer}
+          onSubmit={editingBuyer ? handleEditBuyer : handleCreateBuyer}
+          onClose={() => setShowModal(false)}
         />
-      )}
+      </ReactModal>
     </div>
   );
 };

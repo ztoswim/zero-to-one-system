@@ -1,5 +1,3 @@
-// src/models/Buyer.ts
-
 import mongoose, { Schema, Document } from 'mongoose';
 
 // 定义地址模型

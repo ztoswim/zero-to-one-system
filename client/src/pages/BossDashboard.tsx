@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../components/DashboardLayout";
 import { getUserRole } from "../auth";
 
 const BossDashboard = () => {
@@ -14,9 +13,11 @@ const BossDashboard = () => {
   }, [navigate]);
 
   return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-bold">Boss Dashboard</h1>
-      <p>欢迎来到 Boss 管理后台</p>
+    <>
+      <div>
+        <h1 className="text-2xl font-bold">Boss Dashboard</h1>
+        <p>欢迎来到 Boss 管理后台</p>
+      </div>
 
       {/* 你可以添加更多内容 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -33,7 +34,7 @@ const BossDashboard = () => {
           <p>一些统计信息内容...</p>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

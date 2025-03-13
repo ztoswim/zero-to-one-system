@@ -9,7 +9,7 @@ export const getBuyers = async () => {
   } catch (error) {
     console.error('获取买家列表失败', error);
     toast.error('获取买家列表失败');
-    throw error;
+    throw error; // 让错误上抛，便于在调用处处理
   }
 };
 
@@ -22,7 +22,7 @@ export const createBuyer = async (buyerData: any) => {
   } catch (error) {
     console.error('创建买家失败', error);
     toast.error('创建买家失败');
-    throw error;
+    throw error; // 让错误上抛
   }
 };
 
