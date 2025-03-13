@@ -10,8 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Login from "./pages/Login";
-import CustomerManagement from "./pages/CustomerManagement";
-import CoursePackages from "./pages/CoursePackages";
+import ProductPage from "./pages/ProductPage";
 import InvoicePage from "./pages/InvoicePage"; // 引入发票页面
 import BuyerPage from "./pages/BuyerPage"; // 引入买家管理页面
 
@@ -89,12 +88,8 @@ const App = () => {
 
         {/* 角色特定的页面 */}
         <Route
-          path="/customers"
-          element={<ProtectedRoute roleRequired="boss"><CustomerManagement /></ProtectedRoute>}
-        />
-        <Route
-          path="/courses"
-          element={<ProtectedRoute roleRequired="boss"><CoursePackages /></ProtectedRoute>}
+          path="/product"
+          element={<ProtectedRoute roleRequired="boss"><ProductPage /></ProtectedRoute>}
         />
 
         {/* 404 页面，默认回到登录 */}
