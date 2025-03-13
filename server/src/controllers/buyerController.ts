@@ -1,7 +1,8 @@
+import { Request, Response } from 'express';
 import Buyer from '../models/Buyer';
 
 // 获取买家列表
-export const getBuyers = async (req: any, res: any): Promise<void> => {
+export const getBuyers = async (req: Request, res: Response): Promise<void> => {
   try {
     const buyers = await Buyer.find();
     res.json(buyers);
@@ -13,16 +14,17 @@ export const getBuyers = async (req: any, res: any): Promise<void> => {
 };
 
 // 创建新买家
-export const createBuyer = async (req: any, res: any): Promise<void> => {
+export const createBuyer = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, tin, registrationNumber, registrationScheme, sst, email, contact, address } = req.body;
 
     // 确保所有必需的字段存在
     if (!name || !tin || !registrationNumber || !registrationScheme || !sst || !contact || !address) {
-      return res.status(400).json({ message: '所有必需的字段必须提供' });
+      res.status(400).json({ message: '所有必需的字段必须提供' });
+      return;
     }
 
-    // 使用 create() 方法创建并保存新买家
+    // 创建并保存新买家
     const newBuyer = new Buyer({
       name,
       tin,
@@ -44,14 +46,14 @@ export const createBuyer = async (req: any, res: any): Promise<void> => {
 };
 
 // 编辑买家
-export const updateBuyer = async (req: any, res: any): Promise<void> => {
+export const updateBuyer = async (req: Request, res: Response): Promise<void> => {
   try {
     const { buyerId } = req.params;
     const { name, tin, registrationNumber, registrationScheme, sst, email, contact, address } = req.body;
 
     // 确保所有必需的字段存在
     if (!name || !tin || !registrationNumber || !registrationScheme || !sst || !contact || !address) {
-      return res.status(400).json({ message: '所有必需的字段必须提供' });
+      res.status(400).json({ message: '所有必需的字段必须提供' });
     }
 
     const updatedBuyer = await Buyer.findByIdAndUpdate(
@@ -61,7 +63,8 @@ export const updateBuyer = async (req: any, res: any): Promise<void> => {
     );
 
     if (!updatedBuyer) {
-      return res.status(404).json({ message: '买家未找到' });
+      res.status(404).json({ message: '买家未找到' });
+      return;
     }
 
     res.status(200).json(updatedBuyer);
@@ -73,11 +76,12 @@ export const updateBuyer = async (req: any, res: any): Promise<void> => {
 };
 
 // 删除买家
-export const deleteBuyer = async (req: any, res: any): Promise<void> => {
+export const deleteBuyer = async (req: Request, res: Response): Promise<void> => {
   try {
     const buyer = await Buyer.findByIdAndDelete(req.params.buyerId);
     if (!buyer) {
-      return res.status(404).json({ message: '买家未找到' });
+      res.status(404).json({ message: '买家未找到' });
+      return;
     }
 
     res.json({ message: '买家删除成功' });

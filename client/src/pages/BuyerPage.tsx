@@ -57,13 +57,16 @@ const BuyerPage: React.FC = () => {
   // 编辑买家
   const handleEditBuyer = async (buyer: Buyer) => {
     try {
+      if (!buyer._id) {
+        throw new Error('买家ID不存在');
+      }
       await updateBuyer(buyer._id, buyer); // 使用 buyerAPI 更新买家
       fetchBuyers(); // 刷新列表
       setShowModal(false); // 关闭 Modal
     } catch (error) {
       console.error('编辑买家失败', error);
     }
-  };  
+  };
 
   // 删除买家
   const handleDeleteBuyer = async (buyerId: string) => {
