@@ -21,7 +21,8 @@ export const createBuyer = async (req: any, res: any): Promise<void> => {
       return res.status(400).json({ message: '所有必需的字段必须提供' });
     }
 
-    const newBuyer = new Buyer({
+    // 使用 create() 方法创建并保存新买家
+    const newBuyer = await Buyer.create({
       name,
       tin,
       registrationNumber,
@@ -32,7 +33,6 @@ export const createBuyer = async (req: any, res: any): Promise<void> => {
       address,
     });
 
-    await newBuyer.save();
     res.status(201).json(newBuyer);
   } catch (error) {
     console.error('创建买家失败:', error);

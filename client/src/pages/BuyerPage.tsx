@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getBuyers, createBuyer, updateBuyer } from '../api/buyerAPI';
+import { getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../api/buyerAPI';
 import BuyerForm from '../components/BuyerForm';
 import { toast } from 'react-toastify';
 
@@ -44,6 +44,16 @@ const BuyerPage = () => {
     }
   };
 
+  const handleDelete = async (buyerId: string) => {
+    try {
+      await deleteBuyer(buyerId);
+      setBuyers(buyers.filter(buyer => buyer._id !== buyerId)); // 确保删除使用 _id
+      toast.success('买家删除成功');
+    } catch (error) {
+      toast.error('删除买家失败');
+    }
+  };
+
   return (
     <div>
       <h1>买家管理</h1>
@@ -58,6 +68,7 @@ const BuyerPage = () => {
               key={buyer._id} // 确保每个按钮有唯一的 key
               onClick={() => { setSelectedBuyer(buyer); setShowForm(true); }}
               className="btn btn-secondary m-2"
+              onDoubleClick={() => handleDelete(buyer._id)} // 使用 _id 进行删除
             >
               {buyer.name}
             </button>
