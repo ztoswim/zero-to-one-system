@@ -83,14 +83,14 @@ const App = () => {
               path="/buyers"
               element={<ProtectedRoute roleRequired="admin"><BuyerPage /></ProtectedRoute>}
             />
-          </Route>
-        ) : null}
 
         {/* 角色特定的页面 */}
         <Route
           path="/products"
           element={<ProtectedRoute roleRequired="boss"><ProductPage /></ProtectedRoute>}
         />
+          </Route>
+        ) : null}
 
         {/* 404 页面，默认回到登录 */}
         <Route path="*" element={<Navigate to="/login" />} />
