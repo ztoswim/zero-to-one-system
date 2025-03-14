@@ -10,9 +10,6 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CoachDashboard from "./pages/CoachDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Login from "./pages/Login";
-import ProductPage from "./pages/ProductPage";
-import InvoicePage from "./pages/InvoicePage"; // 引入发票页面
-import BuyerPage from "./pages/BuyerPage"; // 引入买家管理页面
 
 const App = () => {
   const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
@@ -63,32 +60,6 @@ const App = () => {
               path="/customer-dashboard"
               element={<ProtectedRoute roleRequired="customer"><CustomerDashboard /></ProtectedRoute>}
             />
-
-            {/* 发票管理页面，只允许 boss 和 admin 角色访问 */}
-            <Route
-              path="/invoices"
-              element={<ProtectedRoute roleRequired="boss"><InvoicePage /></ProtectedRoute>}
-            />
-            <Route
-              path="/invoices"
-              element={<ProtectedRoute roleRequired="admin"><InvoicePage /></ProtectedRoute>}
-            />
-
-            {/* 买家管理页面，只允许 boss 和 admin 角色访问 */}
-            <Route
-              path="/buyers"
-              element={<ProtectedRoute roleRequired="boss"><BuyerPage /></ProtectedRoute>}
-            />
-            <Route
-              path="/buyers"
-              element={<ProtectedRoute roleRequired="admin"><BuyerPage /></ProtectedRoute>}
-            />
-
-        {/* 角色特定的页面 */}
-        <Route
-          path="/products"
-          element={<ProtectedRoute roleRequired="boss"><ProductPage /></ProtectedRoute>}
-        />
           </Route>
         ) : null}
 
