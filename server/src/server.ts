@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import studentRoutes from './routes/studentRoutes';
+import biztoryRoutes from './routes/biztoryRoutes';  // 引入 biztoryRoutes
 
 dotenv.config();  // 加载环境变量
 const app = express();
@@ -28,6 +29,7 @@ app.use(cookieParser());  // 解析 cookie
 app.use("/api/auth", authRoutes);  // 认证相关路由
 app.use("/api/users", userRoutes);  // 用户管理路由
 app.use("/api/students", studentRoutes);  // 学生管理路由
+app.use('/api/biztory', biztoryRoutes);
 
 // 连接数据库
 mongoose
