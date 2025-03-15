@@ -9,31 +9,21 @@ dotenv.config();
 const { BIZTORY_SUBDOMAIN, BIZTORY_API_KEY, BIZTORY_ADMIN_USERNAME, BIZTORY_BOSS_USERNAME, BIZTORY_ADMIN_USER_ID, BIZTORY_BOSS_USER_ID } = process.env;
 
 // 扩展 Role 类型以支持所有角色
-type Role = "admin" | "boss" | "coach" | "customer"; // 确保这个类型被使用
+type Role = "admin" | "boss" | "coach" | "customer";
 
-const biztoryAccounts: Record<Role, { username: string; apiKey: string; userId: string }> = {
+// 定义 biztoryAccounts 对象的类型
+const biztoryAccounts: Record<"admin" | "boss", { username: string; apiKey: string; userId: string }> = {
   admin: {
-    username: process.env.BIZTORY_ADMIN_USERNAME!,
-    apiKey: process.env.BIZTORY_API_KEY!,
-    userId: process.env.BIZTORY_ADMIN_USER_ID!,
+    username: BIZTORY_ADMIN_USERNAME!,
+    apiKey: BIZTORY_API_KEY!,
+    userId: BIZTORY_ADMIN_USER_ID!,
   },
   boss: {
-    username: process.env.BIZTORY_BOSS_USERNAME!,
-    apiKey: process.env.BIZTORY_API_KEY!,
-    userId: process.env.BIZTORY_BOSS_USER_ID!,
-  },
-  coach: {
-    username: "",
-    apiKey: "",
-    userId: "",
-  },
-  customer: {
-    username: "",
-    apiKey: "",
-    userId: "",
+    username: BIZTORY_BOSS_USERNAME!,
+    apiKey: BIZTORY_API_KEY!,
+    userId: BIZTORY_BOSS_USER_ID!,
   },
 };
-
 
 // 登录 Biztory
 export const loginToBiztory = async (role: "admin" | "boss") => {

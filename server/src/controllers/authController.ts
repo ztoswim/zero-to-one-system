@@ -1,9 +1,9 @@
-// src/controllers/authController.ts
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import axios from 'axios';
+import md5 from 'md5';
 import Student from "../models/Student";
-import { loginToBiztory } from "../utils/biztoryUtils"; // 引入 Biztory 登录的工具函数
 
 // 顾客注册
 export const registerCustomer = async (req: any, res: any): Promise<void> => {
@@ -71,25 +71,40 @@ export const login = async (req: any, res: any): Promise<void> => {
     return;
   }
 
-  // 登录成功后，生成 JWT token
-  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  let biztoryAccount = null;
 
-  // 如果是 admin 或 boss，自动登录 Biztory
-  if (["admin", "boss"].includes(user.role)) {
+  // 检查是否有 Biztory 信息，如果有则尝试登录 Biztory
+  if (user.biztoryApiKey && user.biztoryUserId && user.biztoryUsername) {
+    // 拼接 Biztory 登录密码
+    const concatenatedString = `${user.biztoryUsername}${user.biztoryApiKey}`;
+    const md5Output = md5(concatenatedString);
+    const passwordForBiztory = `${user.biztoryUserId}_${md5Output}`;
+
+    // 进行 Biztory 登录
+    const requestBody = {
+      name: user.biztoryUsername,
+      password: passwordForBiztory,
+    };
+
     try {
-      if (user.role === "admin" || user.role === "boss") {
-        const biztoryResponse = await loginToBiztory(user.role); // 根据用户角色自动登录 Biztory
-        res.json({ token, role: user.role, biztoryMessage: biztoryResponse.message }); // 返回 Biztory 登录的成功信息
+      const biztoryResponse = await axios.post('https://zerotooone.biztory.com.my/api_v1/api_login', requestBody);
+
+      if (biztoryResponse.status === 200) {
+        console.log('成功登录 Biztory');
+        biztoryAccount = biztoryResponse.data;
       } else {
-        res.json({ token, role: user.role }); // 非 admin 或 boss 用户仅返回 JWT token
+        console.error('Biztory 登录失败');
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "未知错误";
-      res.status(500).json({ error: `Biztory 登录失败: ${errorMessage}` });
+      console.error('Biztory 登录请求失败', error);
     }
-  } else {
-    res.json({ token, role: user.role }); // 非 admin 或 boss 用户仅返回 JWT token
   }
+
+  // 生成 JWT token
+  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+
+  // 返回 JWT Token 和 Biztory 账户信息（如果有）
+  res.json({ token, role: user.role, biztoryAccount });
 };
 
 // 忘记密码
