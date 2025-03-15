@@ -4,23 +4,31 @@ import { loginUser } from "../auth";
 import { FiUser, FiLock } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import Logo from "../assets/Logo.png"; // ✅ 引入 Logo
+import Logo from "../assets/Logo.png"; // 引入 Logo
 
 const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // 用于控制加载状态
+  const [loading, setLoading] = useState(false); // 控制加载状态
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); // 开始加载
     try {
-      const role = await loginUser(username, password);
+      const { role, biztoryAccount } = await loginUser(username, password); // 登录并获取 role 和 biztoryAccount
       toast.success("登录成功 🎉");
 
+      // 存储 token 和 role
       localStorage.setItem("role", role);
       setRole(role);
+
+      // 如果有 Biztory 信息，存储 biztoryAccount
+      if (biztoryAccount) {
+        localStorage.setItem("biztoryAccount", JSON.stringify(biztoryAccount));
+      }
+
+      // 导航到相应的 dashboard
       navigate(`/${role}-dashboard`);
     } catch (error) {
       toast.error("登录失败，请检查用户名或密码！");

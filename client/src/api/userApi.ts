@@ -25,6 +25,19 @@ export const registerEmployee = async (data: {
 // 用户登录
 export const login = async (data: { username: string; password: string }) => {
   const response = await api.post("/auth/login", data);
+
+  // 保存用户信息（包括 Biztory 账号信息）
+  const { token, role, biztoryAccount } = response.data;
+
+  // 存储 token 和 role
+  localStorage.setItem("authToken", token);
+  localStorage.setItem("role", role);
+
+  // 如果有 Biztory 账号信息，将其存储
+  if (biztoryAccount) {
+    localStorage.setItem("biztoryAccount", JSON.stringify(biztoryAccount));
+  }
+
   return response.data;
 };
 
