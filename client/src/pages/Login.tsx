@@ -19,16 +19,15 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
       const { role, biztoryAccount } = await loginUser(username, password); // 登录并获取 role 和 biztoryAccount
       toast.success("登录成功 🎉");
 
-      // 存储 token 和 role
       localStorage.setItem("role", role);
       setRole(role);
 
       // 如果有 Biztory 信息，存储 biztoryAccount
       if (biztoryAccount) {
         localStorage.setItem("biztoryAccount", JSON.stringify(biztoryAccount));
+        toast.success("Biztory 登录成功！"); // 显示 Biztory 登录成功提示
       }
 
-      // 导航到相应的 dashboard
       navigate(`/${role}-dashboard`);
     } catch (error) {
       toast.error("登录失败，请检查用户名或密码！");
@@ -40,63 +39,32 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white shadow-lg rounded-xl p-8 w-96"
-      >
-        {/* 放大 Logo */}
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="bg-white shadow-lg rounded-xl p-8 w-96">
         <div className="flex justify-center mb-8">
-          <img src={Logo} alt="Logo" className="w-64 h-auto" /> {/* 放大到 256px 宽度 */}
+          <img src={Logo} alt="Logo" className="w-64 h-auto" />
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div className="relative">
             <FiUser className="absolute left-3 top-3.5 text-gray-500" />
-            <input
-              type="text"
-              placeholder="用户名"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <input type="text" placeholder="用户名" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
           </div>
           <div className="relative">
             <FiLock className="absolute left-3 top-3.5 text-gray-500" />
-            <input
-              type="password"
-              placeholder="密码"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <input type="password" placeholder="密码" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
           </div>
 
           <button
             type="submit"
-            className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
-            disabled={loading} // 登录中禁用按钮
+            className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+            disabled={loading}
           >
             {loading ? (
               <>
                 登录中...
-                <svg
-                  className="animate-spin h-5 w-5 ml-2 text-white" // 动画在文本后面
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="animate-spin h-5 w-5 ml-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"
-                  ></path>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"></path>
                 </svg>
               </>
             ) : (

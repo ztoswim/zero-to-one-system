@@ -28,4 +28,5 @@ export const getUserRole = () => localStorage.getItem("role");
 export const logoutUser = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
+  localStorage.removeItem("biztoryAccount");
 };

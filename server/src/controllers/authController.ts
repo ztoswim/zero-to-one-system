@@ -55,7 +55,7 @@ export const registerEmployee = async (req: any, res: any): Promise<void> => {
   res.json({ message: "注册成功" });
 };
 
-// 登录
+// 登录控制器
 export const login = async (req: any, res: any): Promise<void> => {
   const { username, password } = req.body;
 
@@ -91,12 +91,16 @@ export const login = async (req: any, res: any): Promise<void> => {
 
       if (biztoryResponse.status === 200) {
         console.log('成功登录 Biztory');
-        biztoryAccount = biztoryResponse.data;
+        biztoryAccount = biztoryResponse.data; // 保存 Biztory 返回的账户信息
       } else {
-        console.error('Biztory 登录失败');
+        console.error('Biztory 登录失败', biztoryResponse.status);
+        res.status(401).json({ error: "Biztory 登录失败" });
+        return;
       }
     } catch (error) {
       console.error('Biztory 登录请求失败', error);
+      res.status(500).json({ error: "Biztory 登录请求失败" });
+      return;
     }
   }
 
