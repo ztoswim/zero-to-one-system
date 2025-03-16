@@ -7,34 +7,37 @@ const BIZTORY_API_BASE_URL = process.env.BIZTORY_API_BASE_URL;
 
 // 获取银行列表
 export const getBankList = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const userId = req.user?.id;  // 假设你从 JWT 中获取当前用户的 ID
-
-    if (!userId) {
-      res.status(401).json({ error: "用户未登录" });
-      return;
+    try {
+      const userId = req.userId;  // 从 authMiddleware 获取用户 ID
+  
+      if (!userId) {
+        res.status(401).json({ error: "用户未登录" });
+        return;
+      }
+  
+      const user = await User.findById(userId);
+      if (!user || !user.biztoryApiKey) {
+        res.status(403).json({ error: "无效的 API Key" });
+        return;
+      }
+  
+      const biztoryApiKey = user.biztoryApiKey;
+  
+      // 请求 Biztory API 获取银行列表
+      const response = await axios.get(`${BIZTORY_API_BASE_URL}/account/bank/all`, {
+        headers: {
+          'Api-key': biztoryApiKey,  // 使用用户 Biztory API Key
+        },
+      });
+  
+      // 输出返回的数据，查看是否正确
+      console.log("Biztory Bank List:", response.data);
+  
+      // 返回 Biztory API 返回的银行列表
+      res.json(response.data);
+    } catch (error) {
+      console.error("无法从 Biztory API 获取银行列表", error);
+      res.status(500).json({ error: "无法获取银行列表" });
     }
-
-    // 从数据库中获取用户的 Biztory API Key
-    const user = await User.findById(userId);
-    if (!user || !user.biztoryApiKey) {
-      res.status(403).json({ error: "无效的 API Key" });
-      return;
-    }
-
-    const biztoryApiKey = user.biztoryApiKey;
-
-    // 请求 Biztory API 获取银行列表
-    const response = await axios.get(`${BIZTORY_API_BASE_URL}/account/bank/all`, {
-      headers: {
-        'Api-key': biztoryApiKey,  // 使用从用户数据库中获取的 API Key
-      },
-    });
-
-    // 返回 Biztory API 的数据给前端
-    res.json(response.data);
-  } catch (error) {
-    console.error('无法从 Biztory API 获取银行列表', error);
-    res.status(500).json({ error: '无法获取银行列表' });
-  }
-};
+  };
+  
