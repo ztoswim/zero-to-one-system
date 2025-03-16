@@ -114,3 +114,47 @@ export const createWallet = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ error: "创建钱包失败" });
   }
 };
+
+// 获取销售发票分页列表
+export const getSaleInvoices = async (req: Request, res: Response): Promise<void> => {
+    const { _q, filter, page } = req.query;
+  
+    const userId = req.userId;
+  
+    if (!userId) {
+      res.status(401).json({ error: "用户未登录" });
+      return;
+    }
+  
+    const user = await User.findById(userId);
+    if (!user || !user.biztoryApiKey) {
+      res.status(403).json({ error: "无效的 API Key" });
+      return;
+    }
+  
+    const biztoryApiKey = user.biztoryApiKey;
+  
+    // 构建请求参数
+    let params: any = {
+      _q: _q || "",
+      filter: filter || "",
+      page: page || 1,
+    };
+  
+    try {
+      // 请求 Biztory API 获取销售发票
+      const response = await axios.get(`${BIZTORY_API_BASE_URL}/sale`, {
+          headers: {
+            'Api-key': biztoryApiKey,  // 使用 Biztory API Key
+          },
+          params, // 附加的查询参数
+        }
+      );
+  
+      // 返回发票列表数据
+      res.json(response.data);
+    } catch (error) {
+      console.error("无法从 Biztory API 获取销售发票", error);
+      res.status(500).json({ error: "无法获取销售发票" });
+    }
+  };

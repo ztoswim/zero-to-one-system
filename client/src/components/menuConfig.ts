@@ -11,11 +11,13 @@ export const menuConfig: Record<string, MenuItem[]> = {
     { label: "客户管理", path: "/customers" },
     { label: "课程配套", path: "/courses" },
     { label: "银行列表", path: "/bank-list" },  // 新增银行列表
+    { label: "销售发票", path: "/sale-invoices" },  // 新增销售发票
   ],
   admin: [
     { label: "仪表盘", path: "/admin-dashboard" },
     { label: "用户管理", path: "/users" },
     { label: "银行列表", path: "/bank-list" },  // 新增银行列表
+    { label: "销售发票", path: "/sale-invoices" },  // 新增销售发票
   ],
   coach: [
     { label: "仪表盘", path: "/coach-dashboard" },
