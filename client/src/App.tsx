@@ -70,7 +70,7 @@ const App = () => {
             {/* 销售发票页面 */}
             <Route
               path="/sale-invoices"
-              element={<ProtectedRoute roleRequired="admin"><SaleInvoices /></ProtectedRoute>}
+              element={<ProtectedRoute roleRequired="boss"><SaleInvoices /></ProtectedRoute>}
             />
           </Route>
         ) : null}
