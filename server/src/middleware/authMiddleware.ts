@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 // 扩展 Request 类型
 interface AuthRequest extends Request {
@@ -10,12 +11,13 @@ const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): vo
   const token = req.headers.authorization?.split(" ")[1]; // 示例，实际情况下取决于你用的认证方式
 
   if (token) {
-    // 在这里你可以进行 token 验证并从中提取 userId 或整个 user 对象
-    // 例如：jwt.verify(token, secretKey) 解码并验证 token
-    
     try {
-      // 假设解码后得到的 user 数据
-      req.userId = "12345"; // 这里是解码出的 userId（根据你自己的实际逻辑）
+      // 使用 jwt.verify 解码并验证 token，假设 secretKey 存储在环境变量中
+      const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);  // 通过环境变量获取 secret key
+
+      // 提取 userId（你可以根据需要存储更多用户信息）
+      req.userId = decoded.id;  // 假设 token 中有一个 id 字段
+
       next(); // 验证通过，继续执行请求
     } catch (error) {
       res.status(401).json({ error: "Invalid token" });
