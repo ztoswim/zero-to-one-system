@@ -144,14 +144,12 @@ export const getSaleInvoices = async (req: Request, res: Response): Promise<void
     try {
       // 请求 Biztory API 获取销售发票
       const response = await axios.get(`${BIZTORY_API_BASE_URL}/sale`, {
-          headers: {
-            'Api-key': biztoryApiKey,  // 使用 Biztory API Key
-          },
-          params, // 附加的查询参数
-        }
-      );
-  
-      // 返回发票列表数据
+        headers: {
+          'Api-key': biztoryApiKey,
+        },
+        params,
+      });
+      console.log("Biztory Sale Invoices:", response.data);  // 输出发票数据
       res.json(response.data);
     } catch (error) {
       console.error("无法从 Biztory API 获取销售发票", error);

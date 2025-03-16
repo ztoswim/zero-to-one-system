@@ -22,6 +22,7 @@ const SaleInvoices = () => {
             page: page, // 当前页
           },
         });
+        console.log("Sales Invoices:", response.data); // 查看返回的发票数据
         setInvoices(response.data); // 更新发票列表
       } catch (error: any) {
         setError("无法获取销售发票列表");
