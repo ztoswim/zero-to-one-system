@@ -54,24 +54,23 @@ export const forgotPassword = async (data: {
 
 // 获取所有用户
 export const getAllUsers = async () => {
-  const response = await api.get("/user/list");
+  const response = await api.get("/users/list");
   return response.data;
 };
 
 // 获取当前用户信息
 export const getCurrentUser = async () => {
-  const response = await api.get("/user/me");
+  const response = await api.get("/users/me");
   return response.data;
 };
 
-// 更新用户信息
-export const updateUser = async (id: string, data: { username: string }) => {
+export const updateUser = async (id: string, data: { username: string; role: string }) => {
   const response = await api.put(`/user/${id}`, data);
   return response.data;
 };
 
 // 删除用户
 export const deleteUser = async (id: string) => {
-  const response = await api.delete(`/user/${id}`);
+  const response = await api.delete(`/users/${id}`);
   return response.data;
 };

@@ -28,11 +28,15 @@ export const getUserInfo = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-// 更新用户信息
+// 更新用户信息（包括用户名和角色）
 export const updateUserInfo = async (req: Request, res: Response): Promise<void> => {
-  const { username } = req.body;
+  const { username, role } = req.body; // ✅ 允许更新 role
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, { username }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { username, role }, // ✅ 允许更新 role
+      { new: true }
+    );
 
     if (!updatedUser) {
       res.status(404).json({ error: "用户未找到" });
