@@ -28,13 +28,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
       {/* 右侧内容区 */}
       <div className="flex-1 flex flex-col">
-        {/* 小屏幕显示 Navbar，但不遮挡内容 */}
-        <div className="md:hidden w-full bg-gray-800 z-20 sticky top-0">
+        {/* 仅在小屏幕显示 Navbar */}
+        <div className="bg-gray-800 z-50 fixed top-0 left-0 w-full shadow-md md:hidden">
           <Navbar role={role} />
         </div>
 
-        {/* 页面内容，顶部留出空间以避免 Navbar 遮挡 */}
-        <div className="flex-1 p-4 pt-16 md:pt-4">
+        {/* 页面内容，避免被 Navbar 遮挡小屏 */}
+        <div className="flex-1 p-4 pt-20 md:pt-4">
           {children}
         </div>
       </div>

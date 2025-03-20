@@ -17,10 +17,10 @@ const Navbar = ({ role }: { role: string }) => {
   };
 
   return (
-    <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center relative shadow-md">
+    <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center relative shadow-md w-auto">
       {/* Navbar 左侧 Logo + 文本 */}
       <div className="flex items-center space-x-3">
-        <img src={Logo} alt="Logo" className="w-16 h-auto" /> {/* Logo 变小 */}
+        <img src={Logo} alt="Logo" className="w-16 h-auto" /> {/* Logo 适中 */}
         <Typography variant="h6" className="text-white font-semibold">
           Zero To One
         </Typography>
@@ -57,13 +57,13 @@ const Navbar = ({ role }: { role: string }) => {
                 </li>
               );
             })}
-            {/* 退出登录按钮 - 居中对齐 */}
+            {/* 退出登录按钮 - 靠左对齐 */}
             <li>
               <button
                 onClick={handleLogout}
-                className="w-full flex justify-center items-center gap-3 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-md transition-all"
+                className="w-full flex justify-start items-center px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-md transition-all"
               >
-                <FaSignOutAlt className="text-lg" />
+                <FaSignOutAlt className="mr-3 text-lg" />
                 退出登录
               </button>
             </li>
