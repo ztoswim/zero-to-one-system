@@ -7,7 +7,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background-color: #f0f4f8; /* 背景色 */
+  background-color: #ffffff; /* 背景色为白色（60%） */
   color: rgba(0, 0, 0, 0.87); /* 默认文本颜色 */
 }
 
@@ -17,14 +17,14 @@ body, html {
   width: 100vw;
   height: 100vh;
   overflow: auto; /* 允许滚动 */
-  background-color: #f0f4f8; /* 背景色 */
+  background-color: #ffffff; /* 背景色为白色（60%） */
 }
 
 #root {
   width: 100%;
   height: 100%;
   display: block;  /* 移除 flexbox 布局，改为普通的块级布局 */
-  padding: 20px;
+  padding: 0; /* 移除内边距，确保没有多余的空白 */
   overflow-y: auto; /* 允许垂直滚动 */
 }
 
@@ -43,8 +43,8 @@ input, textarea, select {
 /* 输入框获取焦点时的样式 */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  border-color: #0b3289; /* 聚焦时边框颜色为主色 #0b3289 */
+  box-shadow: 0 0 4px rgba(11, 50, 137, 0.5); /* 聚焦时的阴影效果 */
 }
 
 /* 按钮样式 */
@@ -55,37 +55,38 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #007bff;
+  background-color: #0b3289; /* 按钮背景色为主色 #0b3289 */
   color: white;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #08285b; /* 悬浮时按钮背景色变暗 */
 }
 
 button:focus,
 button:focus-visible {
   outline: none;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  box-shadow: 0 0 4px rgba(11, 50, 137, 0.5); /* 聚焦时的阴影效果 */
 }
 
 /* 页面标题样式 */
 h1 {
   font-size: 2.5em;
   line-height: 1.1;
+  color: #0b3289; /* 标题颜色为主色 #0b3289 */
 }
 
 /* 默认色调设置 */
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #0b3289; /* 链接颜色为主色 #0b3289 */
   text-decoration: none;
 }
 
 a:hover {
-  color: #535bf2;
+  color: #08285b; /* 悬浮时链接颜色 */
 }
 
 /* 表单输入布局 */
@@ -98,6 +99,7 @@ a:hover {
 .form-group label {
   font-size: 1em;
   margin-bottom: 0.5rem;
+  color: #333333; /* 标签文字颜色 */
 }
 
 .form-group input,
@@ -141,7 +143,7 @@ a:hover {
 
 .modal button {
   padding: 0.75em 1.5em;
-  background-color: #007bff;
+  background-color: #ff8a00; /* 按钮背景色为既色 #ff8a00 */
   color: white;
   border-radius: 8px;
   border: none;
@@ -149,7 +151,7 @@ a:hover {
 }
 
 .modal button:hover {
-  background-color: #0056b3;
+  background-color: #e77900; /* 悬浮时按钮背景色 */
 }
 
 /* 小屏幕适配 */

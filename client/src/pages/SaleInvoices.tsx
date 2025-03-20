@@ -9,6 +9,12 @@ const SaleInvoices = () => {
   const [filter, setFilter] = useState<string>(""); // 筛选条件
   const [searchQuery, setSearchQuery] = useState<string>(""); // 搜索条件
 
+  // 格式化日期：将日期从 "yyyy-mm-dd" 转换为 "dd/mm/yy"
+  const formatDate = (date: string) => {
+    const formattedDate = new Date(date);
+    return formattedDate.toLocaleDateString("en-GB"); // 返回 "dd/mm/yyyy" 格式
+  };
+
   useEffect(() => {
     const fetchInvoices = async () => {
       setLoading(true);
@@ -22,8 +28,7 @@ const SaleInvoices = () => {
             page: page, // 当前页
           },
         });
-        console.log("Sales Invoices:", response.data); // 查看返回的发票数据
-        setInvoices(response.data); // 更新发票列表
+        setInvoices(response.data.data); // 更新发票列表
       } catch (error: any) {
         setError("无法获取销售发票列表");
         console.error("获取销售发票失败", error);
@@ -71,27 +76,33 @@ const SaleInvoices = () => {
       <table className="w-full border-collapse mt-4">
         <thead>
           <tr>
-            <th className="border px-4 py-2">发票编号</th>
-            <th className="border px-4 py-2">客户</th>
-            <th className="border px-4 py-2">金额</th>
-            <th className="border px-4 py-2">状态</th>
+            <th className="border px-4 py-2">ID</th>
+            <th className="border px-4 py-2">Invoice No.</th>
+            <th className="border px-4 py-2">Invoice Date</th>
+            <th className="border px-4 py-2">Name</th>
+            <th className="border px-4 py-2">Payment Term</th>
+            <th className="border px-4 py-2">Total</th>
+            <th className="border px-4 py-2">Paid</th>
+            <th className="border px-4 py-2">Due (Overdue)</th>
           </tr>
         </thead>
         <tbody>
           {invoices.length > 0 ? (
             invoices.map((invoice: any) => (
               <tr key={invoice.id}>
+                <td className="border px-4 py-2">{invoice.id}</td>
                 <td className="border px-4 py-2">{invoice.ref_num}</td>
+                <td className="border px-4 py-2">{formatDate(invoice.invoice_date)}</td> {/* 格式化发票日期 */}
                 <td className="border px-4 py-2">{invoice.payee}</td>
+                <td className="border px-4 py-2">{invoice.payment_term}</td>
                 <td className="border px-4 py-2">{invoice.total}</td>
-                <td className="border px-4 py-2">
-                  {invoice.payment_status === 1 ? "已支付" : "未支付"}
-                </td>
+                <td className="border px-4 py-2">{invoice.paid}</td>
+                <td className="border px-4 py-2">{invoice.due}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={4} className="border px-4 py-2 text-center">
+              <td colSpan={8} className="border px-4 py-2 text-center">
                 没有数据
               </td>
             </tr>
