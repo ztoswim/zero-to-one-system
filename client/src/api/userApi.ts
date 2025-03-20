@@ -52,6 +52,12 @@ export const forgotPassword = async (data: {
   return response.data;
 };
 
+// 获取所有用户
+export const getAllUsers = async () => {
+  const response = await api.get("/user/list");
+  return response.data;
+};
+
 // 获取当前用户信息
 export const getCurrentUser = async () => {
   const response = await api.get("/user/me");

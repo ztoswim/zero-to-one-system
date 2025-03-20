@@ -12,6 +12,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import Login from "./pages/Login";
 import BankList from "./pages/BankList"; // 引入银行列表页面
 import SaleInvoices from "./pages/SaleInvoices"; // 引入销售发票页面
+import UserManagement from "./pages/UserManagement"; // ✅ 添加用户管理页面
 
 const App = () => {
   const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
@@ -71,6 +72,11 @@ const App = () => {
             <Route
               path="/sale-invoices"
               element={<ProtectedRoute roleRequired="boss"><SaleInvoices /></ProtectedRoute>}
+            />
+            {/* ✅ 用户管理页面*/}
+            <Route
+              path="/user-management"
+              element={<ProtectedRoute roleRequired="boss"><UserManagement /></ProtectedRoute>}
             />
           </Route>
         ) : null}
