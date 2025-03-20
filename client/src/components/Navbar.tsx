@@ -20,7 +20,7 @@ const Navbar = ({ role }: { role: string }) => {
     <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center relative shadow-md">
       {/* Navbar 左侧 Logo + 文本 */}
       <div className="flex items-center space-x-3">
-        <img src={Logo} alt="Logo" className="w-24 h-auto" /> {/* Logo 适中 */}
+        <img src={Logo} alt="Logo" className="w-16 h-auto" /> {/* Logo 变小 */}
         <Typography variant="h6" className="text-white font-semibold">
           Zero To One
         </Typography>
