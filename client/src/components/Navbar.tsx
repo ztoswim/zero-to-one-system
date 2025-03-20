@@ -1,22 +1,15 @@
-import { useState, JSX } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../auth";
-import { menuConfig } from "./menuConfig"; // 引入共享菜单配置
-import { FaTachometerAlt, FaUsers, FaChalkboardTeacher } from "react-icons/fa"; // 引入图标
+import { menuConfig } from "./menuConfig"; 
+import { FaSignOutAlt, FaBars } from "react-icons/fa"; 
+import { motion } from "framer-motion";
+import { Typography } from "@mui/material";
+import Logo from "../assets/Logo.png"; // 导入 Logo
 
 const Navbar = ({ role }: { role: string }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // 手动映射路径到图标
-  const iconMap: { [key: string]: JSX.Element } = {
-    "/boss-dashboard": <FaTachometerAlt />,
-    "/users": <FaUsers />,
-    "/students": <FaChalkboardTeacher />,
-    "/admin-dashboard": <FaTachometerAlt />,
-    "/coach-dashboard": <FaTachometerAlt />,
-    "/customer-dashboard": <FaTachometerAlt />,
-  };
 
   const handleLogout = () => {
     logoutUser();
@@ -24,38 +17,58 @@ const Navbar = ({ role }: { role: string }) => {
   };
 
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold">Zero To One</h1>
+    <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center relative shadow-md">
+      {/* Navbar 左侧 Logo + 文本 */}
+      <div className="flex items-center space-x-3">
+        <img src={Logo} alt="Logo" className="w-24 h-auto" /> {/* Logo 适中 */}
+        <Typography variant="h6" className="text-white font-semibold">
+          Zero To One
+        </Typography>
+      </div>
+
+      {/* 移动端菜单按钮 */}
       <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
-        ☰
+        <FaBars className="text-2xl" />
       </button>
+
+      {/* 移动端菜单下拉框 */}
       {menuOpen && (
-        <div className="absolute top-12 right-4 bg-gray-700 rounded shadow-lg w-48">
-          <ul>
-            {menuConfig[role]?.map((item) => (
-              <li key={item.path}>
-                <button
-                  onClick={() => {
-                    navigate(item.path);
-                    setMenuOpen(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-600 flex items-center"
-                >
-                  <span className="mr-3">{iconMap[item.path as keyof typeof iconMap]}</span> {/* 渲染对应的图标 */}
-                  {item.label}
-                </button>
-              </li>
-            ))}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute top-14 right-4 bg-gray-700 rounded-lg shadow-lg w-48 z-50 p-2"
+        >
+          <ul className="space-y-2">
+            {menuConfig[role]?.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.path}>
+                  <button
+                    onClick={() => {
+                      navigate(item.path);
+                      setMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-600 flex items-center rounded-md transition-all"
+                  >
+                    <Icon className="mr-3 text-lg" />
+                    {item.label}
+                  </button>
+                </li>
+              );
+            })}
+            {/* 退出登录按钮 - 居中对齐 */}
             <li>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 bg-red-500 hover:bg-red-600 text-white"
+                className="w-full flex justify-center items-center gap-3 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-md transition-all"
               >
+                <FaSignOutAlt className="text-lg" />
                 退出登录
               </button>
             </li>
           </ul>
-        </div>
+        </motion.div>
       )}
     </div>
   );

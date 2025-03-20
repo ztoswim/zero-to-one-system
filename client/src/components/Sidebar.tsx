@@ -1,46 +1,69 @@
-import { useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaSignOutAlt } from 'react-icons/fa';  // 引入登出图标
-import { menuConfig } from './menuConfig';
-import { logoutUser } from '../auth';  // 引入 logoutUser 函数
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../auth";
+import { menuConfig } from "./menuConfig";
+import { FaSignOutAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { Typography } from "@mui/material";
+import Logo from "../assets/Logo.png"; // 导入 Logo
 
 const Sidebar = ({ role }: { role: string }) => {
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // 调用 logoutUser 函数来清除 token 和 role
-    logoutUser();
-    // 跳转到登录页面
-    navigate('/login');
-  };
+  const [isOpen, setIsOpen] = useState(false); // 控制 Sidebar 展开状态
 
   return (
-    <div className="h-full bg-gray-800 text-white p-4">
-      <h1 className="text-xl font-bold mb-4">Zero To One</h1>
-      <ul>
-        {menuConfig[role]?.map((item) => (
-          <li key={item.path} className="mb-2">
-            <button
-              onClick={() => navigate(item.path)}
-              className="w-full text-left px-3 py-2 rounded hover:bg-gray-700 flex items-center"
-            >
-              <span className="mr-3">
-                {item.path === "/users" ? <FaUsers /> : <FaTachometerAlt />}
-              </span>
-              {item.label}
-            </button>
-          </li>
-        ))}
-        {/* 添加登出按钮 */}
-        <li className="mt-4">
+    <div className="relative">
+      {/* 触发区域：鼠标指向左侧时展开 */}
+      <div
+        className="fixed top-0 left-0 h-screen w-2 bg-transparent z-50"
+        onMouseEnter={() => setIsOpen(true)}
+      ></div>
+
+      {/* Sidebar - Framer Motion 动画 */}
+      <motion.div
+        className={`fixed top-0 left-0 h-screen bg-[#0b3289] text-white shadow-xl flex flex-col p-4`}
+        initial={{ x: "-100%" }}
+        animate={{ x: isOpen ? "0%" : "-100%" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        onMouseLeave={() => setIsOpen(false)}
+      >
+        {/* Logo 显示 */}
+        <div className="flex justify-center items-center mb-6">
+          <img src={Logo} alt="Logo" className="w-36 h-auto" /> {/* Logo 加大 */}
+        </div>
+
+        {/* 菜单项 */}
+        <ul className="mt-6 space-y-3">
+          {menuConfig[role]?.map((item) => {
+            const Icon = item.icon;
+            return (
+              <li key={item.path}>
+                <button
+                  onClick={() => navigate(item.path)}
+                  className="flex items-center w-full px-4 py-3 rounded-lg transition hover:bg-[#08285b] text-white"
+                >
+                  <Icon className="mr-3 text-lg" />
+                  <Typography variant="body1">{item.label}</Typography>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* 退出按钮 - 居中对齐 */}
+        <div className="mt-auto">
           <button
-            onClick={handleLogout}
-            className="w-full text-left px-3 py-2 rounded hover:bg-gray-700 flex items-center"
+            onClick={() => {
+              logoutUser();
+              navigate("/login");
+            }}
+            className="w-full flex justify-center items-center gap-3 px-4 py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white"
           >
-            <FaSignOutAlt className="mr-3" />
-            登出
+            <FaSignOutAlt className="text-lg" />
+            <Typography variant="body1">退出</Typography>
           </button>
-        </li>
-      </ul>
+        </div>
+      </motion.div>
     </div>
   );
 };

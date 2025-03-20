@@ -2,34 +2,32 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { getUserRole } from "../auth"; // 获取当前用户角色
+import { getUserRole } from "../auth"; 
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const userRole = getUserRole(); // 获取当前用户角色
+    const userRole = getUserRole(); 
     if (!userRole) {
-      navigate("/login"); // 如果没有角色信息，跳转到登录页面
+      navigate("/login");
     } else {
-      setRole(userRole); // 设置角色
+      setRole(userRole);
     }
   }, [navigate]);
 
-  if (!role) return null; // 等待角色信息加载
+  if (!role) return null;
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* 大屏幕显示 Sidebar */}
-      <div className="hidden md:block w-64 bg-gray-800 text-white p-4">
-        <Sidebar role={role} />
-      </div>
+    <div className="flex bg-gray-100">
+      {/* Sidebar 默认隐藏，鼠标指向左边缘展开 */}
+      <Sidebar role={role} />
 
-      {/* 内容区域 */}
-      <div className="flex-1 flex flex-col ml-0">
+      {/* 右侧内容区 */}
+      <div className="flex-1 flex flex-col transition-all duration-300 ml-0">
         {/* 小屏幕显示 Navbar */}
-        <div className="md:hidden w-full top-0 left-0 bg-gray-800 z-20">
+        <div className="md:hidden w-full top-0 left-0 bg-gray-800 z-20 fixed">
           <Navbar role={role} />
         </div>
 
