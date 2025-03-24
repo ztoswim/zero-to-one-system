@@ -16,21 +16,18 @@ interface Props {
 }
 
 const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, watch } = useForm();
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  // 性别选项
-  const genderOptions = [
-    { value: "male", label: "男" },
-    { value: "female", label: "女" },
-  ];
+  const gender = watch("gender");  // 监听 gender 字段的值
 
   useEffect(() => {
+    // 如果编辑模式，设置表单的默认值
     reset(
       student || {
         studentName: "",
-        gender: "male", // 默认是 male
+        gender: "male", // 默认性别是 male
         birthDate: "",
         parentName: "",
         parentContact: "",
@@ -40,10 +37,17 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
         email: "",
       }
     );
+
+    // 如果有学生数据，设置生日
     if (student && student.birthDate) {
-      setSelectedDate(new Date(student.birthDate)); // 设置日期
+      setSelectedDate(new Date(student.birthDate)); // 设置生日
     }
-  }, [student, reset]);
+
+    // 确保性别在编辑模式下正确更新
+    if (student && student.gender) {
+      setValue("gender", student.gender === "male" ? "male" : "female"); // 使用 setValue 强制设置性别
+    }
+  }, [student, reset, setValue]);
 
   // 将输入转换为大写
   const handleUpperCase = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,19 +57,14 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      // 打印提交的数据，调试性别字段
-      console.log("提交的数据：", data);
 
       // 确保性别值是 male 或 female
-      const gender = data.gender === "男" ? "male" : "female"; // 转换性别
-
-      // 格式化生日为 MongoDB 的标准日期格式 (YYYY-MM-DD)
-      const birthDate = selectedDate ? selectedDate.toISOString().split("T")[0] : null;
+      const gender = data.gender === "male" ? "male" : "female"; // 转换性别值
 
       const studentData = {
         ...data,
-        gender, // 保存转换后的性别
-        birthDate,
+        gender, // 更新 gender 字段
+        birthDate: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
         studentName: data.studentName.toUpperCase(),
         parentName: data.parentName.toUpperCase(),
         address: data.address.toUpperCase(),
@@ -80,7 +79,9 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
       }
 
       refreshList();
-      onClose();
+      reset(); // 清空表单
+      setSelectedDate(null); // 重置日期选择
+      onClose(); // 关闭表单
     } catch {
       toast.error("操作失败");
     } finally {
@@ -102,10 +103,16 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
     }
   };
 
+  const handleClose = () => {
+    reset(); // 关闭弹窗时重置表单
+    setSelectedDate(null); // 重置日期选择
+    onClose();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
       className="bg-white p-6 rounded-lg shadow-lg w-[600px] mx-auto"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
     >
@@ -129,16 +136,22 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
             {/* 性别选择 */}
             <div>
               <label className="block text-sm font-semibold">性别</label>
-              <select
-                className="w-full border p-3 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                {...register("gender", { required: true })}
-              >
-                {genderOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="flex space-x-4 mt-2">
+                <button
+                  type="button"
+                  className={`w-20 py-2 rounded-md border ${gender === "male" ? "bg-blue-500 text-white" : "bg-white text-blue-500"}`}
+                  onClick={() => setValue("gender", "male")}
+                >
+                  男
+                </button>
+                <button
+                  type="button"
+                  className={`w-20 py-2 rounded-md border ${gender === "female" ? "bg-pink-500 text-white" : "bg-white text-pink-500"}`}
+                  onClick={() => setValue("gender", "female")}
+                >
+                  女
+                </button>
+              </div>
             </div>
 
             {/* 生日 */}
@@ -153,6 +166,9 @@ const StudentForm = ({ isOpen, onClose, student, refreshList }: Props) => {
                 dateFormat="dd/MM/yyyy"
                 className="w-full border p-3 mt-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholderText="选择生日日期"
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select" // 允许选择日期、月份和年份
               />
             </div>
           </div>

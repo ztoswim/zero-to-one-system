@@ -12,6 +12,7 @@ const StudentPage = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const fetchStudents = async () => {
     try {
@@ -27,6 +28,14 @@ const StudentPage = () => {
     setIsModalOpen(true);
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredStudents = students.filter((student) =>
+    student.studentName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -35,8 +44,25 @@ const StudentPage = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">学生管理</h1>
 
+      {/* 搜索框 */}
+      <input
+        type="text"
+        placeholder="搜索学生"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="p-2 mb-4 border border-gray-300 rounded-lg w-full"
+      />
+
+      {/* 新建学生按钮 */}
+      <button
+        onClick={() => openStudentForm(null)} // 打开新建学生表单
+        className="mb-4 p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+      >
+        新建学生
+      </button>
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {students.map((student) => (
+        {filteredStudents.map((student) => (
           <button
             key={student._id}
             onClick={() => openStudentForm(student)}

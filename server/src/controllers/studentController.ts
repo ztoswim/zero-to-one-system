@@ -65,10 +65,6 @@ export const updateStudent = async (req: Request, res: Response): Promise<void> 
   try {
     const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
 
-    // 打印接收到的性别字段
-    console.log("Received gender in backend:", gender);  // 确保接收到的 gender 是正确的
-
-    // 更新学生信息
     const updatedStudent = await Student.findByIdAndUpdate(
       req.params.id,
       { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email },
