@@ -1,14 +1,20 @@
 import api from "./apiConfig";
 
-// 用户注册（顾客）
+// ✅ 处理后端的错误消息
 export const registerCustomer = async (data: {
   email: string;
   username: string;
   password: string;
   confirmPassword: string;
 }) => {
-  const response = await api.post("/auth/register/customer", data);
-  return response.data;
+  try {
+    const response = await api.post("/auth/register/customer", data);
+    return response.data;
+  } catch (error: any) {
+    // ✅ 获取后端返回的错误信息
+    const errorMessage = error.response?.data?.error || "注册失败，请稍后再试";
+    throw new Error(errorMessage); // 抛出具体的错误信息，前端可捕获
+  }
 };
 
 // 用户注册（员工）
@@ -65,7 +71,7 @@ export const getCurrentUser = async () => {
 };
 
 export const updateUser = async (id: string, data: { username: string; role: string }) => {
-  const response = await api.put(`/user/${id}`, data);
+  const response = await api.put(`/users/${id}`, data);
   return response.data;
 };
 

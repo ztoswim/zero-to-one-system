@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../auth";
+import { loginUser } from "../auth"; // ✅ 这里不需要引入 forgotPassword
 import { FiUser, FiLock } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Logo from "../assets/Logo.png"; // 引入 Logo
+import UserForm from "../form/UserForm"; // ✅ 引入 UserForm 作为弹窗
 
 const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // 控制加载状态
+  const [loading, setLoading] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false); // ✅ 控制忘记密码弹窗
+
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // 开始加载
+    setLoading(true);
     try {
-      const { role, biztoryAccount } = await loginUser(username, password); // 登录并获取 role 和 biztoryAccount
+      const { role, biztoryAccount } = await loginUser(username, password);
       toast.success("登录成功 🎉");
 
       localStorage.setItem("role", role);
       setRole(role);
 
-      // 如果有 Biztory 信息，存储 biztoryAccount
       if (biztoryAccount) {
         localStorage.setItem("biztoryAccount", JSON.stringify(biztoryAccount));
-        toast.success("Biztory 登录成功！"); // 显示 Biztory 登录成功提示
+        toast.success("Biztory 登录成功！");
       }
 
       navigate(`/${role}-dashboard`);
@@ -33,13 +36,18 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
       toast.error("登录失败，请检查用户名或密码！");
       console.error("登录失败", error);
     } finally {
-      setLoading(false); // 结束加载
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="bg-white shadow-lg rounded-xl p-8 w-96">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white shadow-lg rounded-xl p-8 w-96"
+      >
         <div className="flex justify-center mb-8">
           <img src={Logo} alt="Logo" className="w-64 h-auto" />
         </div>
@@ -47,32 +55,70 @@ const Login = ({ setRole }: { setRole: (role: string | null) => void }) => {
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div className="relative">
             <FiUser className="absolute left-3 top-3.5 text-gray-500" />
-            <input type="text" placeholder="用户名" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            <input
+              type="text"
+              placeholder="用户名"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
           </div>
           <div className="relative">
             <FiLock className="absolute left-3 top-3.5 text-gray-500" />
-            <input type="password" placeholder="密码" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+            <input
+              type="password"
+              placeholder="密码"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
           </div>
 
+          {/* 登录按钮 */}
           <button
             type="submit"
-            className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+            className={`w-full max-w-xs py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
             disabled={loading}
           >
-            {loading ? (
-              <>
-                登录中...
-                <svg className="animate-spin h-5 w-5 ml-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 01-8 8z"></path>
-                </svg>
-              </>
-            ) : (
-              "登录"
-            )}
+            {loading ? "登录中..." : "登录"}
           </button>
+
+          {/* 按钮组 */}
+          <div className="flex justify-between mt-2">
+            <button
+              type="button"
+              onClick={() => setIsRegisterOpen(true)}
+              className="text-blue-500 hover:underline"
+            >
+              注册新用户
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsForgotPasswordOpen(true)} // ✅ 打开忘记密码弹窗
+              className="text-red-500 hover:underline"
+            >
+              忘记密码？
+            </button>
+          </div>
         </form>
       </motion.div>
+
+      {/* 注册弹窗 */}
+      <UserForm
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
+        isRegister={true}
+        refreshList={() => {}}
+      />
+
+      {/* 忘记密码弹窗 */}
+      <UserForm
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
+        isForgotPassword={true} // ✅ 传递 isForgotPassword
+      />
     </div>
   );
 };
