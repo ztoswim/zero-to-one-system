@@ -30,16 +30,18 @@ export const getStudentById = async (req: Request, res: Response): Promise<void>
 // 创建学生
 export const createStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } =
-      req.body;
+    const { studentName, gender, birthDate, parentName, parentContact, address, classDuration, classLocation, email } = req.body;
 
-    if (!studentName || !gender || !birthDate || !parentContact)
+    // 检查必填字段
+    if (!studentName || !gender || !birthDate || !parentContact) {
       res.status(400).json({ error: "缺少必填字段" });
-      return;
+      return;  // 添加 return，确保代码停止执行
+    }
 
+    // 创建新学生实例
     const newStudent = new Student({
       studentName,
-      gender,
+      gender,        // 确保 gender 正确传递
       birthDate,
       parentName,
       parentContact,
@@ -49,9 +51,11 @@ export const createStudent = async (req: Request, res: Response): Promise<void> 
       email,
     });
 
+    // 保存到数据库
     await newStudent.save();
-    res.status(201).json({ message: "学生创建成功" });
+    res.status(201).json({ message: "学生创建成功", student: newStudent });
   } catch (error) {
+    console.error("创建学生失败", error);  // 打印错误信息
     res.status(500).json({ error: "创建学生失败" });
   }
 };
