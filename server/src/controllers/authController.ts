@@ -105,7 +105,7 @@ export const login = async (req: any, res: any): Promise<void> => {
   }
 
   // 生成 JWT token
-  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+  const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: "7d" });
 
   // 返回 JWT Token 和 Biztory 账户信息（如果有）
   res.json({ token, role: user.role, biztoryAccount });
